@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const BRAND = "Anexso Kopi JOE";
 const TAGLINE =
@@ -116,7 +116,9 @@ function Icon({
     | "tokopedia"
     | "phone"
     | "mail"
-    | "map";
+    | "map"
+    | "volumeOn"
+    | "volumeOff";
 }) {
   const common = "w-5 h-5";
   switch (name) {
@@ -178,11 +180,7 @@ function Icon({
     case "clock":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-          />
+          <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="currentColor" strokeWidth="1.6" />
           <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
       );
@@ -225,15 +223,9 @@ function Icon({
         </svg>
       );
     case "tokopedia":
-      // Icon simple "shop"
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M4 7h16l-1 14H5L4 7Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
+          <path d="M4 7h16l-1 14H5L4 7Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
           <path d="M8 7a4 4 0 0 1 8 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
       );
@@ -272,18 +264,52 @@ function Icon({
           />
         </svg>
       );
+    case "volumeOn":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M11 5 6.5 9H3v6h3.5L11 19V5Z"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M15.5 8.5a4.5 4.5 0 0 1 0 7"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+          <path
+            d="M17.8 6.2a7.8 7.8 0 0 1 0 11.6"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "volumeOff":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M11 5 6.5 9H3v6h3.5L11 19V5Z"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M16 9l5 6M21 9l-5 6"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
     default:
       return null;
   }
 }
 
-function SoftCard({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function SoftCard({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <div
       className={cx(
@@ -302,6 +328,11 @@ export default function Page() {
   const [cart, setCart] = useState<Record<string, number>>({});
   const [progress, setProgress] = useState(0);
 
+  // ===== MUSIC =====
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [musicOn, setMusicOn] = useState(true);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+
   // theme init (sync with localStorage + OS preference)
   useEffect(() => {
     const saved = localStorage.getItem("theme");
@@ -317,6 +348,39 @@ export default function Page() {
     localStorage.setItem("theme", dark ? "dark" : "light");
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  // music init (persist)
+  useEffect(() => {
+    const saved = localStorage.getItem("music");
+    if (saved === "off") setMusicOn(false);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("music", musicOn ? "on" : "off");
+  }, [musicOn]);
+
+  // try autoplay (volume pelan)
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el) return;
+
+    el.volume = 0.12; // pelan (0.05 - 0.2)
+    el.loop = true;
+
+    if (!musicOn) {
+      el.pause();
+      return;
+    }
+
+    (async () => {
+      try {
+        setAutoplayBlocked(false);
+        await el.play();
+      } catch {
+        setAutoplayBlocked(true);
+      }
+    })();
+  }, [musicOn]);
 
   // scroll progress bar
   useEffect(() => {
@@ -357,16 +421,11 @@ export default function Page() {
     const q = query.trim().toLowerCase();
     if (!q) return PRODUCTS;
     return PRODUCTS.filter((p) =>
-      `${p.name} ${p.variant} ${p.note} ${p.bullets.join(" ")}`
-        .toLowerCase()
-        .includes(q)
+      `${p.name} ${p.variant} ${p.note} ${p.bullets.join(" ")}`.toLowerCase().includes(q)
     );
   }, [query]);
 
-  const cartCount = useMemo(
-    () => Object.values(cart).reduce((a, b) => a + b, 0),
-    [cart]
-  );
+  const cartCount = useMemo(() => Object.values(cart).reduce((a, b) => a + b, 0), [cart]);
 
   const cartItems = useMemo(() => {
     return PRODUCTS.filter((p) => cart[p.id]).map((p) => ({
@@ -376,10 +435,7 @@ export default function Page() {
     }));
   }, [cart]);
 
-  const cartTotal = useMemo(
-    () => cartItems.reduce((sum, i) => sum + i.subtotal, 0),
-    [cartItems]
-  );
+  const cartTotal = useMemo(() => cartItems.reduce((sum, i) => sum + i.subtotal, 0), [cartItems]);
 
   function addToCart(id: string) {
     setCart((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
@@ -407,9 +463,7 @@ export default function Page() {
   const waCheckoutLink = useMemo(() => {
     const lines = [
       `Halo ${BRAND}, saya mau pesan:`,
-      ...cartItems.map(
-        (i) => `- ${i.name} (${i.variant}) x${i.qty} = ${formatIDR(i.subtotal)}`
-      ),
+      ...cartItems.map((i) => `- ${i.name} (${i.variant}) x${i.qty} = ${formatIDR(i.subtotal)}`),
       cartItems.length ? `Total: ${formatIDR(cartTotal)}` : "(keranjang masih kosong)",
       "",
       "Mohon info ketersediaan & ongkir ya. Terima kasih.",
@@ -420,6 +474,9 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      {/* Audio (taruh file: /public/mars-kopi-joe.mp3) */}
+      <audio ref={audioRef} src="/mars-kopi-joe.mp3" preload="auto" />
+
       {/* background subtle */}
       <div className="pointer-events-none fixed inset-0 -z-10 gpro-animated-bg opacity-80" />
 
@@ -427,10 +484,7 @@ export default function Page() {
       <header className="sticky top-0 z-50 border-b border-[color:var(--border)] bg-[color:var(--card)] backdrop-blur">
         {/* progress bar */}
         <div className="h-1 w-full bg-[color:var(--border)]">
-          <div
-            className="h-1 bg-[color:var(--primary)]"
-            style={{ width: `${progress}%` }}
-          />
+          <div className="h-1 bg-[color:var(--primary)]" style={{ width: `${progress}%` }} />
         </div>
 
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
@@ -440,20 +494,37 @@ export default function Page() {
             </div>
             <div className="leading-tight">
               <div className="text-sm font-black">{BRAND}</div>
-              <div className="text-xs text-[color:var(--muted)]">
-                Sleman • Yogyakarta
-              </div>
+              <div className="text-xs text-[color:var(--muted)]">Sleman • Yogyakarta</div>
             </div>
           </div>
 
           <nav className="hidden items-center gap-6 text-sm text-[color:var(--muted)] md:flex">
-            <a className="hover:opacity-80" href="#produk">Produk</a>
-            <a className="hover:opacity-80" href="#kenapa">Kenapa</a>
-            <a className="hover:opacity-80" href="#testimoni">Testimoni</a>
-            <a className="hover:opacity-80" href="#kontak">Kontak</a>
+            <a className="hover:opacity-80" href="#produk">
+              Produk
+            </a>
+            <a className="hover:opacity-80" href="#kenapa">
+              Kenapa
+            </a>
+            <a className="hover:opacity-80" href="#testimoni">
+              Testimoni
+            </a>
+            <a className="hover:opacity-80" href="#kontak">
+              Kontak
+            </a>
           </nav>
 
           <div className="flex items-center gap-2">
+            {/* Music toggle */}
+            <button
+              onClick={() => setMusicOn((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              aria-label="Toggle music"
+              title="Music"
+            >
+              {musicOn ? <Icon name="volumeOn" /> : <Icon name="volumeOff" />}
+              <span className="hidden sm:inline">{musicOn ? "Music" : "Muted"}</span>
+            </button>
+
             <button
               onClick={() => setDark((v) => !v)}
               className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
@@ -501,6 +572,21 @@ export default function Page() {
         </div>
       </header>
 
+      {/* kalau autoplay diblokir, kasih CTA klik */}
+      {autoplayBlocked && musicOn && (
+        <button
+          onClick={async () => {
+            try {
+              await audioRef.current?.play();
+              setAutoplayBlocked(false);
+            } catch {}
+          }}
+          className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-2 text-sm font-black shadow-[var(--shadow)] backdrop-blur"
+        >
+          Tap untuk nyalakan musik 🎵
+        </button>
+      )}
+
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 md:pb-14 md:pt-14">
         <div className="gpro-reveal" data-reveal>
@@ -512,15 +598,12 @@ export default function Page() {
               </div>
 
               <h1 className="mt-4 text-4xl font-black leading-tight md:text-5xl">
-                Kopi yang bikin{" "}
-                <span className="text-[color:var(--primary)]">percaya</span>
+                Kopi yang bikin <span className="text-[color:var(--primary)]">percaya</span>
                 <br />
                 dari rasa sampai pelayanan.
               </h1>
 
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-[color:var(--muted)]">
-                {TAGLINE}
-              </p>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-[color:var(--muted)]">{TAGLINE}</p>
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
@@ -568,9 +651,7 @@ export default function Page() {
                     </span>
                     <div>
                       <div className="text-sm font-black">Kualitas Terjaga</div>
-                      <div className="text-xs text-[color:var(--muted)]">
-                        Rasa konsisten, siap repeat order.
-                      </div>
+                      <div className="text-xs text-[color:var(--muted)]">Rasa konsisten, siap repeat order.</div>
                     </div>
                   </div>
                 </SoftCard>
@@ -582,9 +663,7 @@ export default function Page() {
                     </span>
                     <div>
                       <div className="text-sm font-black">Packing Aman</div>
-                      <div className="text-xs text-[color:var(--muted)]">
-                        Rapi, cocok juga untuk hadiah.
-                      </div>
+                      <div className="text-xs text-[color:var(--muted)]">Rapi, cocok juga untuk hadiah.</div>
                     </div>
                   </div>
                 </SoftCard>
@@ -596,9 +675,7 @@ export default function Page() {
                     </span>
                     <div>
                       <div className="text-sm font-black">Customer Care</div>
-                      <div className="text-xs text-[color:var(--muted)]">
-                        Respons cepat via WA.
-                      </div>
+                      <div className="text-xs text-[color:var(--muted)]">Respons cepat via WA.</div>
                     </div>
                   </div>
                 </SoftCard>
@@ -610,9 +687,7 @@ export default function Page() {
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <div className="text-sm font-black">Cari produk</div>
-                  <div className="text-xs text-[color:var(--muted)]">
-                    Ketik nama/varian
-                  </div>
+                  <div className="text-xs text-[color:var(--muted)]">Ketik nama/varian</div>
                 </div>
                 <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">
                   {filteredProducts.length} item
@@ -638,9 +713,7 @@ export default function Page() {
                         <div className="text-xs text-[color:var(--muted)]">
                           {p.variant} • {formatIDR(p.price)}
                         </div>
-                        <div className="mt-2 text-xs text-[color:var(--muted)]">
-                          {p.note}
-                        </div>
+                        <div className="mt-2 text-xs text-[color:var(--muted)]">{p.note}</div>
                       </div>
                       <button
                         onClick={() => addToCart(p.id)}
@@ -698,12 +771,8 @@ export default function Page() {
                 <SoftCard key={p.id} className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-xs font-bold text-[color:var(--muted)]">
-                        {p.variant}
-                      </div>
-                      <div className="text-lg font-black leading-tight">
-                        {p.name}
-                      </div>
+                      <div className="text-xs font-bold text-[color:var(--muted)]">{p.variant}</div>
+                      <div className="text-lg font-black leading-tight">{p.name}</div>
                     </div>
                     <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">
                       {formatIDR(p.price)}
@@ -733,9 +802,7 @@ export default function Page() {
                         >
                           −
                         </button>
-                        <div className="min-w-8 text-center text-sm font-black">
-                          {qty}
-                        </div>
+                        <div className="min-w-8 text-center text-sm font-black">{qty}</div>
                         <button
                           onClick={() => addToCart(p.id)}
                           className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
@@ -778,46 +845,25 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Kenapa pilih (style seperti contoh) */}
+      {/* Kenapa pilih */}
       <section id="kenapa" className="py-14">
         <div className="mx-auto max-w-6xl px-4">
           <div className="gpro-reveal" data-reveal>
             <div
               className="rounded-[var(--radius)] border border-[color:var(--border)] p-10 shadow-[var(--shadow)]"
               style={{
-                background:
-                  "linear-gradient(180deg, rgba(42,26,16,0.92), rgba(42,26,16,0.86))",
+                background: "linear-gradient(180deg, rgba(42,26,16,0.92), rgba(42,26,16,0.86))",
                 color: "#fff7ee",
               }}
             >
-              <h2 className="text-center text-3xl font-black md:text-4xl">
-                Kenapa Pilih JOE Coffee?
-              </h2>
-              <p className="mt-2 text-center text-sm opacity-85">
-                Komitmen kami untuk kepuasan Anda
-              </p>
+              <h2 className="text-center text-3xl font-black md:text-4xl">Kenapa Pilih JOE Coffee?</h2>
+              <p className="mt-2 text-center text-sm opacity-85">Komitmen kami untuk kepuasan Anda</p>
 
               <div className="mt-10 grid gap-8 md:grid-cols-4">
-                <Reason
-                  icon={<Icon name="shield" />}
-                  title="Kualitas Terjaga"
-                  desc="Kopi pilihan, rasa konsisten dan kemasan rapi."
-                />
-                <Reason
-                  icon={<Icon name="truck" />}
-                  title="Pengiriman Cepat"
-                  desc="Proses cepat sesuai antrian & packing aman."
-                />
-                <Reason
-                  icon={<Icon name="clock" />}
-                  title="Fresh & Wangi"
-                  desc="Aroma maksimal untuk pengalaman coffee lovers."
-                />
-                <Reason
-                  icon={<Icon name="heart" />}
-                  title="Customer Support"
-                  desc="Kami siap membantu via WhatsApp."
-                />
+                <Reason icon={<Icon name="shield" />} title="Kualitas Terjaga" desc="Kopi pilihan, rasa konsisten dan kemasan rapi." />
+                <Reason icon={<Icon name="truck" />} title="Pengiriman Cepat" desc="Proses cepat sesuai antrian & packing aman." />
+                <Reason icon={<Icon name="clock" />} title="Fresh & Wangi" desc="Aroma maksimal untuk pengalaman coffee lovers." />
+                <Reason icon={<Icon name="heart" />} title="Customer Support" desc="Kami siap membantu via WhatsApp." />
               </div>
 
               <div className="mt-10 rounded-[var(--radius)] bg-white/10 p-6">
@@ -839,14 +885,11 @@ export default function Page() {
       <section id="testimoni" className="mx-auto max-w-6xl px-4 py-14">
         <div className="gpro-reveal" data-reveal>
           <h2 className="text-2xl font-black md:text-3xl">Testimoni Pelanggan</h2>
-          
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {TESTIMONIALS.map((t) => (
               <SoftCard key={t.name} className="p-6">
-                <p className="text-sm leading-relaxed text-[color:var(--muted)]">
-                  “{t.quote}”
-                </p>
+                <p className="text-sm leading-relaxed text-[color:var(--muted)]">“{t.quote}”</p>
                 <div className="mt-4 text-sm font-black">{t.name}</div>
                 <div className="text-xs text-[color:var(--muted)]">{t.meta}</div>
               </SoftCard>
@@ -854,22 +897,10 @@ export default function Page() {
           </div>
 
           <div className="mt-10 grid gap-3 md:grid-cols-2">
-            <Faq
-              q="Bisa kirim luar kota?"
-              a="Bisa. Packing aman dan pengiriman sesuai layanan ekspedisi yang tersedia."
-            />
-            <Faq
-              q="Bisa untuk kantor / reseller?"
-              a="Bisa. Varian 1 Kg cocok untuk kantor, event, atau reseller. Chat WA untuk diskusi."
-            />
-            <Faq
-              q="Pembayaran bagaimana?"
-              a="Konfirmasi via WhatsApp/Tokopedia. Kami bantu sesuai opsi yang tersedia."
-            />
-            <Faq
-              q="Bisa tanya rekomendasi?"
-              a="Bisa. Ceritakan selera kamu (pahit/medium/smooth), nanti kami bantu rekomendasi."
-            />
+            <Faq q="Bisa kirim luar kota?" a="Bisa. Packing aman dan pengiriman sesuai layanan ekspedisi yang tersedia." />
+            <Faq q="Bisa untuk kantor / reseller?" a="Bisa. Varian 1 Kg cocok untuk kantor, event, atau reseller. Chat WA untuk diskusi." />
+            <Faq q="Pembayaran bagaimana?" a="Konfirmasi via WhatsApp/Tokopedia. Kami bantu sesuai opsi yang tersedia." />
+            <Faq q="Bisa tanya rekomendasi?" a="Bisa. Ceritakan selera kamu (pahit/medium/smooth), nanti kami bantu rekomendasi." />
           </div>
         </div>
       </section>
@@ -880,9 +911,7 @@ export default function Page() {
           <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
             <div>
               <h2 className="text-2xl font-black md:text-3xl">Checkout</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Keranjang akan dibuat menjadi pesan otomatis untuk WhatsApp.
-              </p>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">Keranjang akan dibuat menjadi pesan otomatis untuk WhatsApp.</p>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -940,9 +969,7 @@ export default function Page() {
                           <div className="text-xs text-[color:var(--muted)]">
                             {i.variant} • {formatIDR(i.price)}
                           </div>
-                          <div className="mt-2 text-xs font-black">
-                            Subtotal: {formatIDR(i.subtotal)}
-                          </div>
+                          <div className="mt-2 text-xs font-black">Subtotal: {formatIDR(i.subtotal)}</div>
                         </div>
 
                         <div className="flex flex-col items-end gap-2">
@@ -1046,9 +1073,7 @@ export default function Page() {
           <div className="grid gap-6 lg:grid-cols-2">
             <SoftCard className="p-6">
               <h2 className="text-2xl font-black md:text-3xl">Hubungi Kami</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Ada pertanyaan? Kami siap membantu.
-              </p>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">Ada pertanyaan? Kami siap membantu.</p>
 
               <div className="mt-5 space-y-3">
                 <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5">
@@ -1117,9 +1142,7 @@ export default function Page() {
 
             <SoftCard className="p-6">
               <h3 className="text-lg font-black">Kirim Pesan Cepat</h3>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Klik tombol untuk langsung chat (pesan otomatis).
-              </p>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">Klik tombol untuk langsung chat (pesan otomatis).</p>
 
               <div className="mt-5 grid gap-3">
                 <QuickMessage
@@ -1183,15 +1206,7 @@ export default function Page() {
   );
 }
 
-function Reason({
-  icon,
-  title,
-  desc,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}) {
+function Reason({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="text-center">
       <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/15">
