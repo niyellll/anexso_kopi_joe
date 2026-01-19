@@ -21,7 +21,7 @@ const TOKOPEDIA_URL = "https://www.tokopedia.com/anexso-kopi-joe";
 
 // ✅ Pembayaran (placeholder — kamu isi detailnya)
 const PAYMENT = {
-  bankName: "BCA / BRI / Mandiri (isi salah satu)",
+  bankName: "BCA / BRI / Mandiri",
   accountName: "ANEXSO KOPI JOE (isi nama penerima)",
   accountNo: "1234567890 (isi nomor rekening)",
   qrisImage: "", // contoh: "/qris-joe.png" (taruh filenya di /public)
