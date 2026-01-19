@@ -1,105 +1,126 @@
-'use client'
+"use client";
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from "react";
 
-const BRAND = 'Anexso Kopi JOE'
+const BRAND = "Anexso Kopi JOE";
 const TAGLINE =
-  'Kopi pilihan untuk dinikmati di rumah, kantor, maupun hadiah—rasa konsisten, kemasan rapi, dan layanan cepat.'
+  "Kopi pilihan untuk dinikmati di rumah, kantor, maupun hadiah — rasa konsisten, kemasan rapi, dan layanan cepat.";
 const ADDRESS =
-  'Gg. Kamboja CTX No.36, Karang Asem, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281'
-const PHONE_DISPLAY = '+62 858-9999-3742'
-const PHONE_WA = '6285899993742'
-const EMAIL = 'nielpickup@gmail.com'
+  "Gg. kamboja CTX No.36, Karang Asem, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281";
+const PHONE_DISPLAY = "+62 858-9999-3742";
+const PHONE_WA = "6285899993742";
+const EMAIL = "nielpickup@gmail.com";
+const TOKOPEDIA_URL = "https://www.tokopedia.com/anexso-kopi-joe";
+
+// Angka statistik (⚠️ ganti sesuai data asli kamu)
+const STATS = {
+  shipped: "10K+",
+  rating: "4.9/5",
+  satisfaction: "100%",
+};
 
 type Product = {
-  id: string
-  name: string
-  variant: string
-  price: number
-  note: string
-  highlights: string[]
-}
+  id: string;
+  name: string;
+  variant: string;
+  price: number;
+  note: string;
+  bullets: string[];
+};
 
 const PRODUCTS: Product[] = [
   {
-    id: 'instan-50g',
-    name: 'JOE Kopi Bubuk Instan',
-    variant: '50 gram',
+    id: "instan-50g",
+    name: "JOE Kopi Bubuk Instan",
+    variant: "50 gram",
     price: 17000,
-    note: 'Praktis untuk harian, rasa tetap mantap.',
-    highlights: ['Praktis', 'Aroma kuat', 'Cocok untuk pemula'],
+    note: "Praktis untuk harian, rasa tetap mantap.",
+    bullets: ["Praktis", "Aroma kuat", "Cocok untuk pemula"],
   },
   {
-    id: 'sachet-10g',
-    name: 'JOE Coffee Bubuk Sachet',
-    variant: '10 gram',
+    id: "sachet-10g",
+    name: "JOE Coffee Bubuk Sachet",
+    variant: "10 gram",
     price: 35000,
-    note: 'Sachet ringkas untuk dibawa kemana saja.',
-    highlights: ['Ringkas', 'Mudah seduh', 'Travel-friendly'],
+    note: "Sachet ringkas untuk dibawa kemana saja.",
+    bullets: ["Ringkas", "Mudah seduh", "Travel-friendly"],
   },
   {
-    id: 'bubuk-200g',
-    name: 'JOE Coffee Bubuk',
-    variant: '200 gram',
+    id: "bubuk-200g",
+    name: "JOE Coffee Bubuk",
+    variant: "200 gram",
     price: 63000,
-    note: 'Pilihan favorit untuk stok mingguan.',
-    highlights: ['Value terbaik', 'Rasa seimbang', 'Kemasan aman'],
+    note: "Pilihan favorit untuk stok mingguan.",
+    bullets: ["Value", "Rasa seimbang", "Kemasan aman"],
   },
   {
-    id: 'bubuk-100g',
-    name: 'JOE Coffee Kopi Bubuk',
-    variant: '100 gram',
+    id: "bubuk-100g",
+    name: "JOE Coffee Kopi Bubuk",
+    variant: "100 gram",
     price: 33000,
-    note: 'Porsi pas untuk coba rasa sebelum stok besar.',
-    highlights: ['Pas untuk trial', 'Fresh', 'Cocok untuk hadiah'],
+    note: "Porsi pas untuk coba rasa sebelum stok besar.",
+    bullets: ["Pas untuk trial", "Fresh", "Cocok hadiah"],
   },
   {
-    id: 'biji-1kg',
-    name: 'JOE Coffee Bubuk / Biji',
-    variant: '1 Kg',
+    id: "biji-1kg",
+    name: "JOE Coffee Bubuk / Biji",
+    variant: "1 Kg",
     price: 290000,
-    note: 'Untuk kebutuhan kantor, event, atau reseller.',
-    highlights: ['Hemat', 'Konsisten', 'Siap untuk bisnis'],
+    note: "Untuk kantor, event, atau reseller.",
+    bullets: ["Hemat", "Konsisten", "Siap bisnis"],
   },
-]
+];
 
 const TESTIMONIALS = [
   {
-    name: 'Dina',
-    meta: 'Karyawan • Sleman',
-    quote:
-      'Kemasannya rapi, aromanya wangi. Repeat order karena rasanya konsisten.',
+    name: "Dina",
+    meta: "Sleman",
+    quote: "Kemasannya rapi, aromanya wangi. Repeat order karena rasanya konsisten.",
   },
   {
-    name: 'Raka',
-    meta: 'Owner UMKM • Depok',
-    quote:
-      'Respons cepat, pengiriman aman. Cocok untuk stok jualan karena kualitas stabil.',
+    name: "Raka",
+    meta: "Depok",
+    quote: "Respon cepat, pengiriman aman. Cocok untuk stok jualan.",
   },
   {
-    name: 'Maya',
-    meta: 'Mahasiswa • Yogyakarta',
-    quote:
-      'Enak buat daily coffee. Ukuran 100g pas banget buat coba dulu.',
+    name: "Maya",
+    meta: "Yogyakarta",
+    quote: "Enak buat daily coffee. Ukuran 100g pas buat coba dulu.",
   },
-]
+];
 
 function formatIDR(n: number) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
     maximumFractionDigits: 0,
-  }).format(n)
+  }).format(n);
 }
 
 function cx(...classes: Array<string | false | undefined | null>) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
-function Icon({ name }: { name: 'moon' | 'sun' | 'shield' | 'truck' | 'spark' | 'whatsapp' | 'phone' | 'mail' | 'map' | 'cart' }) {
-  const common = 'w-5 h-5'
+function Icon({
+  name,
+}: {
+  name:
+    | "moon"
+    | "sun"
+    | "shield"
+    | "truck"
+    | "clock"
+    | "heart"
+    | "cart"
+    | "whatsapp"
+    | "tokopedia"
+    | "phone"
+    | "mail"
+    | "map";
+}) {
+  const common = "w-5 h-5";
   switch (name) {
-    case 'moon':
+    case "moon":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -110,8 +131,8 @@ function Icon({ name }: { name: 'moon' | 'sun' | 'shield' | 'truck' | 'spark' | 
             strokeLinejoin="round"
           />
         </svg>
-      )
-    case 'sun':
+      );
+    case "sun":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -129,8 +150,8 @@ function Icon({ name }: { name: 'moon' | 'sun' | 'shield' | 'truck' | 'spark' | 
             strokeLinejoin="round"
           />
         </svg>
-      )
-    case 'shield':
+      );
+    case "shield":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -141,47 +162,54 @@ function Icon({ name }: { name: 'moon' | 'sun' | 'shield' | 'truck' | 'spark' | 
             strokeLinejoin="round"
           />
         </svg>
-      )
-    case 'truck':
+      );
+    case "truck":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M3 7h11v10H3V7Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M14 11h4l3 3v3h-7v-6Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
+          <path d="M3 7h11v10H3V7Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M14 11h4l3 3v3h-7v-6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
           <path
             d="M7 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM18 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
             stroke="currentColor"
             strokeWidth="1.6"
           />
         </svg>
-      )
-    case 'spark':
+      );
+    case "clock":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
-            d="M12 2l1.2 4.2L17.4 8 13.2 9.2 12 13.4 10.8 9.2 6.6 8l4.2-1.8L12 2Z"
+            d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z"
             stroke="currentColor"
             strokeWidth="1.6"
-            strokeLinejoin="round"
           />
+          <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      );
+    case "heart":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
-            d="M19 13l.7 2.3L22 16l-2.3.7L19 19l-.7-2.3L16 16l2.3-.7L19 13Z"
+            d="M12 21s-7-4.6-9.2-9C1.3 8.3 3.4 5.8 6.3 5.5c1.6-.2 3.1.5 3.9 1.6.8-1.1 2.3-1.8 3.9-1.6 2.9.3 5 2.8 3.5 6.5C19 16.4 12 21 12 21Z"
             stroke="currentColor"
             strokeWidth="1.6"
             strokeLinejoin="round"
           />
         </svg>
-      )
-    case 'whatsapp':
+      );
+    case "cart":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6h15l-2 9H7L6 6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M6 6 5 3H2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <path
+            d="M9 20a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 20ZM17 20a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 17 20Z"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          />
+        </svg>
+      );
+    case "whatsapp":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -195,8 +223,21 @@ function Icon({ name }: { name: 'moon' | 'sun' | 'shield' | 'truck' | 'spark' | 
             fill="currentColor"
           />
         </svg>
-      )
-    case 'phone':
+      );
+    case "tokopedia":
+      // Icon simple "shop"
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M4 7h16l-1 14H5L4 7Z"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
+          <path d="M8 7a4 4 0 0 1 8 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      );
+    case "phone":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -206,25 +247,15 @@ function Icon({ name }: { name: 'moon' | 'sun' | 'shield' | 'truck' | 'spark' | 
             strokeLinejoin="round"
           />
         </svg>
-      )
-    case 'mail':
+      );
+    case "mail":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M4 6h16v12H4V6Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-          <path
-            d="m4 7 8 6 8-6"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
+          <path d="M4 6h16v12H4V6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
         </svg>
-      )
-    case 'map':
+      );
+    case "map":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -240,179 +271,228 @@ function Icon({ name }: { name: 'moon' | 'sun' | 'shield' | 'truck' | 'spark' | 
             strokeLinejoin="round"
           />
         </svg>
-      )
-    case 'cart':
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M6 6h15l-2 9H7L6 6Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M6 6 5 3H2"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-          <path
-            d="M9 20a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 20ZM17 20a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 17 20Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-          />
-        </svg>
-      )
+      );
     default:
-      return null
+      return null;
   }
 }
 
+function SoftCard({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cx(
+        "gpro-card rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] shadow-[var(--shadow-soft)] backdrop-blur",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function Page() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
-  const [query, setQuery] = useState('')
-  const [cart, setCart] = useState<Record<string, number>>({})
+  const [dark, setDark] = useState(false);
+  const [query, setQuery] = useState("");
+  const [cart, setCart] = useState<Record<string, number>>({});
+  const [progress, setProgress] = useState(0);
 
-  // Init theme (localStorage -> system preference)
+  // theme init (sync with localStorage + OS preference)
   useEffect(() => {
-    const saved = typeof window !== 'undefined' ? localStorage.getItem('theme') : null
-    if (saved === 'light' || saved === 'dark') {
-      setTheme(saved)
-      document.documentElement.classList.toggle('dark', saved === 'dark')
-      return
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+    else if (saved === "light") setDark(false);
+    else {
+      const prefers = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+      setDark(Boolean(prefers));
     }
-    const prefersDark =
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    const initial: 'light' | 'dark' = prefersDark ? 'dark' : 'light'
-    setTheme(initial)
-    document.documentElement.classList.toggle('dark', initial === 'dark')
-  }, [])
+  }, []);
 
-  // Apply theme changes
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem('theme', theme)
-  }, [theme])
+    localStorage.setItem("theme", dark ? "dark" : "light");
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return PRODUCTS
+  // scroll progress bar
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      const p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      setProgress(p);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // reveal on scroll
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          (e.target as HTMLElement).classList.add("is-visible");
+          io.unobserve(e.target);
+        });
+      },
+      { threshold: 0.12 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  const mapsLink = useMemo(() => {
+    const q = encodeURIComponent(`${BRAND} ${ADDRESS}`);
+    return `https://www.google.com/maps/search/?api=1&query=${q}`;
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return PRODUCTS;
     return PRODUCTS.filter((p) =>
-      `${p.name} ${p.variant} ${p.note} ${p.highlights.join(' ')}`.toLowerCase().includes(q)
-    )
-  }, [query])
+      `${p.name} ${p.variant} ${p.note} ${p.bullets.join(" ")}`
+        .toLowerCase()
+        .includes(q)
+    );
+  }, [query]);
 
   const cartCount = useMemo(
     () => Object.values(cart).reduce((a, b) => a + b, 0),
     [cart]
-  )
+  );
 
   const cartItems = useMemo(() => {
     return PRODUCTS.filter((p) => cart[p.id]).map((p) => ({
       ...p,
       qty: cart[p.id],
       subtotal: cart[p.id] * p.price,
-    }))
-  }, [cart])
+    }));
+  }, [cart]);
 
   const cartTotal = useMemo(
-    () => cartItems.reduce((sum, item) => sum + item.subtotal, 0),
+    () => cartItems.reduce((sum, i) => sum + i.subtotal, 0),
     [cartItems]
-  )
+  );
 
   function addToCart(id: string) {
-    setCart((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }))
+    setCart((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
   }
   function decFromCart(id: string) {
     setCart((prev) => {
-      const next = { ...prev }
-      const qty = (next[id] ?? 0) - 1
-      if (qty <= 0) delete next[id]
-      else next[id] = qty
-      return next
-    })
+      const next = { ...prev };
+      const qty = (next[id] ?? 0) - 1;
+      if (qty <= 0) delete next[id];
+      else next[id] = qty;
+      return next;
+    });
   }
   function removeFromCart(id: string) {
     setCart((prev) => {
-      const next = { ...prev }
-      delete next[id]
-      return next
-    })
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }
+  function clearCart() {
+    setCart({});
   }
 
-  const mapsLink = useMemo(() => {
-    const q = encodeURIComponent(`Anexso Kopi JOE ${ADDRESS}`)
-    return `https://www.google.com/maps/search/?api=1&query=${q}`
-  }, [])
-
-  const waLink = useMemo(() => {
+  const waCheckoutLink = useMemo(() => {
     const lines = [
       `Halo ${BRAND}, saya mau pesan:`,
-      ...cartItems.map((i) => `- ${i.name} (${i.variant}) x${i.qty} = ${formatIDR(i.subtotal)}`),
-      cartItems.length ? `Total: ${formatIDR(cartTotal)}` : '(belum ada item)',
-      '',
-      'Mohon info ketersediaan & ongkir ya. Terima kasih.',
-    ]
-    const text = encodeURIComponent(lines.join('\n'))
-    return `https://wa.me/${PHONE_WA}?text=${text}`
-  }, [cartItems, cartTotal])
+      ...cartItems.map(
+        (i) => `- ${i.name} (${i.variant}) x${i.qty} = ${formatIDR(i.subtotal)}`
+      ),
+      cartItems.length ? `Total: ${formatIDR(cartTotal)}` : "(keranjang masih kosong)",
+      "",
+      "Mohon info ketersediaan & ongkir ya. Terima kasih.",
+    ];
+    const text = encodeURIComponent(lines.join("\n"));
+    return `https://wa.me/${PHONE_WA}?text=${text}`;
+  }, [cartItems, cartTotal]);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-      {/* Top bar */}
-      <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/70 backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/60">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      {/* background subtle */}
+      <div className="pointer-events-none fixed inset-0 -z-10 gpro-animated-bg opacity-80" />
+
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-[color:var(--border)] bg-[color:var(--card)] backdrop-blur">
+        {/* progress bar */}
+        <div className="h-1 w-full bg-[color:var(--border)]">
+          <div
+            className="h-1 bg-[color:var(--primary)]"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 shadow-sm dark:border-slate-800 dark:from-slate-900 dark:to-slate-950">
-              <span className="text-sm font-black tracking-tight">JOE</span>
+            <div className="grid h-10 w-10 place-items-center rounded-2xl border border-[color:var(--border)] bg-white/40 font-black tracking-tight dark:bg-white/5">
+              JOE
             </div>
             <div className="leading-tight">
-              <div className="text-sm font-semibold">{BRAND}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400">Yogyakarta • Coffee & Supply</div>
+              <div className="text-sm font-black">{BRAND}</div>
+              <div className="text-xs text-[color:var(--muted)]">
+                Sleman • Yogyakarta
+              </div>
             </div>
           </div>
 
-          <nav className="hidden items-center gap-6 text-sm md:flex">
-            <a href="#produk" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Produk</a>
-            <a href="#kenapa" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Kenapa Kami</a>
-            <a href="#testimoni" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Testimoni</a>
-            <a href="#kontak" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Kontak</a>
+          <nav className="hidden items-center gap-6 text-sm text-[color:var(--muted)] md:flex">
+            <a className="hover:opacity-80" href="#produk">Produk</a>
+            <a className="hover:opacity-80" href="#kenapa">Kenapa</a>
+            <a className="hover:opacity-80" href="#testimoni">Testimoni</a>
+            <a className="hover:opacity-80" href="#kontak">Kontak</a>
           </nav>
 
           <div className="flex items-center gap-2">
             <button
-              type="button"
-              onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900/40"
+              onClick={() => setDark((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
               aria-label="Toggle dark mode"
               title="Toggle dark mode"
             >
-              {theme === 'dark' ? <Icon name="moon" /> : <Icon name="sun" />}
-              <span className="hidden sm:inline">{theme === 'dark' ? 'Dark' : 'Light'}</span>
+              {dark ? <Icon name="moon" /> : <Icon name="sun" />}
+              <span className="hidden sm:inline">{dark ? "Dark" : "Light"}</span>
             </button>
 
             <a
-              href={waLink}
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+              href={TOKOPEDIA_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="hidden items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5 sm:inline-flex"
+              title="Buka Tokopedia"
+            >
+              <Icon name="tokopedia" />
+              Tokopedia
+            </a>
+
+            <a
+              href={waCheckoutLink}
+              className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+              title="Order via WhatsApp"
             >
               <Icon name="whatsapp" />
               Order
-              <span className="hidden sm:inline">via WA</span>
             </a>
 
             <a
               href="#checkout"
-              className="relative inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:text-slate-100 dark:hover:bg-slate-900/40"
-              title="Lihat keranjang"
-              aria-label="Lihat keranjang"
+              className="relative inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              title="Keranjang"
             >
               <Icon name="cart" />
               <span className="hidden sm:inline">Keranjang</span>
               {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 grid h-6 min-w-6 place-items-center rounded-full bg-emerald-500 px-1 text-xs font-black text-white">
+                <span className="absolute -right-2 -top-2 grid h-6 min-w-6 place-items-center rounded-full bg-[color:var(--primary)] px-1 text-xs font-black text-[color:var(--primary-foreground)]">
                   {cartCount}
                 </span>
               )}
@@ -422,68 +502,120 @@ export default function Page() {
       </header>
 
       {/* Hero */}
-      <section className="relative">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(148,163,184,0.28),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(34,197,94,0.14),transparent_35%)] dark:bg-[radial-gradient(circle_at_20%_20%,rgba(30,41,59,0.65),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(34,197,94,0.18),transparent_35%)]" />
-        <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 md:pb-16 md:pt-16">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center">
+      <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 md:pb-14 md:pt-14">
+        <div className="gpro-reveal" data-reveal>
+          <div className="grid gap-8 md:grid-cols-2 md:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-200">
-                <Icon name="spark" />
-                Ready stock • Respon cepat • Packing aman
+              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-1 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
+                <span className="h-2 w-2 rounded-full bg-[color:var(--primary)]" />
+                Ready stock • Packing aman • Respon cepat
               </div>
 
-              <h1 className="mt-4 text-4xl font-black tracking-tight md:text-5xl">
-                Kopi yang bikin yakin:
-                <span className="block text-slate-700 dark:text-slate-200">
-                  kualitas rapi, layanan profesional.
-                </span>
+              <h1 className="mt-4 text-4xl font-black leading-tight md:text-5xl">
+                Kopi yang bikin{" "}
+                <span className="text-[color:var(--primary)]">percaya</span>
+                <br />
+                dari rasa sampai pelayanan.
               </h1>
 
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300">
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-[color:var(--muted)]">
                 {TAGLINE}
               </p>
 
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-wrap gap-3">
                 <a
-                  href={waLink}
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-emerald-500"
+                  href={waCheckoutLink}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
                 >
                   <Icon name="whatsapp" />
-                  Konsultasi & Order
+                  Order via WhatsApp
+                </a>
+
+                <a
+                  href={TOKOPEDIA_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"
+                >
+                  <Icon name="tokopedia" />
+                  Beli di Tokopedia
                 </a>
 
                 <a
                   href={`tel:${PHONE_WA}`}
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-5 py-3 text-sm font-bold text-slate-800 shadow-sm hover:bg-white dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-100 dark:hover:bg-slate-900/40"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
                 >
                   <Icon name="phone" />
                   Telepon
                 </a>
 
                 <a
-                  href="#produk"
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900/40"
+                  href={mapsLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
                 >
-                  Lihat Produk
-                  <span aria-hidden>→</span>
+                  <Icon name="map" />
+                  Lokasi
                 </a>
               </div>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <TrustCard title="Aman & Rapi" desc="Packing aman, cocok untuk gift." icon="shield" />
-                <TrustCard title="Pengiriman" desc="Proses cepat sesuai antrian." icon="truck" />
-                <TrustCard title="Kualitas" desc="Rasa konsisten, siap repeat." icon="spark" />
+                <SoftCard className="p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
+                      <Icon name="shield" />
+                    </span>
+                    <div>
+                      <div className="text-sm font-black">Kualitas Terjaga</div>
+                      <div className="text-xs text-[color:var(--muted)]">
+                        Rasa konsisten, siap repeat order.
+                      </div>
+                    </div>
+                  </div>
+                </SoftCard>
+
+                <SoftCard className="p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
+                      <Icon name="truck" />
+                    </span>
+                    <div>
+                      <div className="text-sm font-black">Packing Aman</div>
+                      <div className="text-xs text-[color:var(--muted)]">
+                        Rapi, cocok juga untuk hadiah.
+                      </div>
+                    </div>
+                  </div>
+                </SoftCard>
+
+                <SoftCard className="p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
+                      <Icon name="heart" />
+                    </span>
+                    <div>
+                      <div className="text-sm font-black">Customer Care</div>
+                      <div className="text-xs text-[color:var(--muted)]">
+                        Respons cepat via WA.
+                      </div>
+                    </div>
+                  </div>
+                </SoftCard>
               </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/40">
+            {/* Right card */}
+            <SoftCard className="p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <div className="text-sm font-semibold">Cari produk</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">Ketik nama/varian</div>
+                  <div className="text-sm font-black">Cari produk</div>
+                  <div className="text-xs text-[color:var(--muted)]">
+                    Ketik nama/varian
+                  </div>
                 </div>
-                <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white dark:bg-white dark:text-slate-900">
-                  {filtered.length} item
+                <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">
+                  {filteredProducts.length} item
                 </span>
               </div>
 
@@ -491,486 +623,616 @@ export default function Page() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Contoh: 200g, sachet, instan..."
-                className="mt-4 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none ring-0 placeholder:text-slate-400 focus:border-slate-300 dark:border-slate-800 dark:bg-slate-950 dark:placeholder:text-slate-500 dark:focus:border-slate-700"
+                className="mt-4 w-full rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5"
               />
 
               <div className="mt-5 space-y-3">
-                {filtered.slice(0, 4).map((p) => (
+                {filteredProducts.slice(0, 4).map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                    className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5"
                   >
-                    <div>
-                      <div className="text-sm font-semibold">{p.name}</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">
-                        {p.variant} • {formatIDR(p.price)}
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <div className="text-sm font-black">{p.name}</div>
+                        <div className="text-xs text-[color:var(--muted)]">
+                          {p.variant} • {formatIDR(p.price)}
+                        </div>
+                        <div className="mt-2 text-xs text-[color:var(--muted)]">
+                          {p.note}
+                        </div>
                       </div>
-                      <div className="mt-2 text-xs text-slate-600 dark:text-slate-300">{p.note}</div>
+                      <button
+                        onClick={() => addToCart(p.id)}
+                        className="shrink-0 rounded-xl bg-[color:var(--primary)] px-3 py-2 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                      >
+                        + Keranjang
+                      </button>
                     </div>
-
-                    <button
-                      onClick={() => addToCart(p.id)}
-                      className="shrink-0 rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
-                    >
-                      + Keranjang
-                    </button>
                   </div>
                 ))}
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
-                  Tip: klik <span className="font-bold">+ Keranjang</span>, lalu checkout lewat WhatsApp.
+                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
+                  Tip: Tambahkan ke keranjang, lalu checkout via WhatsApp.
                 </div>
               </div>
-            </div>
+            </SoftCard>
           </div>
         </div>
       </section>
 
       {/* Produk */}
-      <section id="produk" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <h2 className="text-2xl font-black tracking-tight md:text-3xl">Produk Kopi</h2>
-            <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
-              Pilih ukuran sesuai kebutuhan. Semua produk dipacking rapi dan siap kirim.
-            </p>
-          </div>
-          <a
-            href={waLink}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-100 dark:hover:bg-slate-900/40"
-          >
-            <Icon name="whatsapp" />
-            Tanya stok / reseller
-          </a>
-        </div>
-
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {PRODUCTS.map((p) => {
-            const qty = cart[p.id] ?? 0
-            return (
-              <div
-                key={p.id}
-                className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-950"
+      <section id="produk" className="mx-auto max-w-6xl px-4 py-10">
+        <div className="gpro-reveal" data-reveal>
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <h2 className="text-2xl font-black md:text-3xl">Produk Kopi</h2>
+              <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
+                Pilih ukuran sesuai kebutuhan. Semua produk dipacking rapi dan siap kirim.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href={TOKOPEDIA_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">{p.variant}</div>
-                    <div className="text-lg font-black leading-tight">{p.name}</div>
-                  </div>
-                  <span className="rounded-full bg-emerald-600/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                    {formatIDR(p.price)}
-                  </span>
-                </div>
+                <Icon name="tokopedia" />
+                Tokopedia
+              </a>
+              <a
+                href={waCheckoutLink}
+                className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+              >
+                <Icon name="whatsapp" />
+                Order WA
+              </a>
+            </div>
+          </div>
 
-                <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{p.note}</p>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {p.highlights.map((h) => (
-                    <span
-                      key={h}
-                      className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-slate-800 dark:bg-slate-900/30 dark:text-slate-200"
-                    >
-                      {h}
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {PRODUCTS.map((p) => {
+              const qty = cart[p.id] ?? 0;
+              return (
+                <SoftCard key={p.id} className="p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-xs font-bold text-[color:var(--muted)]">
+                        {p.variant}
+                      </div>
+                      <div className="text-lg font-black leading-tight">
+                        {p.name}
+                      </div>
+                    </div>
+                    <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">
+                      {formatIDR(p.price)}
                     </span>
-                  ))}
-                </div>
+                  </div>
 
-                <div className="mt-5 flex items-center justify-between gap-3">
-                  {qty > 0 ? (
-                    <div className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1 dark:border-slate-800 dark:bg-slate-950">
-                      <button
-                        onClick={() => decFromCart(p.id)}
-                        className="grid h-9 w-9 place-items-center rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900/40"
-                        aria-label="Kurangi"
+                  <p className="mt-3 text-sm text-[color:var(--muted)]">{p.note}</p>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {p.bullets.map((b) => (
+                      <span
+                        key={b}
+                        className="rounded-full border border-[color:var(--border)] bg-white/50 px-3 py-1 text-xs font-semibold dark:bg-white/10"
                       >
-                        −
-                      </button>
-                      <div className="min-w-8 text-center text-sm font-bold">{qty}</div>
+                        {b}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 flex items-center justify-between gap-3">
+                    {qty > 0 ? (
+                      <div className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/50 px-2 py-1 dark:bg-white/10">
+                        <button
+                          onClick={() => decFromCart(p.id)}
+                          className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
+                          aria-label="Kurangi"
+                        >
+                          −
+                        </button>
+                        <div className="min-w-8 text-center text-sm font-black">
+                          {qty}
+                        </div>
+                        <button
+                          onClick={() => addToCart(p.id)}
+                          className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
+                          aria-label="Tambah"
+                        >
+                          +
+                        </button>
+                      </div>
+                    ) : (
                       <button
                         onClick={() => addToCart(p.id)}
-                        className="grid h-9 w-9 place-items-center rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900/40"
-                        aria-label="Tambah"
+                        className="rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
                       >
-                        +
+                        + Keranjang
                       </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => addToCart(p.id)}
-                      className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+                    )}
+
+                    <a
+                      href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+                        `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info stok & ongkir ya.`
+                      )}`}
+                      className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
                     >
-                      + Keranjang
+                      Chat WA →
+                    </a>
+                  </div>
+
+                  {qty > 0 && (
+                    <button
+                      onClick={() => removeFromCart(p.id)}
+                      className="mt-3 w-full rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-xs font-black hover:opacity-90 dark:bg-white/5"
+                    >
+                      Hapus dari keranjang
                     </button>
                   )}
-
-                  <a
-                    href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                      `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info stok & ongkir ya.`
-                    )}`}
-                    className="text-sm font-semibold text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300"
-                  >
-                    Chat WA →
-                  </a>
-                </div>
-
-                {qty > 0 && (
-                  <button
-                    onClick={() => removeFromCart(p.id)}
-                    className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900/40"
-                  >
-                    Hapus dari keranjang
-                  </button>
-                )}
-              </div>
-            )
-          })}
+                </SoftCard>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* Kenapa kami */}
-      <section id="kenapa" className="border-y border-slate-200/70 bg-slate-50/60 dark:border-slate-800/70 dark:bg-slate-900/20">
-        <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
-          <h2 className="text-2xl font-black tracking-tight md:text-3xl">Kenapa {BRAND}?</h2>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
-            Kami fokus pada hal yang bikin pelanggan nyaman: komunikasi jelas, kualitas stabil, dan pengiriman aman.
-          </p>
+      {/* Kenapa pilih (style seperti contoh) */}
+      <section id="kenapa" className="py-14">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="gpro-reveal" data-reveal>
+            <div
+              className="rounded-[var(--radius)] border border-[color:var(--border)] p-10 shadow-[var(--shadow)]"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(42,26,16,0.92), rgba(42,26,16,0.86))",
+                color: "#fff7ee",
+              }}
+            >
+              <h2 className="text-center text-3xl font-black md:text-4xl">
+                Kenapa Pilih JOE Coffee?
+              </h2>
+              <p className="mt-2 text-center text-sm opacity-85">
+                Komitmen kami untuk kepuasan Anda
+              </p>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            <Feature
-              title="Kualitas konsisten"
-              desc="Rasa dan aroma dijaga stabil. Cocok untuk repeat order maupun kebutuhan bisnis."
-            />
-            <Feature
-              title="Pelayanan profesional"
-              desc="Respons cepat, info jelas, dan siap bantu rekomendasi sesuai selera dan kebutuhan."
-            />
-            <Feature
-              title="Packing aman"
-              desc="Kemasan rapi dan aman untuk pengiriman, cocok juga untuk hadiah."
-            />
-          </div>
+              <div className="mt-10 grid gap-8 md:grid-cols-4">
+                <Reason
+                  icon={<Icon name="shield" />}
+                  title="Kualitas Terjaga"
+                  desc="Kopi pilihan, rasa konsisten dan kemasan rapi."
+                />
+                <Reason
+                  icon={<Icon name="truck" />}
+                  title="Pengiriman Cepat"
+                  desc="Proses cepat sesuai antrian & packing aman."
+                />
+                <Reason
+                  icon={<Icon name="clock" />}
+                  title="Fresh & Wangi"
+                  desc="Aroma maksimal untuk pengalaman coffee lovers."
+                />
+                <Reason
+                  icon={<Icon name="heart" />}
+                  title="Customer Support"
+                  desc="Kami siap membantu via WhatsApp."
+                />
+              </div>
 
-          <div className="mt-10 grid gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950 md:grid-cols-3">
-            <Stat label="Lokasi" value="Sleman, DIY" />
-            <Stat label="Channel order" value="WhatsApp / Telepon" />
-            <Stat label="Skala" value="Retail • Kantor • Reseller" />
+              <div className="mt-10 rounded-[var(--radius)] bg-white/10 p-6">
+                <div className="grid gap-6 text-center md:grid-cols-3">
+                  <StatBig value={STATS.shipped} label="Paket Terkirim" />
+                  <StatBig value={STATS.rating} label="Rating Pelanggan" />
+                  <StatBig value={STATS.satisfaction} label="Kepuasan" />
+                </div>
+                <p className="mt-4 text-center text-xs opacity-75">
+                  *Ganti angka statistik sesuai data asli kamu agar lebih kredibel.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Testimoni */}
-      <section id="testimoni" className="mx-auto max-w-6xl px-4 py-12 md:py-16">
-        <h2 className="text-2xl font-black tracking-tight md:text-3xl">Testimoni Pelanggan</h2>
-        <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
-          Beberapa feedback dari pelanggan kami (contoh). Kamu bisa ganti nama & kata-katanya.
-        </p>
+      <section id="testimoni" className="mx-auto max-w-6xl px-4 py-14">
+        <div className="gpro-reveal" data-reveal>
+          <h2 className="text-2xl font-black md:text-3xl">Testimoni Pelanggan</h2>
+          <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
+            Tambahkan testimoni real untuk meningkatkan trust (bisa kamu edit).
+          </p>
 
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {TESTIMONIALS.map((t) => (
-            <div
-              key={t.name}
-              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950"
-            >
-              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200">“{t.quote}”</p>
-              <div className="mt-4 text-sm font-bold">{t.name}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400">{t.meta}</div>
-            </div>
-          ))}
-        </div>
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {TESTIMONIALS.map((t) => (
+              <SoftCard key={t.name} className="p-6">
+                <p className="text-sm leading-relaxed text-[color:var(--muted)]">
+                  “{t.quote}”
+                </p>
+                <div className="mt-4 text-sm font-black">{t.name}</div>
+                <div className="text-xs text-[color:var(--muted)]">{t.meta}</div>
+              </SoftCard>
+            ))}
+          </div>
 
-        <div className="mt-10">
-          <h3 className="text-lg font-black">FAQ</h3>
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <Faq q="Bisa kirim luar kota?" a="Bisa. Kami packing aman dan kirim sesuai layanan ekspedisi yang tersedia." />
-            <Faq q="Bisa pesan untuk kantor / event?" a="Bisa. Varian 1 Kg cocok untuk kantor, event, atau reseller. Hubungi WA untuk diskusi." />
-            <Faq q="Bisa pilih bubuk atau biji?" a="Tersedia bubuk dan (jika tersedia) biji. Tanyakan stok terbaru via WhatsApp." />
-            <Faq q="Pembayaran bagaimana?" a="Konfirmasi via WhatsApp, lalu kami info metode pembayaran yang tersedia." />
+          <div className="mt-10 grid gap-3 md:grid-cols-2">
+            <Faq
+              q="Bisa kirim luar kota?"
+              a="Bisa. Packing aman dan pengiriman sesuai layanan ekspedisi yang tersedia."
+            />
+            <Faq
+              q="Bisa untuk kantor / reseller?"
+              a="Bisa. Varian 1 Kg cocok untuk kantor, event, atau reseller. Chat WA untuk diskusi."
+            />
+            <Faq
+              q="Pembayaran bagaimana?"
+              a="Konfirmasi via WhatsApp/Tokopedia. Kami bantu sesuai opsi yang tersedia."
+            />
+            <Faq
+              q="Bisa tanya rekomendasi?"
+              a="Bisa. Ceritakan selera kamu (pahit/medium/smooth), nanti kami bantu rekomendasi."
+            />
           </div>
         </div>
       </section>
 
       {/* Checkout */}
-      <section id="checkout" className="border-t border-slate-200/70 bg-slate-50/60 dark:border-slate-800/70 dark:bg-slate-900/20">
-        <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <section id="checkout" className="mx-auto max-w-6xl px-4 pb-16 pt-6">
+        <div className="gpro-reveal" data-reveal>
+          <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
             <div>
-              <h2 className="text-2xl font-black tracking-tight md:text-3xl">Checkout</h2>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-                Keranjang kamu akan dibuat menjadi pesan otomatis untuk WhatsApp.
+              <h2 className="text-2xl font-black md:text-3xl">Checkout</h2>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                Keranjang akan dibuat menjadi pesan otomatis untuk WhatsApp.
               </p>
             </div>
-            <a
-              href={waLink}
-              className={cx(
-                'inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black shadow-sm',
-                cartItems.length
-                  ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                  : 'bg-slate-300 text-slate-600 cursor-not-allowed dark:bg-slate-800 dark:text-slate-400'
-              )}
-              aria-disabled={!cartItems.length}
-              onClick={(e) => {
-                if (!cartItems.length) e.preventDefault()
-              }}
-            >
-              <Icon name="whatsapp" />
-              Kirim Pesanan via WA
-            </a>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={clearCart}
+                className="rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              >
+                Kosongkan
+              </button>
+              <a
+                href={waCheckoutLink}
+                className={cx(
+                  "inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-black",
+                  cartItems.length
+                    ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                    : "cursor-not-allowed bg-white/40 text-[color:var(--muted)] dark:bg-white/5"
+                )}
+                aria-disabled={!cartItems.length}
+                onClick={(e) => {
+                  if (!cartItems.length) e.preventDefault();
+                }}
+              >
+                <Icon name="whatsapp" />
+                Kirim via WA
+              </a>
+              <a
+                href={TOKOPEDIA_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-black hover:opacity-90 dark:bg-white/5"
+              >
+                <Icon name="tokopedia" />
+                Tokopedia
+              </a>
+            </div>
           </div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-5">
-            <div className="lg:col-span-3">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-bold">Item di keranjang</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">{cartCount} item</div>
-                </div>
+            <SoftCard className="p-6 lg:col-span-3">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-black">Item di keranjang</div>
+                <div className="text-xs text-[color:var(--muted)]">{cartCount} item</div>
+              </div>
 
-                <div className="mt-4 space-y-3">
-                  {cartItems.length ? (
-                    cartItems.map((i) => (
-                      <div
-                        key={i.id}
-                        className="flex items-start justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
-                      >
+              <div className="mt-4 space-y-3">
+                {cartItems.length ? (
+                  cartItems.map((i) => (
+                    <div
+                      key={i.id}
+                      className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5"
+                    >
+                      <div className="flex items-start justify-between gap-3">
                         <div>
-                          <div className="text-sm font-semibold">{i.name}</div>
-                          <div className="text-xs text-slate-500 dark:text-slate-400">
+                          <div className="text-sm font-black">{i.name}</div>
+                          <div className="text-xs text-[color:var(--muted)]">
                             {i.variant} • {formatIDR(i.price)}
                           </div>
-                          <div className="mt-2 text-xs font-bold text-slate-700 dark:text-slate-200">
+                          <div className="mt-2 text-xs font-black">
                             Subtotal: {formatIDR(i.subtotal)}
                           </div>
                         </div>
+
                         <div className="flex flex-col items-end gap-2">
-                          <div className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-2 py-1 dark:border-slate-800">
+                          <div className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/50 px-2 py-1 dark:bg-white/10">
                             <button
                               onClick={() => decFromCart(i.id)}
-                              className="grid h-8 w-8 place-items-center rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900/40"
-                              aria-label="Kurangi"
+                              className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
                             >
                               −
                             </button>
                             <div className="min-w-8 text-center text-sm font-black">{i.qty}</div>
                             <button
                               onClick={() => addToCart(i.id)}
-                              className="grid h-8 w-8 place-items-center rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900/40"
-                              aria-label="Tambah"
+                              className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
                             >
                               +
                             </button>
                           </div>
                           <button
                             onClick={() => removeFromCart(i.id)}
-                            className="text-xs font-bold text-rose-600 hover:text-rose-500"
+                            className="text-xs font-black text-[color:var(--primary)] hover:opacity-80"
                           >
                             Hapus
                           </button>
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    <div className="rounded-2xl border border-dashed border-slate-300 p-6 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300">
-                      Keranjang masih kosong. Tambahkan produk dari bagian <a className="font-bold underline" href="#produk">Produk</a>.
                     </div>
-                  )}
+                  ))
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-[color:var(--border)] p-6 text-sm text-[color:var(--muted)]">
+                    Keranjang kosong. Tambahkan produk dari bagian{" "}
+                    <a className="font-black underline" href="#produk">
+                      Produk
+                    </a>
+                    .
+                  </div>
+                )}
+              </div>
+            </SoftCard>
+
+            <SoftCard className="p-6 lg:col-span-2">
+              <div className="text-sm font-black">Ringkasan</div>
+
+              <div className="mt-4 space-y-2 text-sm">
+                <div className="flex items-center justify-between text-[color:var(--muted)]">
+                  <span>Total item</span>
+                  <span className="font-black text-[var(--foreground)]">{cartCount}</span>
+                </div>
+                <div className="flex items-center justify-between text-[color:var(--muted)]">
+                  <span>Total harga</span>
+                  <span className="font-black text-[var(--foreground)]">{formatIDR(cartTotal)}</span>
+                </div>
+
+                <div className="mt-3 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
+                  Ongkir & ketersediaan dikonfirmasi via WhatsApp sesuai alamat pengiriman.
                 </div>
               </div>
-            </div>
 
-            <div className="lg:col-span-2">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-sm font-bold">Ringkasan</div>
-                <div className="mt-4 space-y-2 text-sm">
-                  <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                    <span>Total item</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{cartCount}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                    <span>Total harga</span>
-                    <span className="font-black text-slate-900 dark:text-white">{formatIDR(cartTotal)}</span>
-                  </div>
-                  <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/30 dark:text-slate-300">
-                    Ongkir & ketersediaan dikonfirmasi via WhatsApp sesuai alamat pengiriman.
-                  </div>
-                </div>
+              <a
+                href={waCheckoutLink}
+                className={cx(
+                  "mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black",
+                  cartItems.length
+                    ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                    : "cursor-not-allowed bg-white/40 text-[color:var(--muted)] dark:bg-white/5"
+                )}
+                aria-disabled={!cartItems.length}
+                onClick={(e) => {
+                  if (!cartItems.length) e.preventDefault();
+                }}
+              >
+                <Icon name="whatsapp" />
+                Checkout via WhatsApp
+              </a>
 
-                <a
-                  href={waLink}
-                  className={cx(
-                    'mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black shadow-sm',
-                    cartItems.length
-                      ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                      : 'bg-slate-300 text-slate-600 cursor-not-allowed dark:bg-slate-800 dark:text-slate-400'
-                  )}
-                  aria-disabled={!cartItems.length}
-                  onClick={(e) => {
-                    if (!cartItems.length) e.preventDefault()
-                  }}
-                >
-                  <Icon name="whatsapp" />
-                  Checkout via WhatsApp
-                </a>
+              <a
+                href={TOKOPEDIA_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"
+              >
+                <Icon name="tokopedia" />
+                Beli via Tokopedia
+              </a>
 
-                <a
-                  href={`tel:${PHONE_WA}`}
-                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-100 dark:hover:bg-slate-900/40"
-                >
-                  <Icon name="phone" />
-                  Telepon: {PHONE_DISPLAY}
-                </a>
-              </div>
-            </div>
+              <a
+                href={`tel:${PHONE_WA}`}
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              >
+                <Icon name="phone" />
+                {PHONE_DISPLAY}
+              </a>
+            </SoftCard>
           </div>
         </div>
       </section>
 
       {/* Kontak */}
-      <section id="kontak" className="mx-auto max-w-6xl px-4 py-12 md:py-16">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-black tracking-tight md:text-3xl">Kontak & Lokasi</h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              Untuk pemesanan, kerja sama, atau reseller—hubungi kami via WhatsApp/telepon/email.
-            </p>
+      <section id="kontak" className="mx-auto max-w-6xl px-4 pb-20 pt-4">
+        <div className="gpro-reveal" data-reveal>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <SoftCard className="p-6">
+              <h2 className="text-2xl font-black md:text-3xl">Hubungi Kami</h2>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                Ada pertanyaan? Kami siap membantu.
+              </p>
 
-            <div className="mt-6 space-y-3">
-              <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 text-emerald-600"><Icon name="map" /></div>
-                  <div>
-                    <div className="text-sm font-bold">Alamat</div>
-                    <div className="mt-1 text-sm text-slate-600 dark:text-slate-300">{ADDRESS}</div>
-                    <a
-                      href={mapsLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-2 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-600 dark:text-emerald-400"
-                    >
-                      Buka di Google Maps →
-                    </a>
+              <div className="mt-5 space-y-3">
+                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5">
+                  <div className="flex items-start gap-3">
+                    <span className="mt-0.5 text-[color:var(--primary)]">
+                      <Icon name="map" />
+                    </span>
+                    <div>
+                      <div className="text-sm font-black">Alamat</div>
+                      <div className="mt-1 text-sm text-[color:var(--muted)]">{ADDRESS}</div>
+                      <a
+                        href={mapsLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 inline-flex items-center gap-2 text-sm font-black text-[color:var(--primary)] hover:opacity-80"
+                      >
+                        Buka di Google Maps →
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <a
-                  href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(`Halo ${BRAND}, saya mau tanya produk & stok ya.`)}`}
-                  className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-950"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-emerald-600"><Icon name="whatsapp" /></div>
-                    <div>
-                      <div className="text-sm font-black">WhatsApp</div>
-                      <div className="text-sm text-slate-600 dark:text-slate-300">{PHONE_DISPLAY}</div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <a
+                    href={waCheckoutLink}
+                    className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 hover:opacity-90 dark:bg-white/5"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-[color:var(--primary)]">
+                        <Icon name="whatsapp" />
+                      </span>
+                      <div>
+                        <div className="text-sm font-black">WhatsApp</div>
+                        <div className="text-sm text-[color:var(--muted)]">{PHONE_DISPLAY}</div>
+                      </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+
+                  <a
+                    href={`mailto:${EMAIL}`}
+                    className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 hover:opacity-90 dark:bg-white/5"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-[color:var(--primary)]">
+                        <Icon name="mail" />
+                      </span>
+                      <div>
+                        <div className="text-sm font-black">Email</div>
+                        <div className="text-sm text-[color:var(--muted)]">{EMAIL}</div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
 
                 <a
-                  href={`mailto:${EMAIL}`}
-                  className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-950"
+                  href={TOKOPEDIA_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="text-emerald-600"><Icon name="mail" /></div>
-                    <div>
-                      <div className="text-sm font-black">Email</div>
-                      <div className="text-sm text-slate-600 dark:text-slate-300">{EMAIL}</div>
-                    </div>
-                  </div>
+                  <Icon name="tokopedia" />
+                  Kunjungi Tokopedia Resmi
                 </a>
               </div>
-            </div>
-          </div>
+            </SoftCard>
 
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <div className="text-sm font-black">Tentang Kami</div>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              {BRAND} melayani pembelian kopi dalam berbagai ukuran (instan, sachet, 100g, 200g, hingga 1kg)
-              untuk kebutuhan personal maupun bisnis. Kami mengutamakan kualitas, komunikasi yang jelas, dan
-              pengiriman yang aman.
-            </p>
+            <SoftCard className="p-6">
+              <h3 className="text-lg font-black">Kirim Pesan Cepat</h3>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                Klik tombol untuk langsung chat (pesan otomatis).
+              </p>
 
-            <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/30 dark:text-slate-200">
-              <div className="font-black">Jam respon</div>
-              <div className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                Setiap hari (menyesuaikan antrian). Untuk order cepat, WhatsApp lebih disarankan.
+              <div className="mt-5 grid gap-3">
+                <QuickMessage
+                  label="Tanya stok & rekomendasi"
+                  href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+                    `Halo ${BRAND}, saya mau tanya stok & rekomendasi kopi yang cocok untuk saya.`
+                  )}`}
+                />
+                <QuickMessage
+                  label="Tanya ongkir & estimasi kirim"
+                  href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+                    `Halo ${BRAND}, saya mau tanya ongkir & estimasi pengiriman untuk alamat saya.`
+                  )}`}
+                />
+                <QuickMessage
+                  label="Kerja sama / reseller"
+                  href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+                    `Halo ${BRAND}, saya tertarik kerja sama/reseller. Mohon info syarat & harga grosir.`
+                  )}`}
+                />
               </div>
-            </div>
 
-            <div className="mt-5 flex flex-wrap gap-3">
-              <a
-                href={waLink}
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-500"
-              >
-                <Icon name="whatsapp" />
-                Chat Sekarang
-              </a>
-              <a
-                href={`tel:${PHONE_WA}`}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-100 dark:hover:bg-slate-900/40"
-              >
-                <Icon name="phone" />
-                Telepon
-              </a>
-            </div>
+              <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
+                © {new Date().getFullYear()} {BRAND}. All rights reserved.
+              </div>
+            </SoftCard>
           </div>
         </div>
-
-        <footer className="mt-12 border-t border-slate-200 pt-6 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
-          © {new Date().getFullYear()} {BRAND}. All rights reserved.
-        </footer>
       </section>
-    </div>
-  )
-}
 
-function TrustCard({
-  title,
-  desc,
-  icon,
-}: {
-  title: string
-  desc: string
-  icon: 'shield' | 'truck' | 'spark'
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950/40">
-      <div className="flex items-start gap-3">
-        <div className="mt-0.5 text-emerald-600">
-          <Icon name={icon} />
-        </div>
-        <div>
-          <div className="text-sm font-black">{title}</div>
-          <div className="text-xs text-slate-600 dark:text-slate-300">{desc}</div>
+      {/* Floating WA (desktop) */}
+      <a
+        href={waCheckoutLink}
+        className="fixed bottom-5 right-5 z-50 hidden items-center gap-2 rounded-full bg-[color:var(--primary)] px-4 py-3 text-sm font-black text-[color:var(--primary-foreground)] shadow-[var(--shadow)] hover:bg-[color:var(--primary-hover)] md:inline-flex"
+        aria-label="Chat WhatsApp"
+      >
+        <Icon name="whatsapp" />
+        Chat WhatsApp
+      </a>
+
+      {/* Sticky bottom bar (mobile) */}
+      <div className="fixed bottom-3 left-1/2 z-50 w-[min(680px,calc(100%-24px))] -translate-x-1/2 md:hidden">
+        <div className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-3 shadow-[var(--shadow)] backdrop-blur">
+          <a
+            href={waCheckoutLink}
+            className="flex-1 rounded-xl bg-[color:var(--primary)] px-4 py-3 text-center text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+          >
+            Order WA
+          </a>
+          <a
+            href={TOKOPEDIA_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-3 text-center text-sm font-black hover:opacity-90 dark:bg-white/5"
+          >
+            Tokopedia
+          </a>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-function Feature({ title, desc }: { title: string; desc: string }) {
+function Reason({
+  icon,
+  title,
+  desc,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-      <div className="text-sm font-black">{title}</div>
-      <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{desc}</p>
+    <div className="text-center">
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/15">
+        <span className="text-white">{icon}</span>
+      </div>
+      <div className="mt-3 text-sm font-black">{title}</div>
+      <div className="mt-2 text-xs opacity-85">{desc}</div>
     </div>
-  )
+  );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function StatBig({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
-      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{label}</div>
-      <div className="mt-1 text-sm font-black">{value}</div>
+    <div>
+      <div className="text-3xl font-black md:text-4xl">{value}</div>
+      <div className="mt-1 text-xs opacity-85">{label}</div>
     </div>
-  )
+  );
 }
 
 function Faq({ q, a }: { q: string; a: string }) {
   return (
-    <details className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm open:shadow-md dark:border-slate-800 dark:bg-slate-950">
+    <details className="gpro-card rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] p-4 shadow-[var(--shadow-soft)]">
       <summary className="cursor-pointer text-sm font-black">{q}</summary>
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{a}</p>
+      <p className="mt-2 text-sm text-[color:var(--muted)]">{a}</p>
     </details>
-  )
+  );
+}
+
+function QuickMessage({ label, href }: { label: string; href: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="gpro-card inline-flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-4 text-sm font-black hover:opacity-90 dark:bg-white/5"
+    >
+      <span>{label}</span>
+      <span className="text-[color:var(--primary)]">→</span>
+    </a>
+  );
 }
