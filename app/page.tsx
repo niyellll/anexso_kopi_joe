@@ -378,7 +378,7 @@ function PlaceholderMedia({ title }: { title: string }) {
     <div className="grid aspect-[4/3] w-full place-items-center rounded-2xl border border-dashed border-[color:var(--border)] bg-white/40 p-4 text-center text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
       <div>
         <div className="text-sm font-black text-[var(--foreground)]">{title}</div>
-        <div className="mt-1">Tempat foto/video — kamu bisa isi nanti</div>
+        <div className="mt-1">Tempat foto/video</div>
       </div>
     </div>
   );
