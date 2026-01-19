@@ -1003,7 +1003,7 @@ export default function Page() {
         <div className="gpro-reveal" data-reveal>
           <h2 className="text-2xl font-black md:text-3xl">Media</h2>
           <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
-            Tempat foto / video. Kamu tinggal upload file ke <span className="font-black">/public</span> lalu isi link sosial di const.
+            Tempat foto / video. Kamu tinggal upload file ke <span className="font-black">/public</span> 
           </p>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-5">
@@ -1032,9 +1032,6 @@ export default function Page() {
               <div className="text-sm font-black">Video / Reels</div>
               <div className="mt-3 rounded-2xl border border-dashed border-[color:var(--border)] bg-white/40 p-4 text-sm text-[color:var(--muted)] dark:bg-white/5">
                 <div className="font-black">Placeholder video</div>
-                <div className="mt-2 opacity-80">
-                  Isi <span className="font-black">SOCIALS.youtubeVideo</span> untuk tombol.
-                </div>
                 <div className="mt-3">
                   <a
                     href={SOCIALS.youtubeVideo || "#"}
