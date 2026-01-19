@@ -3,14 +3,57 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const BRAND = "Anexso Kopi JOE";
+
+// ✅ Keterangan kopi + taste note sesuai request
+const COFFEE_DESC = "Blend Robusta + Arabika — tanpa dicampur bahan lainnya.";
+const TASTE_NOTE = "Kopi pahit tanpa gula.";
+
 const TAGLINE =
-  "Kopi pilihan untuk dinikmati di rumah, kantor, maupun hadiah — rasa konsisten, kemasan rapi, dan layanan cepat.";
+  "Kopi pilihan untuk dinikmati di rumah, kantor, maupun hadiah — rasa konsisten, kemasan rapi, dan layanan cepat. " +
+  `${COFFEE_DESC} ${TASTE_NOTE}`;
+
 const ADDRESS =
   "Gg. kamboja CTX No.36, Karang Asem, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281";
 const PHONE_DISPLAY = "+62 858-9999-3742";
 const PHONE_WA = "6285899993742";
 const EMAIL = "nielpickup@gmail.com";
 const TOKOPEDIA_URL = "https://www.tokopedia.com/anexso-kopi-joe";
+
+// ✅ Pembayaran (placeholder — kamu isi detailnya)
+const PAYMENT = {
+  bankName: "BCA / BRI / Mandiri (isi salah satu)",
+  accountName: "ANEXSO KOPI JOE (isi nama penerima)",
+  accountNo: "1234567890 (isi nomor rekening)",
+  qrisImage: "", // contoh: "/qris-joe.png" (taruh filenya di /public)
+  hasQRIS: true,
+};
+
+// ✅ Media links (kosong = placeholder)
+const SOCIAL = {
+  youtube: "", // contoh: "https://youtube.com/..."
+  instagram: "", // contoh: "https://instagram.com/..."
+  tiktok: "", // contoh: "https://tiktok.com/..."
+  facebook: "", // contoh: "https://facebook.com/..."
+};
+
+// ✅ Tempat foto (isi src nanti kalau sudah ada)
+const GALLERY: Array<{ title: string; src: string }> = [
+  { title: "Foto produk 1", src: "" },
+  { title: "Foto produk 2", src: "" },
+  { title: "Foto packaging", src: "" },
+  { title: "Foto aktivitas / booth", src: "" },
+  { title: "Foto Dine In (nanti)", src: "" },
+  { title: "Foto customer / testimoni", src: "" },
+];
+
+// ✅ Tempat video / embed (isi link nanti)
+const VIDEOS: Array<{ title: string; platform: "YouTube" | "Instagram" | "TikTok" | "Facebook"; url: string }> =
+  [
+    { title: "Video profil / promo", platform: "YouTube", url: "" },
+    { title: "Reels IG", platform: "Instagram", url: "" },
+    { title: "TikTok promo", platform: "TikTok", url: "" },
+    { title: "Facebook video", platform: "Facebook", url: "" },
+  ];
 
 // Angka statistik (⚠️ ganti sesuai data asli kamu)
 const STATS = {
@@ -34,40 +77,40 @@ const PRODUCTS: Product[] = [
     name: "JOE Kopi Bubuk Instan",
     variant: "50 gram",
     price: 17000,
-    note: "Praktis untuk harian, rasa tetap mantap.",
-    bullets: ["Praktis", "Aroma kuat", "Cocok untuk pemula"],
+    note: `Praktis untuk harian, rasa tetap mantap. ${COFFEE_DESC} ${TASTE_NOTE}`,
+    bullets: ["Praktis", "Aroma kuat", "Pahit tanpa gula"],
   },
   {
     id: "sachet-10g",
     name: "JOE Coffee Bubuk Sachet",
     variant: "10 gram",
     price: 35000,
-    note: "Sachet ringkas untuk dibawa kemana saja.",
-    bullets: ["Ringkas", "Mudah seduh", "Travel-friendly"],
+    note: `Sachet ringkas untuk dibawa kemana saja. ${COFFEE_DESC} ${TASTE_NOTE}`,
+    bullets: ["Ringkas", "Mudah seduh", "Pahit tanpa gula"],
   },
   {
     id: "bubuk-200g",
     name: "JOE Coffee Bubuk",
     variant: "200 gram",
     price: 63000,
-    note: "Pilihan favorit untuk stok mingguan.",
-    bullets: ["Value", "Rasa seimbang", "Kemasan aman"],
+    note: `Pilihan favorit untuk stok mingguan. ${COFFEE_DESC} ${TASTE_NOTE}`,
+    bullets: ["Value", "Rasa seimbang", "Pahit tanpa gula"],
   },
   {
     id: "bubuk-100g",
     name: "JOE Coffee Kopi Bubuk",
     variant: "100 gram",
     price: 33000,
-    note: "Porsi pas untuk coba rasa sebelum stok besar.",
-    bullets: ["Pas untuk trial", "Fresh", "Cocok hadiah"],
+    note: `Porsi pas untuk coba rasa sebelum stok besar. ${COFFEE_DESC} ${TASTE_NOTE}`,
+    bullets: ["Pas untuk trial", "Fresh", "Pahit tanpa gula"],
   },
   {
     id: "biji-1kg",
     name: "JOE Coffee Bubuk / Biji",
     variant: "1 Kg",
     price: 290000,
-    note: "Untuk kantor, event, atau reseller.",
-    bullets: ["Hemat", "Konsisten", "Siap bisnis"],
+    note: `Untuk kantor, event, atau reseller. ${COFFEE_DESC} ${TASTE_NOTE}`,
+    bullets: ["Hemat", "Konsisten", "Pahit tanpa gula"],
   },
 ];
 
@@ -118,7 +161,10 @@ function Icon({
     | "mail"
     | "map"
     | "volumeOn"
-    | "volumeOff";
+    | "volumeOff"
+    | "bank"
+    | "qris"
+    | "media";
 }) {
   const common = "w-5 h-5";
   switch (name) {
@@ -267,41 +313,46 @@ function Icon({
     case "volumeOn":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M11 5 6.5 9H3v6h3.5L11 19V5Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M15.5 8.5a4.5 4.5 0 0 1 0 7"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-          <path
-            d="M17.8 6.2a7.8 7.8 0 0 1 0 11.6"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
+          <path d="M11 5 6.5 9H3v6h3.5L11 19V5Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M15.5 8.5a4.5 4.5 0 0 1 0 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M17.8 6.2a7.8 7.8 0 0 1 0 11.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
       );
     case "volumeOff":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M11 5 6.5 9H3v6h3.5L11 19V5Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      );
+    case "bank":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
-            d="M11 5 6.5 9H3v6h3.5L11 19V5Z"
+            d="M3 10h18M5 10V20m4-10V20m6-10V20m4-10V20M3 20h18M12 4 3 9h18L12 4Z"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "qris":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 10v-6h6v6h-6Z"
             stroke="currentColor"
             strokeWidth="1.6"
             strokeLinejoin="round"
           />
-          <path
-            d="M16 9l5 6M21 9l-5 6"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
+        </svg>
+      );
+    case "media":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 6h16v12H4V6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="m9 11 2 2 4-4 3 3v4H6v-3l3-2Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
         </svg>
       );
     default:
@@ -319,6 +370,47 @@ function SoftCard({ children, className }: { children: React.ReactNode; classNam
     >
       {children}
     </div>
+  );
+}
+
+function PlaceholderMedia({ title }: { title: string }) {
+  return (
+    <div className="grid aspect-[4/3] w-full place-items-center rounded-2xl border border-dashed border-[color:var(--border)] bg-white/40 p-4 text-center text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
+      <div>
+        <div className="text-sm font-black text-[var(--foreground)]">{title}</div>
+        <div className="mt-1">Tempat foto/video — kamu bisa isi nanti</div>
+      </div>
+    </div>
+  );
+}
+
+function SocialButton({
+  label,
+  url,
+}: {
+  label: "YouTube" | "Instagram" | "TikTok" | "Facebook";
+  url: string;
+}) {
+  const disabled = !url;
+  return (
+    <a
+      href={disabled ? "#media" : url}
+      target={disabled ? undefined : "_blank"}
+      rel={disabled ? undefined : "noreferrer"}
+      aria-disabled={disabled}
+      onClick={(e) => {
+        if (disabled) e.preventDefault();
+      }}
+      className={cx(
+        "inline-flex items-center justify-center rounded-xl border border-[color:var(--border)] px-4 py-2 text-sm font-black",
+        disabled
+          ? "cursor-not-allowed bg-white/40 text-[color:var(--muted)] dark:bg-white/5"
+          : "bg-white/40 hover:opacity-90 dark:bg-white/5"
+      )}
+      title={disabled ? `${label} (belum diisi)` : `Buka ${label}`}
+    >
+      {label}
+    </a>
   );
 }
 
@@ -364,7 +456,7 @@ export default function Page() {
     const el = audioRef.current;
     if (!el) return;
 
-    el.volume = 0.12; // pelan (0.05 - 0.2)
+    el.volume = 0.12;
     el.loop = true;
 
     if (!musicOn) {
@@ -466,6 +558,7 @@ export default function Page() {
       ...cartItems.map((i) => `- ${i.name} (${i.variant}) x${i.qty} = ${formatIDR(i.subtotal)}`),
       cartItems.length ? `Total: ${formatIDR(cartTotal)}` : "(keranjang masih kosong)",
       "",
+      "Metode bayar: Transfer bank / QRIS (JOE Coffee sudah punya QRIS).",
       "Mohon info ketersediaan & ongkir ya. Terima kasih.",
     ];
     const text = encodeURIComponent(lines.join("\n"));
@@ -502,8 +595,11 @@ export default function Page() {
             <a className="hover:opacity-80" href="#produk">
               Produk
             </a>
-            <a className="hover:opacity-80" href="#kenapa">
-              Kenapa
+            <a className="hover:opacity-80" href="#dinein">
+              Dine In
+            </a>
+            <a className="hover:opacity-80" href="#media">
+              Media
             </a>
             <a className="hover:opacity-80" href="#testimoni">
               Testimoni
@@ -592,9 +688,15 @@ export default function Page() {
         <div className="gpro-reveal" data-reveal>
           <div className="grid gap-8 md:grid-cols-2 md:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-1 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
+              <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-1 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
                 <span className="h-2 w-2 rounded-full bg-[color:var(--primary)]" />
                 Ready stock • Packing aman • Respon cepat
+                <span className="mx-1 opacity-60">•</span>
+                <span className="font-black text-[color:var(--primary)]">Robusta + Arabika</span>
+                <span className="mx-1 opacity-60">•</span>
+                Tanpa campuran
+                <span className="mx-1 opacity-60">•</span>
+                Pahit tanpa gula
               </div>
 
               <h1 className="mt-4 text-4xl font-black leading-tight md:text-5xl">
@@ -650,8 +752,8 @@ export default function Page() {
                       <Icon name="shield" />
                     </span>
                     <div>
-                      <div className="text-sm font-black">Kualitas Terjaga</div>
-                      <div className="text-xs text-[color:var(--muted)]">Rasa konsisten, siap repeat order.</div>
+                      <div className="text-sm font-black">Blend Jujur</div>
+                      <div className="text-xs text-[color:var(--muted)]">Robusta + Arabika, tanpa campuran.</div>
                     </div>
                   </div>
                 </SoftCard>
@@ -674,8 +776,8 @@ export default function Page() {
                       <Icon name="heart" />
                     </span>
                     <div>
-                      <div className="text-sm font-black">Customer Care</div>
-                      <div className="text-xs text-[color:var(--muted)]">Respons cepat via WA.</div>
+                      <div className="text-sm font-black">Taste</div>
+                      <div className="text-xs text-[color:var(--muted)]">Pahit tanpa gula, mantap.</div>
                     </div>
                   </div>
                 </SoftCard>
@@ -726,7 +828,7 @@ export default function Page() {
                 ))}
 
                 <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
-                  Tip: Tambahkan ke keranjang, lalu checkout via WhatsApp.
+                  Tip: Tambahkan ke keranjang, lalu checkout via WhatsApp. Pembayaran bisa transfer bank atau QRIS.
                 </div>
               </div>
             </SoftCard>
@@ -741,7 +843,7 @@ export default function Page() {
             <div>
               <h2 className="text-2xl font-black md:text-3xl">Produk Kopi</h2>
               <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
-                Pilih ukuran sesuai kebutuhan. Semua produk dipacking rapi dan siap kirim.
+                {COFFEE_DESC} {TASTE_NOTE} Pilih ukuran sesuai kebutuhan.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -822,7 +924,7 @@ export default function Page() {
 
                     <a
                       href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                        `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info stok & ongkir ya.`
+                        `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). ${COFFEE_DESC} ${TASTE_NOTE} Mohon info stok & ongkir ya.`
                       )}`}
                       className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
                     >
@@ -845,38 +947,136 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Kenapa pilih */}
-      <section id="kenapa" className="py-14">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="gpro-reveal" data-reveal>
-            <div
-              className="rounded-[var(--radius)] border border-[color:var(--border)] p-10 shadow-[var(--shadow)]"
-              style={{
-                background: "linear-gradient(180deg, rgba(42,26,16,0.92), rgba(42,26,16,0.86))",
-                color: "#fff7ee",
-              }}
-            >
-              <h2 className="text-center text-3xl font-black md:text-4xl">Kenapa Pilih JOE Coffee?</h2>
-              <p className="mt-2 text-center text-sm opacity-85">Komitmen kami untuk kepuasan Anda</p>
-
-              <div className="mt-10 grid gap-8 md:grid-cols-4">
-                <Reason icon={<Icon name="shield" />} title="Kualitas Terjaga" desc="Kopi pilihan, rasa konsisten dan kemasan rapi." />
-                <Reason icon={<Icon name="truck" />} title="Pengiriman Cepat" desc="Proses cepat sesuai antrian & packing aman." />
-                <Reason icon={<Icon name="clock" />} title="Fresh & Wangi" desc="Aroma maksimal untuk pengalaman coffee lovers." />
-                <Reason icon={<Icon name="heart" />} title="Customer Support" desc="Kami siap membantu via WhatsApp." />
-              </div>
-
-              <div className="mt-10 rounded-[var(--radius)] bg-white/10 p-6">
-                <div className="grid gap-6 text-center md:grid-cols-3">
-                  <StatBig value={STATS.shipped} label="Paket Terkirim" />
-                  <StatBig value={STATS.rating} label="Rating Pelanggan" />
-                  <StatBig value={STATS.satisfaction} label="Kepuasan" />
-                </div>
-                <p className="mt-4 text-center text-xs opacity-75">
-                  *Ganti angka statistik sesuai data asli kamu agar lebih kredibel.
-                </p>
-              </div>
+      {/* Dine In (placeholder) */}
+      <section id="dinein" className="mx-auto max-w-6xl px-4 py-14">
+        <div className="gpro-reveal" data-reveal>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-black md:text-3xl">Menu Dine In</h2>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                (Coming soon) Nanti tinggal kamu isi menu + harga + foto.
+              </p>
             </div>
+            <span className="rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-1 text-xs font-black text-[color:var(--muted)] dark:bg-white/5">
+              Akan ditambahkan
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
+            <SoftCard className="p-5">
+              <div className="text-sm font-black">Contoh item Dine In</div>
+              <div className="mt-2 text-xs text-[color:var(--muted)]">
+                Nama menu • Deskripsi singkat • Harga
+              </div>
+              <div className="mt-4">
+                <PlaceholderMedia title="Foto menu Dine In" />
+              </div>
+            </SoftCard>
+
+            <SoftCard className="p-5">
+              <div className="text-sm font-black">Contoh item Dine In</div>
+              <div className="mt-2 text-xs text-[color:var(--muted)]">
+                Nama menu • Deskripsi singkat • Harga
+              </div>
+              <div className="mt-4">
+                <PlaceholderMedia title="Foto menu Dine In" />
+              </div>
+            </SoftCard>
+
+            <SoftCard className="p-5">
+              <div className="text-sm font-black">Contoh item Dine In</div>
+              <div className="mt-2 text-xs text-[color:var(--muted)]">
+                Nama menu • Deskripsi singkat • Harga
+              </div>
+              <div className="mt-4">
+                <PlaceholderMedia title="Foto menu Dine In" />
+              </div>
+            </SoftCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Media (foto / video / social) */}
+      <section id="media" className="mx-auto max-w-6xl px-4 py-14">
+        <div className="gpro-reveal" data-reveal>
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <h2 className="text-2xl font-black md:text-3xl">Media</h2>
+              <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
+                Tempat foto & video. Kamu tinggal isi link YouTube/IG/TikTok/FB dan upload fotonya nanti.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <SocialButton label="YouTube" url={SOCIAL.youtube} />
+              <SocialButton label="Instagram" url={SOCIAL.instagram} />
+              <SocialButton label="TikTok" url={SOCIAL.tiktok} />
+              <SocialButton label="Facebook" url={SOCIAL.facebook} />
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-5 lg:grid-cols-5">
+            <SoftCard className="p-6 lg:col-span-3">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-black">Galeri Foto</div>
+                <div className="text-xs text-[color:var(--muted)]">Placeholder (isi nanti)</div>
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {GALLERY.map((g) => (
+                  <div key={g.title}>
+                    {g.src ? (
+                      <img
+                        src={g.src}
+                        alt={g.title}
+                        className="aspect-[4/3] w-full rounded-2xl border border-[color:var(--border)] object-cover"
+                      />
+                    ) : (
+                      <PlaceholderMedia title={g.title} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </SoftCard>
+
+            <SoftCard className="p-6 lg:col-span-2">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-black">Video</div>
+                <div className="text-xs text-[color:var(--muted)]">Link/embed (isi nanti)</div>
+              </div>
+
+              <div className="mt-4 space-y-3">
+                {VIDEOS.map((v) => (
+                  <div key={v.title} className="rounded-2xl border border-[color:var(--border)] bg-white/50 p-4 dark:bg-white/10">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-black">{v.title}</div>
+                        <div className="text-xs text-[color:var(--muted)]">{v.platform}</div>
+                      </div>
+                      <span className="rounded-full bg-white/60 px-3 py-1 text-xs font-black dark:bg-white/10">
+                        {v.url ? "Link OK" : "Belum diisi"}
+                      </span>
+                    </div>
+
+                    <div className="mt-3">
+                      {v.url ? (
+                        <a
+                          href={v.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                        >
+                          <Icon name="media" />
+                          Buka video
+                        </a>
+                      ) : (
+                        <PlaceholderMedia title={`Tempat ${v.platform} embed / link`} />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SoftCard>
           </div>
         </div>
       </section>
@@ -899,8 +1099,8 @@ export default function Page() {
           <div className="mt-10 grid gap-3 md:grid-cols-2">
             <Faq q="Bisa kirim luar kota?" a="Bisa. Packing aman dan pengiriman sesuai layanan ekspedisi yang tersedia." />
             <Faq q="Bisa untuk kantor / reseller?" a="Bisa. Varian 1 Kg cocok untuk kantor, event, atau reseller. Chat WA untuk diskusi." />
-            <Faq q="Pembayaran bagaimana?" a="Konfirmasi via WhatsApp/Tokopedia. Kami bantu sesuai opsi yang tersedia." />
-            <Faq q="Bisa tanya rekomendasi?" a="Bisa. Ceritakan selera kamu (pahit/medium/smooth), nanti kami bantu rekomendasi." />
+            <Faq q="Pembayaran bagaimana?" a="Bisa transfer bank atau QRIS. JOE Coffee sudah punya QRIS — tinggal minta via WhatsApp." />
+            <Faq q="Kopinya manis atau pahit?" a="Ciri khas JOE Coffee: pahit tanpa gula (tanpa campuran bahan lainnya)." />
           </div>
         </div>
       </section>
@@ -911,7 +1111,9 @@ export default function Page() {
           <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
             <div>
               <h2 className="text-2xl font-black md:text-3xl">Checkout</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">Keranjang akan dibuat menjadi pesan otomatis untuk WhatsApp.</p>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                Keranjang akan dibuat menjadi pesan otomatis untuk WhatsApp. Pembayaran: Transfer bank / QRIS.
+              </p>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -970,6 +1172,9 @@ export default function Page() {
                             {i.variant} • {formatIDR(i.price)}
                           </div>
                           <div className="mt-2 text-xs font-black">Subtotal: {formatIDR(i.subtotal)}</div>
+                          <div className="mt-1 text-xs text-[color:var(--muted)]">
+                            {COFFEE_DESC} {TASTE_NOTE}
+                          </div>
                         </div>
 
                         <div className="flex flex-col items-end gap-2">
@@ -1028,6 +1233,44 @@ export default function Page() {
                 </div>
               </div>
 
+              {/* ✅ Payment methods */}
+              <div className="mt-5 grid gap-3">
+                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5">
+                  <div className="flex items-center gap-2 text-sm font-black">
+                    <Icon name="bank" />
+                    Transfer Bank
+                  </div>
+                  <div className="mt-2 text-xs text-[color:var(--muted)]">
+                    {PAYMENT.bankName}
+                    <br />
+                    a.n. {PAYMENT.accountName}
+                    <br />
+                    No. {PAYMENT.accountNo}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5">
+                  <div className="flex items-center gap-2 text-sm font-black">
+                    <Icon name="qris" />
+                    QRIS (JOE Coffee)
+                  </div>
+                  <div className="mt-2 text-xs text-[color:var(--muted)]">
+                    {PAYMENT.hasQRIS ? "QRIS tersedia (minta via WA)." : "QRIS belum tersedia."}
+                  </div>
+                  <div className="mt-3">
+                    {PAYMENT.qrisImage ? (
+                      <img
+                        src={PAYMENT.qrisImage}
+                        alt="QRIS JOE Coffee"
+                        className="w-full rounded-2xl border border-[color:var(--border)] object-cover"
+                      />
+                    ) : (
+                      <PlaceholderMedia title="Tempat gambar QRIS (upload nanti)" />
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <a
                 href={waCheckoutLink}
                 className={cx(
@@ -1043,16 +1286,6 @@ export default function Page() {
               >
                 <Icon name="whatsapp" />
                 Checkout via WhatsApp
-              </a>
-
-              <a
-                href={TOKOPEDIA_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"
-              >
-                <Icon name="tokopedia" />
-                Beli via Tokopedia
               </a>
 
               <a
@@ -1073,7 +1306,9 @@ export default function Page() {
           <div className="grid gap-6 lg:grid-cols-2">
             <SoftCard className="p-6">
               <h2 className="text-2xl font-black md:text-3xl">Hubungi Kami</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">Ada pertanyaan? Kami siap membantu.</p>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                Ada pertanyaan? Kami siap membantu. Pembayaran bisa transfer bank atau QRIS.
+              </p>
 
               <div className="mt-5 space-y-3">
                 <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5">
@@ -1148,13 +1383,13 @@ export default function Page() {
                 <QuickMessage
                   label="Tanya stok & rekomendasi"
                   href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                    `Halo ${BRAND}, saya mau tanya stok & rekomendasi kopi yang cocok untuk saya.`
+                    `Halo ${BRAND}, saya mau tanya stok & rekomendasi kopi. ${COFFEE_DESC} ${TASTE_NOTE}`
                   )}`}
                 />
                 <QuickMessage
-                  label="Tanya ongkir & estimasi kirim"
+                  label="Minta QRIS / info transfer bank"
                   href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                    `Halo ${BRAND}, saya mau tanya ongkir & estimasi pengiriman untuk alamat saya.`
+                    `Halo ${BRAND}, saya mau minta QRIS dan/atau info rekening untuk pembayaran. Terima kasih.`
                   )}`}
                 />
                 <QuickMessage
@@ -1202,27 +1437,6 @@ export default function Page() {
           </a>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Reason({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
-  return (
-    <div className="text-center">
-      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/15">
-        <span className="text-white">{icon}</span>
-      </div>
-      <div className="mt-3 text-sm font-black">{title}</div>
-      <div className="mt-2 text-xs opacity-85">{desc}</div>
-    </div>
-  );
-}
-
-function StatBig({ value, label }: { value: string; label: string }) {
-  return (
-    <div>
-      <div className="text-3xl font-black md:text-4xl">{value}</div>
-      <div className="mt-1 text-xs opacity-85">{label}</div>
     </div>
   );
 }
