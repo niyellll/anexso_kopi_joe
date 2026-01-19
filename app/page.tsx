@@ -839,9 +839,7 @@ export default function Page() {
       <section id="testimoni" className="mx-auto max-w-6xl px-4 py-14">
         <div className="gpro-reveal" data-reveal>
           <h2 className="text-2xl font-black md:text-3xl">Testimoni Pelanggan</h2>
-          <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
-            Tambahkan testimoni real untuk meningkatkan trust (bisa kamu edit).
-          </p>
+          
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {TESTIMONIALS.map((t) => (
