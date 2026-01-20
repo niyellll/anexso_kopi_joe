@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Tailwind v4: dark:* ikut class .dark */
+/* Tailwind v4: bikin `dark:` ikut class `.dark` (bukan media) */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* =========================
@@ -9,6 +9,7 @@
 :root {
   --background: #fff7ee; /* latte */
   --foreground: #2a1a10; /* espresso */
+
   --muted: rgba(42, 26, 16, 0.72);
 
   --card: rgba(255, 255, 255, 0.74);
@@ -18,26 +19,30 @@
   --primary-hover: #9c5722;
   --primary-foreground: #fff7ee;
 
-  --shadow: 0 12px 30px rgba(42, 26, 16, 0.12);
-  --shadow-soft: 0 10px 22px rgba(42, 26, 16, 0.10);
+  --shadow: 0 14px 34px rgba(42, 26, 16, 0.12);
+  --shadow-soft: 0 10px 22px rgba(42, 26, 16, 0.1);
   --radius: 24px;
+
+  --ring: rgba(182, 106, 43, 0.25);
 }
 
-/* Dark mode manual (pakai <html class="dark">) */
 :root.dark {
   --background: #0c0705; /* dark espresso */
   --foreground: #f6eee6; /* crema */
+
   --muted: rgba(246, 238, 230, 0.74);
 
   --card: rgba(255, 255, 255, 0.06);
   --border: rgba(255, 255, 255, 0.12);
 
-  --primary: #d08a4a;
-  --primary-hover: #b87438;
+  --primary: #d88a4a;
+  --primary-hover: #b8743b;
   --primary-foreground: #120a06;
 
   --shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
-  --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.40);
+  --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.4);
+
+  --ring: rgba(216, 138, 74, 0.25);
 }
 
 /* =========================
@@ -62,6 +67,13 @@ a {
   background: rgba(182, 106, 43, 0.25);
 }
 
+/* Focus ring */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 5px var(--ring);
+  border-radius: 14px;
+}
+
 /* =========================
    Cards / hover polish
    ========================= */
@@ -69,12 +81,14 @@ a {
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
   will-change: transform;
 }
+
 .gpro-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-soft);
 }
+
 .gpro-card:active {
-  transform: translateY(0px);
+  transform: translateY(0);
 }
 
 /* =========================
@@ -87,6 +101,7 @@ a {
   transition: opacity 700ms ease, transform 700ms ease, filter 700ms ease;
   will-change: opacity, transform, filter;
 }
+
 .gpro-reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
@@ -94,29 +109,38 @@ a {
 }
 
 /* =========================
-   Subtle gradient background
+   Subtle animated background
    ========================= */
 .gpro-animated-bg {
-  background: radial-gradient(800px circle at 20% 15%, rgba(182, 106, 43, 0.14), transparent 40%),
-    radial-gradient(900px circle at 80% 25%, rgba(208, 138, 74, 0.12), transparent 45%),
-    radial-gradient(1100px circle at 60% 85%, rgba(42, 26, 16, 0.10), transparent 45%);
+  background:
+    radial-gradient(850px circle at 18% 14%, rgba(182, 106, 43, 0.14), transparent 45%),
+    radial-gradient(900px circle at 82% 22%, rgba(216, 138, 74, 0.12), transparent 45%),
+    radial-gradient(1100px circle at 60% 86%, rgba(42, 26, 16, 0.10), transparent 45%);
 }
 
 /* =========================
-   Accessibility
+   Mobile polish
    ========================= */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (max-width: 640px) {
+  .mobile-title {
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Accessibility: reduce motion */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
   .gpro-reveal,
-  .gpro-reveal.is-visible {
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-  }
+  .gpro-reveal.is-visible,
   .gpro-card {
     transition: none !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
