@@ -1141,7 +1141,7 @@ export default function Page() {
                   </div>
                 </div>
                 <div className="p-4 text-xs text-[color:var(--muted)]">
-                  Kalau file sudah ada, ganti bagian ini dengan <code>&lt;img src="{m.src}" /&gt;</code> atau langsung replace block ini.
+                 
                 </div>
               </SoftCard>
             ))}
@@ -1172,9 +1172,6 @@ export default function Page() {
             ) : (
               <SoftCard className="mt-3 p-6">
                 <div className="text-sm font-black">Placeholder Video</div>
-                <div className="mt-2 text-sm text-[color:var(--muted)]">
-                  Isi array <code>YOUTUBE_IDS</code> dengan ID video YouTube kamu (contoh: <code>dQw4w9WgXcQ</code>).
-                </div>
               </SoftCard>
             )}
           </div>
