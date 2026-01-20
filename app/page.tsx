@@ -1205,9 +1205,6 @@ export default function Page() {
                   <StatBig value={STATS.rating} label="Rating Pelanggan" />
                   <StatBig value={STATS.satisfaction} label="Kepuasan" />
                 </div>
-                <p className="mt-4 text-center text-xs opacity-75">
-                  *Ganti angka statistik sesuai data asli kamu agar lebih kredibel.
-                </p>
               </div>
             </div>
           </div>
