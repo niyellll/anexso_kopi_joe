@@ -537,6 +537,7 @@ export default function Page() {
   // music
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [musicOn, setMusicOn] = useState<boolean>(true); // default ON (first time)
+  const [audioPlaying, setAudioPlaying] = useState(false);
   const [needsTap, setNeedsTap] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
 
@@ -589,6 +590,7 @@ export default function Page() {
 
     if (!musicOn) {
       scheduleState(() => setNeedsTap(false));
+      scheduleState(() => setAudioPlaying(false));
       try {
         a.pause();
         a.currentTime = 0;
@@ -599,9 +601,11 @@ export default function Page() {
     const tryPlay = async () => {
       try {
         await a.play();
+        setAudioPlaying(true);
         setNeedsTap(false);
       } catch {
         // Autoplay blocked (mobile) OR file format not supported
+        setAudioPlaying(false);
         setNeedsTap(true);
       }
     };
@@ -610,30 +614,48 @@ export default function Page() {
     return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [musicOn]);
 
-  // if autoplay blocked, try again on first user gesture
-  useEffect(() => {
-    if (!needsTap) return;
+  async function playMusicNow() {
+    const a = audioRef.current;
+    if (!a) return;
 
-    const onGesture = async () => {
-      const a = audioRef.current;
-      if (!a) return;
-      a.volume = MUSIC_VOLUME;
+    a.loop = true;
+    a.preload = "auto";
+    a.volume = MUSIC_VOLUME;
+
+    try {
+      await a.play();
+      setMusicOn(true);
+      setAudioPlaying(true);
+      setNeedsTap(false);
+      setAudioError(null);
+    } catch {
+      setMusicOn(true);
+      setAudioPlaying(false);
+      setNeedsTap(true);
+    }
+  }
+
+  function pauseMusicNow() {
+    const a = audioRef.current;
+    if (a) {
       try {
-        await a.play();
-        setNeedsTap(false);
-      } catch {
-        setNeedsTap(true);
-      }
-    };
+        a.pause();
+        a.currentTime = 0;
+      } catch {}
+    }
+    setMusicOn(false);
+    setAudioPlaying(false);
+    setNeedsTap(false);
+  }
 
-    window.addEventListener("pointerdown", onGesture, { once: true });
-    window.addEventListener("touchstart", onGesture, { once: true });
-
-    return () => {
-      window.removeEventListener("pointerdown", onGesture);
-      window.removeEventListener("touchstart", onGesture);
-    };
-  }, [needsTap]);
+  async function toggleMusic() {
+    const a = audioRef.current;
+    if (a && !a.paused) {
+      pauseMusicNow();
+      return;
+    }
+    await playMusicNow();
+  }
 
   // scroll progress bar
   useEffect(() => {
@@ -741,6 +763,8 @@ export default function Page() {
         ref={audioRef}
         src={AUDIO_SRC}
         preload="auto"
+        onPlay={() => setAudioPlaying(true)}
+        onPause={() => setAudioPlaying(false)}
         onError={() => {
           setAudioError("Audio gagal dimuat. Pastikan file ada di /public/mars-kopi-joe.mp3 dan formatnya benar.");
         }}
@@ -779,11 +803,11 @@ export default function Page() {
           <div className="flex items-center gap-2">
             {/* Music */}
             <button
-              onClick={() => setMusicOn((v) => !v)}
+              onClick={toggleMusic}
               className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-              title={musicOn ? "Matikan musik" : "Nyalakan musik"}
+              title={audioPlaying ? "Matikan musik" : "Nyalakan musik"}
             >
-              {musicOn ? <Icon name="pause" /> : <Icon name="music" />}
+              {audioPlaying ? <Icon name="pause" /> : <Icon name="music" />}
               <span className="hidden sm:inline">Music</span>
             </button>
 
@@ -842,17 +866,7 @@ export default function Page() {
       {musicOn && needsTap && (
         <div className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 md:bottom-6">
           <button
-            onClick={async () => {
-              const a = audioRef.current;
-              if (!a) return;
-              try {
-                a.volume = MUSIC_VOLUME;
-                await a.play();
-                setNeedsTap(false);
-              } catch {
-                setNeedsTap(true);
-              }
-            }}
+            onClick={playMusicNow}
             className="rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-2 text-xs font-black shadow-[var(--shadow)] backdrop-blur hover:opacity-90"
           >
             Tap untuk nyalakan musik 🎵
