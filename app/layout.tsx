@@ -2,10 +2,25 @@ import "./globals.css";
 import type { Metadata } from "next";
 import React from "react";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Anexso Kopi JOE",
   description:
-    "Anexso Kopi JOE — kopi pilihan untuk dinikmati di rumah, kantor, maupun hadiah. Order via WhatsApp atau Tokopedia.",
+    "Anexso Kopi JOE - kopi bubuk pouch 100gr, 200gr, 500gr, 1kg serta Es Kopi Tanpa Ampas dan Es Kopi Susu Gula Aren.",
+  icons: {
+    icon: "/joe-coffee-logo.jpeg",
+    apple: "/joe-coffee-logo.jpeg",
+  },
+  openGraph: {
+    title: "Anexso Kopi JOE",
+    description:
+      "Kopi bubuk pouch dan menu es kopi Joe Coffee. Order via WhatsApp atau katalog resmi.",
+    images: ["/joe-coffee-logo.jpeg"],
+  },
 };
 
 function ThemeInitScript() {

@@ -7,42 +7,46 @@
    Coffee theme tokens
    ========================= */
 :root {
-  --background: #fff7ee; /* latte */
-  --foreground: #2a1a10; /* espresso */
+  --background: #f5efe0;
+  --foreground: #15110a;
 
-  --muted: rgba(42, 26, 16, 0.72);
+  --muted: rgba(21, 17, 10, 0.72);
 
-  --card: rgba(255, 255, 255, 0.74);
-  --border: rgba(42, 26, 16, 0.14);
+  --card: rgba(255, 250, 238, 0.84);
+  --border: rgba(73, 53, 12, 0.18);
 
-  --primary: #b66a2b; /* caramel */
-  --primary-hover: #9c5722;
-  --primary-foreground: #fff7ee;
+  --primary: #c98513;
+  --primary-hover: #9f6810;
+  --primary-foreground: #11100c;
+  --surface-strong: #123f20;
+  --surface-strong-foreground: #f8efd8;
 
-  --shadow: 0 14px 34px rgba(42, 26, 16, 0.12);
-  --shadow-soft: 0 10px 22px rgba(42, 26, 16, 0.1);
+  --shadow: 0 14px 34px rgba(21, 17, 10, 0.16);
+  --shadow-soft: 0 10px 22px rgba(21, 17, 10, 0.12);
   --radius: 24px;
 
-  --ring: rgba(182, 106, 43, 0.25);
+  --ring: rgba(201, 133, 19, 0.28);
 }
 
 :root.dark {
-  --background: #0c0705; /* dark espresso */
-  --foreground: #f6eee6; /* crema */
+  --background: #090806;
+  --foreground: #fff2ca;
 
-  --muted: rgba(246, 238, 230, 0.74);
+  --muted: rgba(255, 242, 202, 0.74);
 
-  --card: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.12);
+  --card: rgba(21, 18, 12, 0.82);
+  --border: rgba(231, 167, 42, 0.18);
 
-  --primary: #d88a4a;
-  --primary-hover: #b8743b;
-  --primary-foreground: #120a06;
+  --primary: #e7a72a;
+  --primary-hover: #c88b17;
+  --primary-foreground: #0d0b07;
+  --surface-strong: #0f4d24;
+  --surface-strong-foreground: #fff2ca;
 
   --shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
   --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.4);
 
-  --ring: rgba(216, 138, 74, 0.25);
+  --ring: rgba(231, 167, 42, 0.28);
 }
 
 /* =========================
@@ -64,7 +68,7 @@ a {
 }
 
 ::selection {
-  background: rgba(182, 106, 43, 0.25);
+  background: rgba(201, 133, 19, 0.28);
 }
 
 /* Focus ring */
@@ -113,9 +117,9 @@ a {
    ========================= */
 .gpro-animated-bg {
   background:
-    radial-gradient(850px circle at 18% 14%, rgba(182, 106, 43, 0.14), transparent 45%),
-    radial-gradient(900px circle at 82% 22%, rgba(216, 138, 74, 0.12), transparent 45%),
-    radial-gradient(1100px circle at 60% 86%, rgba(42, 26, 16, 0.10), transparent 45%);
+    linear-gradient(135deg, rgba(18, 63, 32, 0.12), transparent 42%),
+    linear-gradient(45deg, transparent 36%, rgba(201, 133, 19, 0.12) 72%),
+    linear-gradient(180deg, rgba(21, 17, 10, 0.06), transparent 28%, rgba(18, 63, 32, 0.08));
 }
 
 /* =========================
@@ -127,7 +131,7 @@ a {
 
 @media (max-width: 640px) {
   .mobile-title {
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
   }
 }
 

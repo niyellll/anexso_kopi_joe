@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const BRAND = "Anexso Kopi JOE";
+const LOGO_SRC = "/joe-coffee-logo.jpeg";
 const TAGLINE =
-  "Kopi pilihan untuk dinikmati di rumah, kantor, maupun hadiah — rasa konsisten, kemasan rapi, dan layanan cepat.";
+  "Pouch kopi bubuk siap seduh dan menu es kopi segar untuk rumah, kantor, maupun hadiah - rasa konsisten, kemasan rapi, dan layanan cepat.";
 
 const COFFEE_TRUTH = "Blend Robusta + Arabika — tanpa dicampur bahan lainnya.";
 const TASTE_NOTE = "Kopi pahit tanpa gula.";
@@ -14,7 +16,8 @@ const ADDRESS =
 const PHONE_DISPLAY = "+62 858-9999-3742";
 const PHONE_WA = "6285899993742";
 const EMAIL = "nielpickup@gmail.com";
-const TOKOPEDIA_URL = "https://www.tokopedia.com/anexso-kopi-joe";
+const CATALOG_URL = "https://utas.me/oomgaga";
+const WHATSAPP_CATALOG_URL = "https://wa.me/c/6281395955293";
 
 /** Audio */
 const AUDIO_SRC = "/mars-kopi-joe.mp3";
@@ -22,16 +25,16 @@ const MUSIC_VOLUME = 0.12; // volume pelan
 
 /** Sosial (isi link kamu nanti) */
 const SOCIAL = {
-  instagram: "#",
-  tiktok: "#",
-  facebook: "#",
-  youtube: "#",
+  instagram: "https://instagram.com/anexso_kopi_joe",
+  tiktok: "https://www.tiktok.com/@radenpm0819",
+  facebook: "https://facebook.com/Anexso%20Kopi%20Joe",
+  youtube: "https://www.youtube.com/@oomgaga",
 };
 
 const PAYMENT = {
   bankNote:
     "Transfer Bank (isi rekening di sini):\n- Bank: (contoh BCA)\n- No Rek: (0000xxxx)\n- a.n: (Nama penerima)",
-  qrisImage: "/qris-joe.jpg", // taruh gambar QRIS di /public/qris-joe.jpg
+  qrisImage: "/qris-joe.jpg",
 };
 
 // Angka statistik (ganti sesuai data asli)
@@ -44,54 +47,87 @@ const STATS = {
 type Product = {
   id: string;
   name: string;
+  category: "Kopi Bubuk" | "Es Kopi";
   variant: string;
-  price: number;
+  price: number | null;
+  status: string;
   note: string;
   bullets: string[];
+  image: string;
 };
-
-const BASE_NOTE = `${COFFEE_TRUTH} ${TASTE_NOTE}`;
 
 const PRODUCTS: Product[] = [
   {
-    id: "instan-50g",
-    name: "JOE Kopi Bubuk Instan",
-    variant: "50 gram",
-    price: 17000,
-    note: `Praktis untuk harian, rasa tetap mantap. ${BASE_NOTE}`,
-    bullets: ["Praktis", "Aroma kuat", "Pahit mantap"],
-  },
-  {
-    id: "sachet-10g",
-    name: "JOE Coffee Bubuk Sachet",
-    variant: "10 gram (isi 10 sachet)",
-    price: 35000,
-    note: `Sachet ringkas untuk dibawa kemana saja. Isi 10 sachet. ${BASE_NOTE}`,
-    bullets: ["Isi 10 sachet", "Ringkas", "Mudah seduh"],
-  },
-  {
-    id: "bubuk-200g",
-    name: "JOE Coffee Bubuk",
-    variant: "200 gram",
-    price: 63000,
-    note: `Pilihan favorit untuk stok mingguan. ${BASE_NOTE}`,
-    bullets: ["Value", "Rasa seimbang", "Kemasan aman"],
-  },
-  {
-    id: "bubuk-100g",
-    name: "JOE Coffee Kopi Bubuk",
-    variant: "100 gram",
+    id: "kopi-bubuk-100gr",
+    name: "Kopi Bubuk 100gr",
+    category: "Kopi Bubuk",
+    variant: "Pouch 100 gram",
     price: 33000,
-    note: `Porsi pas untuk coba rasa sebelum stok besar. ${BASE_NOTE}`,
-    bullets: ["Pas untuk trial", "Fresh", "Cocok hadiah"],
+    status: "Konfirmasi stok via WA",
+    note:
+      "Ukuran coba atau stok harian kecil. Blend Robusta dan Arabika, tanpa bahan pengawet dan tanpa campuran lainnya.",
+    bullets: ["Pouch 100gr", "Blend jujur", "Tanpa campuran"],
+    image: "/produk-kopi-bubuk-100gr.jpeg",
   },
   {
-    id: "biji-1kg",
-    name: "JOE Coffee Bubuk / Biji",
-    variant: "1 Kg",
-    price: 290000,
-    note: `Untuk kantor, event, atau reseller. ${BASE_NOTE}`,
-    bullets: ["Hemat", "Konsisten", "Siap bisnis"],
+    id: "kopi-bubuk-200gr",
+    name: "Kopi Bubuk 200gr",
+    category: "Kopi Bubuk",
+    variant: "Pouch 200 gram",
+    price: 63000,
+    status: "Konfirmasi stok via WA",
+    note:
+      "Ukuran favorit untuk persediaan rumah. Takaran seduh 10gr atau 1 sdm munjung untuk satu cangkir.",
+    bullets: ["Pouch 200gr", "Takaran 10gr", "Pahit tanpa gula"],
+    image: "/produk-kopi-bubuk-200gr.jpeg",
+  },
+  {
+    id: "kopi-bubuk-500gr",
+    name: "Kopi Bubuk 500gr",
+    category: "Kopi Bubuk",
+    variant: "Pouch 500 gram",
+    price: null,
+    status: "Tanya harga & stok via WA",
+    note:
+      "Pouch ukuran sedang untuk peminum rutin, kantor kecil, atau stok mingguan.",
+    bullets: ["Pouch 500gr", "Untuk stok rutin", "Konfirmasi harga"],
+    image: "/produk-kopi-bubuk-500gr.jpeg",
+  },
+  {
+    id: "kopi-bubuk-1kg",
+    name: "Kopi Bubuk 1kg",
+    category: "Kopi Bubuk",
+    variant: "Pouch 1 kilogram",
+    price: null,
+    status: "Tanya harga & stok via WA",
+    note:
+      "Ukuran besar untuk kantor, event, reseller, atau kebutuhan stok lebih lama.",
+    bullets: ["Pouch 1kg", "Untuk kantor/reseller", "Konfirmasi harga"],
+    image: "/produk-kopi-bubuk-1kg.jpeg",
+  },
+  {
+    id: "es-kopi-tanpa-ampas",
+    name: "Es Kopi Tanpa Ampas",
+    category: "Es Kopi",
+    variant: "Cup dingin",
+    price: null,
+    status: "Tanya harga & ketersediaan via WA",
+    note:
+      "Es kopi hitam tanpa ampas, ringan diminum dingin dan tetap membawa karakter kopi Joe.",
+    bullets: ["Tanpa ampas", "Dingin segar", "Kopi hitam"],
+    image: "/produk-es-kopi-tanpa-ampas.jpeg",
+  },
+  {
+    id: "es-kopi-susu-gula-aren",
+    name: "Es Kopi Susu Gula Aren",
+    category: "Es Kopi",
+    variant: "Cup dingin",
+    price: null,
+    status: "Tanya harga & ketersediaan via WA",
+    note:
+      "Es kopi susu creamy dengan manis gula aren, cocok untuk teman kerja atau santai.",
+    bullets: ["Gula aren", "Creamy", "Dingin segar"],
+    image: "/produk-es-kopi-susu-gula-aren.jpeg",
   },
 ];
 
@@ -114,12 +150,12 @@ const TESTIMONIALS = [
 ];
 
 const MEDIA_IMAGES = [
-  { label: "Foto produk 1", src: "/media-1.jpg" },
-  { label: "Foto produk 2", src: "/media-2.jpg" },
-  { label: "Foto packing", src: "/media-3.jpg" },
-  { label: "Foto toko", src: "/media-4.jpg" },
-  { label: "Foto event", src: "/media-5.jpg" },
-  { label: "Foto lainnya", src: "/media-6.jpg" },
+  { label: "Pouch kopi bubuk", src: "/produk-kopi-bubuk-500gr.jpeg", note: "Kemasan pouch Joe Coffee." },
+  { label: "Pouch 1kg", src: "/produk-kopi-bubuk-1kg.jpeg", note: "Ukuran besar untuk stok." },
+  { label: "Es kopi tanpa ampas", src: "/produk-es-kopi-tanpa-ampas.jpeg", note: "Cup dingin tanpa ampas." },
+  { label: "Es kopi susu gula aren", src: "/produk-es-kopi-susu-gula-aren.jpeg", note: "Creamy dengan gula aren." },
+  { label: "Es kopi botol", src: "/media-es-kopi-botol.jpeg", note: "Foto produk es kopi botol." },
+  { label: "Kopi sachet", src: "/media-kopi-sachet.jpeg", note: "Kemasan kopi bubuk kecil." },
 ];
 
 // kalau mau embed video youtube: isi id-nya (contoh: "dQw4w9WgXcQ")
@@ -133,6 +169,20 @@ function formatIDR(n: number) {
     currency: "IDR",
     maximumFractionDigits: 0,
   }).format(n);
+}
+
+function formatPrice(n: number | null) {
+  return n === null ? "Tanya harga" : formatIDR(n);
+}
+
+function formatSubtotal(price: number | null, qty: number) {
+  return price === null ? "harga konfirmasi" : formatIDR(price * qty);
+}
+
+function formatCartTotal(total: number, hasOpenPrice: boolean) {
+  if (hasOpenPrice && total > 0) return `${formatIDR(total)} + harga konfirmasi`;
+  if (hasOpenPrice) return "Tanya harga";
+  return formatIDR(total);
 }
 
 function cx(...classes: Array<string | false | undefined | null>) {
@@ -450,6 +500,26 @@ function SoftCard({
   );
 }
 
+function LogoMark({ className = "h-10 w-10" }: { className?: string }) {
+  return (
+    <div
+      className={cx(
+        "relative shrink-0 overflow-hidden rounded-2xl border border-[color:var(--border)] bg-black shadow-[var(--shadow-soft)]",
+        className
+      )}
+    >
+      <Image
+        src={LOGO_SRC}
+        alt={`${BRAND} logo`}
+        fill
+        sizes="56px"
+        className="object-cover"
+        priority
+      />
+    </div>
+  );
+}
+
 export default function Page() {
   const [dark, setDark] = useState(false);
 
@@ -472,13 +542,17 @@ export default function Page() {
 
   // theme init (sync with localStorage + OS preference)
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark") setDark(true);
-    else if (saved === "light") setDark(false);
-    else {
-      const prefers = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-      setDark(Boolean(prefers));
-    }
+    const timer = window.setTimeout(() => {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark") setDark(true);
+      else if (saved === "light") setDark(false);
+      else {
+        const prefers = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+        setDark(Boolean(prefers));
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -488,8 +562,12 @@ export default function Page() {
 
   // music init from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("music"); // "on" | "off"
-    setMusicOn(saved ? saved === "on" : true);
+    const timer = window.setTimeout(() => {
+      const saved = localStorage.getItem("music"); // "on" | "off"
+      setMusicOn(saved ? saved === "on" : true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   // apply music state
@@ -502,28 +580,34 @@ export default function Page() {
     a.preload = "auto";
     a.volume = MUSIC_VOLUME;
 
-    setAudioError(null);
+    const timers: number[] = [];
+    const scheduleState = (fn: () => void) => {
+      timers.push(window.setTimeout(fn, 0));
+    };
+
+    scheduleState(() => setAudioError(null));
 
     if (!musicOn) {
-      setNeedsTap(false);
+      scheduleState(() => setNeedsTap(false));
       try {
         a.pause();
         a.currentTime = 0;
       } catch {}
-      return;
+      return () => timers.forEach((timer) => window.clearTimeout(timer));
     }
 
     const tryPlay = async () => {
       try {
         await a.play();
         setNeedsTap(false);
-      } catch (e: any) {
+      } catch {
         // Autoplay blocked (mobile) OR file format not supported
         setNeedsTap(true);
       }
     };
 
     tryPlay();
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [musicOn]);
 
   // if autoplay blocked, try again on first user gesture
@@ -590,7 +674,7 @@ export default function Page() {
     const q = query.trim().toLowerCase();
     if (!q) return PRODUCTS;
     return PRODUCTS.filter((p) =>
-      `${p.name} ${p.variant} ${p.note} ${p.bullets.join(" ")}`.toLowerCase().includes(q)
+      `${p.name} ${p.category} ${p.variant} ${p.note} ${p.bullets.join(" ")}`.toLowerCase().includes(q)
     );
   }, [query]);
 
@@ -600,11 +684,12 @@ export default function Page() {
     return PRODUCTS.filter((p) => cart[p.id]).map((p) => ({
       ...p,
       qty: cart[p.id],
-      subtotal: cart[p.id] * p.price,
+      subtotal: p.price === null ? 0 : cart[p.id] * p.price,
     }));
   }, [cart]);
 
   const cartTotal = useMemo(() => cartItems.reduce((sum, i) => sum + i.subtotal, 0), [cartItems]);
+  const hasOpenPrice = useMemo(() => cartItems.some((i) => i.price === null), [cartItems]);
 
   function addToCart(id: string) {
     setCart((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
@@ -637,16 +722,17 @@ export default function Page() {
       shipTo ? `Alamat tujuan: ${shipTo}` : "Alamat tujuan: (isi alamat tujuan)",
       "Catatan alamat: boleh shareloc untuk patokan alamat ya 🙏",
       "",
-      ...cartItems.map((i) => `- ${i.name} (${i.variant}) x${i.qty} = ${formatIDR(i.subtotal)}`),
-      cartItems.length ? `Total: ${formatIDR(cartTotal)}` : "(keranjang masih kosong)",
+      ...cartItems.map((i) => `- ${i.name} (${i.category}, ${i.variant}) x${i.qty} = ${formatSubtotal(i.price, i.qty)}`),
+      cartItems.length ? `Total sementara: ${formatCartTotal(cartTotal, hasOpenPrice)}` : "(keranjang masih kosong)",
       "",
-      `Catatan kopi: ${COFFEE_TRUTH} ${TASTE_NOTE}`,
+      `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, Es Kopi Tanpa Ampas, dan Es Kopi Susu Gula Aren. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
       "",
       "Metode bayar: Transfer Bank / QRIS (JOE Coffee). Mohon info ongkir ya. Terima kasih.",
+      `Katalog lengkap: ${CATALOG_URL}`,
     ];
     const text = encodeURIComponent(lines.join("\n"));
     return `https://wa.me/${PHONE_WA}?text=${text}`;
-  }, [cartItems, cartTotal, buyerName, shipTo]);
+  }, [cartItems, cartTotal, hasOpenPrice, buyerName, shipTo]);
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] gpro-safe-bottom">
@@ -673,9 +759,7 @@ export default function Page() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:px-4">
           {/* Brand */}
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-2xl border border-[color:var(--border)] bg-white/40 font-black tracking-tight dark:bg-white/5">
-              JOE
-            </div>
+            <LogoMark />
             <div className="leading-tight">
               <div className="text-sm font-black">{BRAND}</div>
               <div className="text-xs text-[color:var(--muted)]">Sleman • Yogyakarta</div>
@@ -685,7 +769,7 @@ export default function Page() {
           {/* Nav desktop */}
           <nav className="hidden items-center gap-5 text-sm text-[color:var(--muted)] md:flex">
             <a className="hover:opacity-80" href="#produk">Produk</a>
-            <a className="hover:opacity-80" href="#dinein">Dine In</a>
+            <a className="hover:opacity-80" href="#dinein">Menu Es</a>
             <a className="hover:opacity-80" href="#media">Media</a>
             <a className="hover:opacity-80" href="#testimoni">Testimoni</a>
             <a className="hover:opacity-80" href="#kontak">Kontak</a>
@@ -714,16 +798,16 @@ export default function Page() {
               <span className="hidden sm:inline">{dark ? "Dark" : "Light"}</span>
             </button>
 
-            {/* Tokopedia (desktop) */}
+            {/* Katalog (desktop) */}
             <a
-              href={TOKOPEDIA_URL}
+              href={CATALOG_URL}
               target="_blank"
               rel="noreferrer"
               className="hidden items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5 lg:inline-flex"
-              title="Buka Tokopedia"
+              title="Buka katalog Utas"
             >
               <Icon name="tokopedia" />
-              Tokopedia
+              Katalog
             </a>
 
             {/* Order WA */}
@@ -797,7 +881,7 @@ export default function Page() {
             <div>
               <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-2 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
                 <span className="h-2 w-2 rounded-full bg-[color:var(--primary)]" />
-                Ready stock • Packing aman • Respon cepat
+                Pouch 100gr - 1kg • Es kopi siap pesan
                 <span className="mx-2 hidden sm:inline">•</span>
                 <span className="font-black text-[color:var(--primary)]">Robusta + Arabika</span>
                 <span className="mx-2 hidden sm:inline">•</span>
@@ -825,13 +909,13 @@ export default function Page() {
                 </a>
 
                 <a
-                  href={TOKOPEDIA_URL}
+                  href={CATALOG_URL}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"
                 >
                   <Icon name="tokopedia" />
-                  Beli di Tokopedia
+                  Lihat Katalog
                 </a>
 
                 <a
@@ -907,7 +991,7 @@ export default function Page() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Contoh: 200g, sachet, instan..."
+                placeholder="Contoh: 500gr, gula aren, tanpa ampas..."
                 className="mt-4 w-full rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5"
               />
 
@@ -917,26 +1001,42 @@ export default function Page() {
                     key={p.id}
                     className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-sm font-black">{p.name}</div>
-                        <div className="text-xs text-[color:var(--muted)]">
-                          {p.variant} • {formatIDR(p.price)}
-                        </div>
-                        <div className="mt-2 text-xs text-[color:var(--muted)]">{p.note}</div>
+                    <div className="flex items-start gap-3">
+                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[color:var(--border)] bg-black/10">
+                        <Image
+                          src={p.image}
+                          alt={p.name}
+                          fill
+                          sizes="64px"
+                          className="object-cover"
+                        />
                       </div>
-                      <button
-                        onClick={() => addToCart(p.id)}
-                        className="shrink-0 rounded-xl bg-[color:var(--primary)] px-3 py-2 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                      >
-                        + Keranjang
-                      </button>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="text-[11px] font-black uppercase text-[color:var(--primary)]">
+                              {p.category}
+                            </div>
+                            <div className="text-sm font-black">{p.name}</div>
+                          </div>
+                          <button
+                            onClick={() => addToCart(p.id)}
+                            className="shrink-0 rounded-xl bg-[color:var(--primary)] px-3 py-2 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <div className="text-xs text-[color:var(--muted)]">
+                          {p.variant} • {formatPrice(p.price)}
+                        </div>
+                        <div className="mt-2 line-clamp-2 text-xs text-[color:var(--muted)]">{p.note}</div>
+                      </div>
                     </div>
                   </div>
                 ))}
 
                 <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
-                  Tip: Tambahkan ke keranjang, lalu checkout via WhatsApp. Pembayaran bisa transfer bank atau QRIS.
+                  Katalog sudah disesuaikan: pouch kopi bubuk 100gr, 200gr, 500gr, 1kg serta dua menu es.
                 </div>
               </div>
             </SoftCard>
@@ -949,20 +1049,29 @@ export default function Page() {
         <div className="gpro-reveal" data-reveal>
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <h2 className="text-2xl font-black md:text-3xl">Produk Kopi</h2>
+              <h2 className="text-2xl font-black md:text-3xl">Katalog Produk</h2>
               <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
-                Pilih ukuran sesuai kebutuhan. Semua produk dipacking rapi dan siap kirim. {COFFEE_TRUTH} {TASTE_NOTE}
+                Pouch kopi bubuk 100gr, 200gr, 500gr, 1kg plus Es Kopi Tanpa Ampas dan Es Kopi Susu Gula Aren.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <a
-                href={TOKOPEDIA_URL}
+                href={CATALOG_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
               >
                 <Icon name="tokopedia" />
-                Tokopedia
+                Katalog Utas
+              </a>
+              <a
+                href={WHATSAPP_CATALOG_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              >
+                <Icon name="whatsapp" />
+                WA Catalog
               </a>
               <a
                 href={waCheckoutLink}
@@ -978,18 +1087,35 @@ export default function Page() {
             {PRODUCTS.map((p) => {
               const qty = cart[p.id] ?? 0;
               return (
-                <SoftCard key={p.id} className="p-5">
+                <SoftCard key={p.id} className="overflow-hidden">
+                  <div className="relative aspect-[4/3] border-b border-[color:var(--border)] bg-black/10">
+                    <Image
+                      src={p.image}
+                      alt={p.name}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                    <span className="absolute left-3 top-3 rounded-full bg-[color:var(--surface-strong)] px-3 py-1 text-xs font-black text-[color:var(--surface-strong-foreground)] shadow-[var(--shadow-soft)]">
+                      {p.category}
+                    </span>
+                  </div>
+                  <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-xs font-bold text-[color:var(--muted)]">{p.variant}</div>
                       <div className="text-lg font-black leading-tight">{p.name}</div>
                     </div>
                     <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">
-                      {formatIDR(p.price)}
+                      {formatPrice(p.price)}
                     </span>
                   </div>
 
                   <p className="mt-3 text-sm text-[color:var(--muted)]">{p.note}</p>
+
+                  <div className="mt-3 text-xs font-bold text-[color:var(--muted)]">
+                    {p.status}
+                  </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
                     {p.bullets.map((b) => (
@@ -1032,13 +1158,22 @@ export default function Page() {
 
                     <a
                       href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                        `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info stok & ongkir ya. (${COFFEE_TRUTH} ${TASTE_NOTE})`
+                        `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info harga final, stok, dan ongkir ya. ${COFFEE_TRUTH} ${TASTE_NOTE}`
                       )}`}
                       className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
                     >
                       Chat WA →
                     </a>
                   </div>
+
+                  <a
+                    href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+                      `Halo ${BRAND}, saya mau tanya detail ${p.name} (${p.variant}).`
+                    )}`}
+                    className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-xs font-black hover:opacity-90 dark:bg-white/5"
+                  >
+                    Tanya produk via WA
+                  </a>
 
                   {qty > 0 && (
                     <button
@@ -1048,6 +1183,7 @@ export default function Page() {
                       Hapus dari keranjang
                     </button>
                   )}
+                  </div>
                 </SoftCard>
               );
             })}
@@ -1055,14 +1191,14 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Dine In (placeholder) */}
+      {/* Menu Es */}
       <section id="dinein" className="mx-auto max-w-6xl px-4 py-12">
         <div className="gpro-reveal" data-reveal>
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-black md:text-3xl">Dine In</h2>
+              <h2 className="text-2xl font-black md:text-3xl">Menu Es Kopi</h2>
               <p className="mt-2 text-sm text-[color:var(--muted)]">
-                (Placeholder) Nanti kamu bisa isi menu dine in, jam buka, paket, dll.
+                Dua menu es yang bisa langsung ditanyakan ketersediaannya lewat WhatsApp.
               </p>
             </div>
             <a
@@ -1075,35 +1211,35 @@ export default function Page() {
 
           <div className="mt-6 grid gap-5 md:grid-cols-3">
             <SoftCard className="p-6">
-              <div className="text-sm font-black">Menu Dine In</div>
+              <div className="text-sm font-black">Es Kopi Tanpa Ampas</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Tambahkan daftar menu di sini (espresso, americano, manual brew, dsb).
+                Kopi hitam dingin tanpa ampas, praktis diminum dan tetap terasa kopinya.
               </div>
             </SoftCard>
             <SoftCard className="p-6">
-              <div className="text-sm font-black">Jam Operasional</div>
+              <div className="text-sm font-black">Es Kopi Susu Gula Aren</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Tambahkan jam buka/tutup & hari operasional.
+                Es kopi susu creamy dengan manis gula aren untuk rasa yang lebih lembut.
               </div>
             </SoftCard>
             <SoftCard className="p-6">
-              <div className="text-sm font-black">Lokasi & Ambience</div>
+              <div className="text-sm font-black">Pesanan Banyak</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Tambahkan foto tempat / suasana (bisa taruh di section Media).
+                Cocok untuk kantor, acara kecil, atau stok minuman dingin. Konfirmasi jadwal via WA.
               </div>
             </SoftCard>
           </div>
         </div>
       </section>
 
-      {/* Media (foto/video placeholder + socials) */}
+      {/* Media */}
       <section id="media" className="mx-auto max-w-6xl px-4 py-12">
         <div className="gpro-reveal" data-reveal>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="text-2xl font-black md:text-3xl">Media</h2>
               <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Tempat foto & video. Kamu tinggal upload file ke folder <b>/public</b> sesuai nama yang dipakai di sini.
+                Foto produk Joe Coffee: kemasan pouch, cup es kopi, dan materi pendukung katalog.
               </p>
             </div>
 
@@ -1131,17 +1267,18 @@ export default function Page() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {MEDIA_IMAGES.map((m) => (
               <SoftCard key={m.label} className="overflow-hidden">
-                <div className="grid aspect-[16/10] place-items-center border-b border-[color:var(--border)] bg-white/40 text-[color:var(--muted)] dark:bg-white/5">
-                  <div className="text-center">
-                    <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-2xl border border-[color:var(--border)] bg-white/50 dark:bg-white/10">
-                      <Icon name="image" />
-                    </div>
-                    <div className="text-sm font-black">{m.label}</div>
-                    <div className="mt-1 text-xs">Taruh file: <code>{m.src}</code></div>
-                  </div>
+                <div className="relative aspect-[16/10] border-b border-[color:var(--border)] bg-black/10">
+                  <Image
+                    src={m.src}
+                    alt={m.label}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover"
+                  />
                 </div>
                 <div className="p-4 text-xs text-[color:var(--muted)]">
-                 
+                  <div className="text-sm font-black text-[var(--foreground)]">{m.label}</div>
+                  <div className="mt-1">{m.note}</div>
                 </div>
               </SoftCard>
             ))}
@@ -1270,13 +1407,13 @@ export default function Page() {
                 Kirim via WA
               </a>
               <a
-                href={TOKOPEDIA_URL}
+                href={CATALOG_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-black hover:opacity-90 dark:bg-white/5"
               >
                 <Icon name="tokopedia" />
-                Tokopedia
+                Katalog
               </a>
             </div>
           </div>
@@ -1329,9 +1466,9 @@ export default function Page() {
                         <div>
                           <div className="text-sm font-black">{i.name}</div>
                           <div className="text-xs text-[color:var(--muted)]">
-                            {i.variant} • {formatIDR(i.price)}
+                            {i.variant} • {formatPrice(i.price)}
                           </div>
-                          <div className="mt-2 text-xs font-black">Subtotal: {formatIDR(i.subtotal)}</div>
+                          <div className="mt-2 text-xs font-black">Subtotal: {formatSubtotal(i.price, i.qty)}</div>
                         </div>
 
                         <div className="flex flex-col items-end gap-2">
@@ -1383,7 +1520,7 @@ export default function Page() {
                 </div>
                 <div className="flex items-center justify-between text-[color:var(--muted)]">
                   <span>Total harga</span>
-                  <span className="font-black text-[var(--foreground)]">{formatIDR(cartTotal)}</span>
+                  <span className="font-black text-[var(--foreground)]">{formatCartTotal(cartTotal, hasOpenPrice)}</span>
                 </div>
 
                 <div className="mt-3 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
@@ -1409,13 +1546,13 @@ export default function Page() {
               </a>
 
               <a
-                href={TOKOPEDIA_URL}
+                href={CATALOG_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"
               >
                 <Icon name="tokopedia" />
-                Beli via Tokopedia
+                Beli via Katalog
               </a>
 
               {/* Payment methods */}
@@ -1425,9 +1562,15 @@ export default function Page() {
                 <div className="mt-3 font-semibold text-[var(--foreground)]">Info Transfer</div>
                 <div className="mt-1">{PAYMENT.bankNote}</div>
 
-                <div className="mt-4 font-semibold text-[var(--foreground)]">QRIS (placeholder)</div>
-                <div className="mt-2 rounded-2xl border border-dashed border-[color:var(--border)] bg-white/40 p-3 dark:bg-white/5">
-                  Taruh gambar QRIS di: <code>{PAYMENT.qrisImage}</code>
+                <div className="mt-4 font-semibold text-[var(--foreground)]">QRIS JOE Coffee</div>
+                <div className="relative mt-2 aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white p-3">
+                  <Image
+                    src={PAYMENT.qrisImage}
+                    alt="QRIS JOE Coffee"
+                    fill
+                    sizes="(min-width: 1024px) 240px, 100vw"
+                    className="object-contain p-2"
+                  />
                 </div>
               </div>
 
@@ -1505,13 +1648,13 @@ export default function Page() {
                 </div>
 
                 <a
-                  href={TOKOPEDIA_URL}
+                  href={CATALOG_URL}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
                 >
                   <Icon name="tokopedia" />
-                  Kunjungi Tokopedia Resmi
+                  Kunjungi Katalog Resmi
                 </a>
               </div>
             </SoftCard>
@@ -1571,12 +1714,12 @@ export default function Page() {
             Order WA
           </a>
           <a
-            href={TOKOPEDIA_URL}
+            href={CATALOG_URL}
             target="_blank"
             rel="noreferrer"
             className="flex-1 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-3 text-center text-sm font-black hover:opacity-90 dark:bg-white/5"
           >
-            Tokopedia
+            Katalog
           </a>
         </div>
       </div>
