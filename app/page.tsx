@@ -196,6 +196,10 @@ function cx(...classes: Array<string | false | undefined | null>) {
   return classes.filter(Boolean).join(" ");
 }
 
+function revealDelay(index: number): React.CSSProperties {
+  return { "--gpro-delay": `${Math.min(index, 6) * 60}ms` } as React.CSSProperties;
+}
+
 function Icon({
   name,
 }: {
@@ -491,12 +495,15 @@ function Icon({
 function SoftCard({
   children,
   className,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <div
+      style={style}
       className={cx(
         "gpro-card rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] shadow-[var(--shadow-soft)] backdrop-blur",
         className
@@ -697,20 +704,42 @@ export default function Page() {
 
   // scroll progress bar
   useEffect(() => {
-    const onScroll = () => {
+    let rafId = 0;
+
+    const updateProgress = () => {
       const h = document.documentElement;
       const max = h.scrollHeight - h.clientHeight;
       const p = max > 0 ? (h.scrollTop / max) * 100 : 0;
       setProgress(p);
+      rafId = 0;
     };
-    onScroll();
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // reveal on scroll
   useEffect(() => {
+    const root = document.documentElement;
     const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+
+    root.classList.add("gpro-reveal-ready");
+
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return () => root.classList.remove("gpro-reveal-ready");
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -722,7 +751,11 @@ export default function Page() {
       { threshold: 0.12 }
     );
     els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    return () => {
+      io.disconnect();
+      root.classList.remove("gpro-reveal-ready");
+    };
   }, []);
 
   const mapsLink = useMemo(() => {
@@ -925,7 +958,7 @@ export default function Page() {
 
       {/* Toast: tap to enable music */}
       {musicOn && needsTap && (
-        <div className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 md:bottom-6">
+        <div className="gpro-toast fixed bottom-24 left-1/2 z-50 -translate-x-1/2 md:bottom-6">
           <button
             onClick={playMusicNow}
             className="rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-4 py-2 text-xs font-black shadow-[var(--shadow)] backdrop-blur hover:opacity-90"
@@ -1164,10 +1197,10 @@ export default function Page() {
           </div>
 
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {PRODUCTS.map((p) => {
+            {PRODUCTS.map((p, index) => {
               const qty = cart[p.id] ?? 0;
               return (
-                <SoftCard key={p.id} className="overflow-hidden">
+                <SoftCard key={p.id} className="overflow-hidden" style={revealDelay(index)}>
                   <div className="relative aspect-[4/3] border-b border-[color:var(--border)] bg-black/10">
                     <Image
                       src={p.image}
@@ -1286,19 +1319,19 @@ export default function Page() {
           </div>
 
           <div className="mt-6 grid gap-5 md:grid-cols-3">
-            <SoftCard className="p-6">
+            <SoftCard className="p-6" style={revealDelay(0)}>
               <div className="text-sm font-black">Es Kopi Tanpa Ampas</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
                 Kopi hitam dingin tanpa ampas, praktis diminum dan tetap terasa kopinya.
               </div>
             </SoftCard>
-            <SoftCard className="p-6">
+            <SoftCard className="p-6" style={revealDelay(1)}>
               <div className="text-sm font-black">Es Kopi Susu Gula Aren</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
                 Es kopi susu creamy dengan manis gula aren untuk rasa yang lebih lembut.
               </div>
             </SoftCard>
-            <SoftCard className="p-6">
+            <SoftCard className="p-6" style={revealDelay(2)}>
               <div className="text-sm font-black">Pesanan Banyak</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
                 Cocok untuk kantor, acara kecil, atau stok minuman dingin. Konfirmasi jadwal via WA.
@@ -1341,8 +1374,8 @@ export default function Page() {
 
           {/* image grid */}
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {MEDIA_IMAGES.map((m) => (
-              <SoftCard key={m.label} className="overflow-hidden">
+            {MEDIA_IMAGES.map((m, index) => (
+              <SoftCard key={m.label} className="overflow-hidden" style={revealDelay(index)}>
                 <div className="relative aspect-[16/10] border-b border-[color:var(--border)] bg-black/10">
                   <Image
                     src={m.src}
@@ -1430,8 +1463,8 @@ export default function Page() {
           <h2 className="text-2xl font-black md:text-3xl">Info Order</h2>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {INFO_CARDS.map((item) => (
-              <SoftCard key={item.title} className="p-6">
+            {INFO_CARDS.map((item, index) => (
+              <SoftCard key={item.title} className="p-6" style={revealDelay(index)}>
                 <p className="text-sm leading-relaxed text-[color:var(--muted)]">{item.desc}</p>
                 <div className="mt-4 text-sm font-black">{item.title}</div>
                 <div className="text-xs text-[color:var(--muted)]">{item.meta}</div>
