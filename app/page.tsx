@@ -17,11 +17,19 @@ const PHONE_DISPLAY = "+62 858-9999-3742";
 const PHONE_WA = "6285899993742";
 const EMAIL = "nielpickup@gmail.com";
 const CATALOG_URL = "https://utas.me/oomgaga";
-const WHATSAPP_CATALOG_URL = "https://wa.me/c/6281395955293";
+const WHATSAPP_CATALOG_URL = `https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+  `Halo ${BRAND}, saya mau minta katalog Joe Coffee.`
+)}`;
 
 /** Audio */
 const AUDIO_SRC = "/mars-kopi-joe.mp3";
 const MUSIC_VOLUME = 0.12; // volume pelan
+
+const STORAGE_KEYS = {
+  cart: "joeCoffeeCart",
+  buyerName: "joeCoffeeBuyerName",
+  shipTo: "joeCoffeeShipTo",
+};
 
 /** Sosial (isi link kamu nanti) */
 const SOCIAL = {
@@ -37,12 +45,11 @@ const PAYMENT = {
   qrisImage: "/qris-joe.jpg",
 };
 
-// Angka statistik (ganti sesuai data asli)
-const STATS = {
-  shipped: "10K+",
-  rating: "4.9/5",
-  satisfaction: "100%",
-};
+const TRUST_POINTS = [
+  { value: "100gr-1kg", label: "Pilihan pouch" },
+  { value: "2 menu", label: "Es kopi" },
+  { value: "WA + QRIS", label: "Order & bayar" },
+];
 
 type Product = {
   id: string;
@@ -131,21 +138,21 @@ const PRODUCTS: Product[] = [
   },
 ];
 
-const TESTIMONIALS = [
+const INFO_CARDS = [
   {
-    name: "Dina",
-    meta: "Sleman",
-    quote: "Kemasannya rapi, aromanya wangi. Repeat order karena rasanya konsisten.",
+    title: "Pilih Ukuran",
+    meta: "Kopi bubuk pouch",
+    desc: "Tersedia 100gr, 200gr, 500gr, dan 1kg. Harga 500gr dan 1kg dikonfirmasi lewat WhatsApp.",
   },
   {
-    name: "Raka",
-    meta: "Depok",
-    quote: "Respon cepat, pengiriman aman. Cocok untuk stok jualan.",
+    title: "Menu Dingin",
+    meta: "Es kopi",
+    desc: "Ada Es Kopi Tanpa Ampas dan Es Kopi Susu Gula Aren untuk pesanan harian atau pesanan jumlah banyak.",
   },
   {
-    name: "Maya",
-    meta: "Yogyakarta",
-    quote: "Enak buat daily coffee. Ukuran 100g pas buat coba dulu.",
+    title: "Konfirmasi Order",
+    meta: "WhatsApp",
+    desc: "Keranjang dibuat jadi pesan WhatsApp. Stok, ongkir, jadwal kirim, dan pembayaran dikonfirmasi di chat.",
   },
 ];
 
@@ -530,13 +537,14 @@ export default function Page() {
   // search & cart
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string, number>>({});
+  const [storageReady, setStorageReady] = useState(false);
 
   // scroll progress
   const [progress, setProgress] = useState(0);
 
   // music
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [musicOn, setMusicOn] = useState<boolean>(true); // default ON (first time)
+  const [musicOn, setMusicOn] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [needsTap, setNeedsTap] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
@@ -561,19 +569,49 @@ export default function Page() {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
 
-  // music init from localStorage
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const saved = localStorage.getItem("music"); // "on" | "off"
-      setMusicOn(saved ? saved === "on" : true);
-    }, 0);
+    const validIds = new Set(PRODUCTS.map((p) => p.id));
 
-    return () => window.clearTimeout(timer);
+    try {
+      const savedCart = localStorage.getItem(STORAGE_KEYS.cart);
+      if (savedCart) {
+        const parsed = JSON.parse(savedCart) as Record<string, unknown>;
+        const nextCart: Record<string, number> = {};
+
+        for (const [id, value] of Object.entries(parsed)) {
+          const qty = typeof value === "number" ? Math.floor(value) : 0;
+          if (validIds.has(id) && qty > 0) nextCart[id] = Math.min(qty, 99);
+        }
+
+        setCart(nextCart);
+      }
+
+      setBuyerName(localStorage.getItem(STORAGE_KEYS.buyerName) ?? "");
+      setShipTo(localStorage.getItem(STORAGE_KEYS.shipTo) ?? "");
+    } catch {
+      setCart({});
+    } finally {
+      setStorageReady(true);
+    }
   }, []);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(cart));
+  }, [cart, storageReady]);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    localStorage.setItem(STORAGE_KEYS.buyerName, buyerName);
+  }, [buyerName, storageReady]);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    localStorage.setItem(STORAGE_KEYS.shipTo, shipTo);
+  }, [shipTo, storageReady]);
 
   // apply music state
   useEffect(() => {
-    localStorage.setItem("music", musicOn ? "on" : "off");
     const a = audioRef.current;
     if (!a) return;
 
@@ -737,15 +775,33 @@ export default function Page() {
   }
 
   const waCheckoutLink = useMemo(() => {
+    const cleanBuyerName = buyerName.trim();
+    const cleanShipTo = shipTo.trim();
+    const buyerLines = [
+      cleanBuyerName ? `Nama: ${cleanBuyerName}` : null,
+      cleanShipTo ? `Alamat tujuan: ${cleanShipTo}` : null,
+      "Catatan alamat: ongkir bisa dikonfirmasi lewat chat; saya bisa shareloc bila perlu.",
+    ].filter((line): line is string => Boolean(line));
+
+    if (!cartItems.length) {
+      const text = encodeURIComponent(
+        [
+          `Halo ${BRAND}, saya mau tanya produk Joe Coffee.`,
+          "",
+          "Katalog yang saya lihat: kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, Es Kopi Tanpa Ampas, dan Es Kopi Susu Gula Aren.",
+          "Mohon info stok, harga final, dan ongkir ya.",
+        ].join("\n")
+      );
+      return `https://wa.me/${PHONE_WA}?text=${text}`;
+    }
+
     const lines = [
       `Halo ${BRAND}, saya mau pesan:`,
       "",
-      buyerName ? `Nama: ${buyerName}` : "Nama: (isi nama)",
-      shipTo ? `Alamat tujuan: ${shipTo}` : "Alamat tujuan: (isi alamat tujuan)",
-      "Catatan alamat: boleh shareloc untuk patokan alamat ya 🙏",
+      ...buyerLines,
       "",
       ...cartItems.map((i) => `- ${i.name} (${i.category}, ${i.variant}) x${i.qty} = ${formatSubtotal(i.price, i.qty)}`),
-      cartItems.length ? `Total sementara: ${formatCartTotal(cartTotal, hasOpenPrice)}` : "(keranjang masih kosong)",
+      `Total sementara: ${formatCartTotal(cartTotal, hasOpenPrice)}`,
       "",
       `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, Es Kopi Tanpa Ampas, dan Es Kopi Susu Gula Aren. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
       "",
@@ -757,7 +813,7 @@ export default function Page() {
   }, [cartItems, cartTotal, hasOpenPrice, buyerName, shipTo]);
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] gpro-safe-bottom">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] safe-bottom">
       {/* audio element (hidden) */}
       <audio
         ref={audioRef}
@@ -793,9 +849,9 @@ export default function Page() {
           {/* Nav desktop */}
           <nav className="hidden items-center gap-5 text-sm text-[color:var(--muted)] md:flex">
             <a className="hover:opacity-80" href="#produk">Produk</a>
-            <a className="hover:opacity-80" href="#dinein">Menu Es</a>
+            <a className="hover:opacity-80" href="#menu-es">Menu Es</a>
             <a className="hover:opacity-80" href="#media">Media</a>
-            <a className="hover:opacity-80" href="#testimoni">Testimoni</a>
+            <a className="hover:opacity-80" href="#info-order">Info Order</a>
             <a className="hover:opacity-80" href="#kontak">Kontak</a>
           </nav>
 
@@ -805,6 +861,7 @@ export default function Page() {
             <button
               onClick={toggleMusic}
               className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              aria-label={audioPlaying ? "Matikan musik" : "Nyalakan musik"}
               title={audioPlaying ? "Matikan musik" : "Nyalakan musik"}
             >
               {audioPlaying ? <Icon name="pause" /> : <Icon name="music" />}
@@ -815,8 +872,8 @@ export default function Page() {
             <button
               onClick={() => setDark((v) => !v)}
               className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-              aria-label="Toggle dark mode"
-              title="Toggle dark mode"
+              aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+              title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
             >
               {dark ? <Icon name="moon" /> : <Icon name="sun" />}
               <span className="hidden sm:inline">{dark ? "Dark" : "Light"}</span>
@@ -837,7 +894,10 @@ export default function Page() {
             {/* Order WA */}
             <a
               href={waCheckoutLink}
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+              aria-label="Order via WhatsApp"
               title="Order via WhatsApp"
             >
               <Icon name="whatsapp" />
@@ -848,6 +908,7 @@ export default function Page() {
             <a
               href="#checkout"
               className="relative inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              aria-label={`Keranjang, ${cartCount} item`}
               title="Keranjang"
             >
               <Icon name="cart" />
@@ -916,6 +977,8 @@ export default function Page() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href={waCheckoutLink}
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
                 >
                   <Icon name="whatsapp" />
@@ -1036,6 +1099,7 @@ export default function Page() {
                           <button
                             onClick={() => addToCart(p.id)}
                             className="shrink-0 rounded-xl bg-[color:var(--primary)] px-3 py-2 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                            aria-label={`Tambah ${p.name} ke keranjang`}
                           >
                             +
                           </button>
@@ -1089,6 +1153,8 @@ export default function Page() {
               </a>
               <a
                 href={waCheckoutLink}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
               >
                 <Icon name="whatsapp" />
@@ -1148,7 +1214,7 @@ export default function Page() {
                         <button
                           onClick={() => decFromCart(p.id)}
                           className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
-                          aria-label="Kurangi"
+                          aria-label={`Kurangi ${p.name}`}
                         >
                           −
                         </button>
@@ -1156,7 +1222,7 @@ export default function Page() {
                         <button
                           onClick={() => addToCart(p.id)}
                           className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
-                          aria-label="Tambah"
+                          aria-label={`Tambah ${p.name}`}
                         >
                           +
                         </button>
@@ -1165,6 +1231,7 @@ export default function Page() {
                       <button
                         onClick={() => addToCart(p.id)}
                         className="rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                        aria-label={`Tambah ${p.name} ke keranjang`}
                       >
                         + Keranjang
                       </button>
@@ -1174,20 +1241,13 @@ export default function Page() {
                       href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
                         `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info harga final, stok, dan ongkir ya. ${COFFEE_TRUTH} ${TASTE_NOTE}`
                       )}`}
+                      target="_blank"
+                      rel="noreferrer"
                       className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
                     >
                       Chat WA →
                     </a>
                   </div>
-
-                  <a
-                    href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                      `Halo ${BRAND}, saya mau tanya detail ${p.name} (${p.variant}).`
-                    )}`}
-                    className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-xs font-black hover:opacity-90 dark:bg-white/5"
-                  >
-                    Tanya produk via WA
-                  </a>
 
                   {qty > 0 && (
                     <button
@@ -1206,7 +1266,7 @@ export default function Page() {
       </section>
 
       {/* Menu Es */}
-      <section id="dinein" className="mx-auto max-w-6xl px-4 py-12">
+      <section id="menu-es" className="mx-auto max-w-6xl px-4 py-12">
         <div className="gpro-reveal" data-reveal>
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -1217,9 +1277,11 @@ export default function Page() {
             </div>
             <a
               href={waCheckoutLink}
+              target="_blank"
+              rel="noreferrer"
               className="hidden rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)] sm:inline-flex"
             >
-              Reservasi via WA
+              Pesan menu es via WA
             </a>
           </div>
 
@@ -1352,9 +1414,9 @@ export default function Page() {
 
               <div className="mt-10 rounded-[var(--radius)] bg-white/10 p-6">
                 <div className="grid gap-6 text-center md:grid-cols-3">
-                  <StatBig value={STATS.shipped} label="Paket Terkirim" />
-                  <StatBig value={STATS.rating} label="Rating Pelanggan" />
-                  <StatBig value={STATS.satisfaction} label="Kepuasan" />
+                  {TRUST_POINTS.map((point) => (
+                    <StatBig key={point.label} value={point.value} label={point.label} />
+                  ))}
                 </div>
               </div>
             </div>
@@ -1362,17 +1424,17 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Testimoni */}
-      <section id="testimoni" className="mx-auto max-w-6xl px-4 py-14">
+      {/* Info order */}
+      <section id="info-order" className="mx-auto max-w-6xl px-4 py-14">
         <div className="gpro-reveal" data-reveal>
-          <h2 className="text-2xl font-black md:text-3xl">Testimoni Pelanggan</h2>
+          <h2 className="text-2xl font-black md:text-3xl">Info Order</h2>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <SoftCard key={t.name} className="p-6">
-                <p className="text-sm leading-relaxed text-[color:var(--muted)]">“{t.quote}”</p>
-                <div className="mt-4 text-sm font-black">{t.name}</div>
-                <div className="text-xs text-[color:var(--muted)]">{t.meta}</div>
+            {INFO_CARDS.map((item) => (
+              <SoftCard key={item.title} className="p-6">
+                <p className="text-sm leading-relaxed text-[color:var(--muted)]">{item.desc}</p>
+                <div className="mt-4 text-sm font-black">{item.title}</div>
+                <div className="text-xs text-[color:var(--muted)]">{item.meta}</div>
               </SoftCard>
             ))}
           </div>
@@ -1406,6 +1468,8 @@ export default function Page() {
               </button>
               <a
                 href={waCheckoutLink}
+                target="_blank"
+                rel="noreferrer"
                 className={cx(
                   "inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-black",
                   cartItems.length
@@ -1490,6 +1554,7 @@ export default function Page() {
                             <button
                               onClick={() => decFromCart(i.id)}
                               className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
+                              aria-label={`Kurangi ${i.name}`}
                             >
                               −
                             </button>
@@ -1497,6 +1562,7 @@ export default function Page() {
                             <button
                               onClick={() => addToCart(i.id)}
                               className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
+                              aria-label={`Tambah ${i.name}`}
                             >
                               +
                             </button>
@@ -1544,6 +1610,8 @@ export default function Page() {
 
               <a
                 href={waCheckoutLink}
+                target="_blank"
+                rel="noreferrer"
                 className={cx(
                   "mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black",
                   cartItems.length
@@ -1632,6 +1700,8 @@ export default function Page() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   <a
                     href={waCheckoutLink}
+                    target="_blank"
+                    rel="noreferrer"
                     className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 hover:opacity-90 dark:bg-white/5"
                   >
                     <div className="flex items-center gap-3">
@@ -1711,6 +1781,8 @@ export default function Page() {
       {/* Floating WA (desktop) */}
       <a
         href={waCheckoutLink}
+        target="_blank"
+        rel="noreferrer"
         className="fixed bottom-5 right-5 z-50 hidden items-center gap-2 rounded-full bg-[color:var(--primary)] px-4 py-3 text-sm font-black text-[color:var(--primary-foreground)] shadow-[var(--shadow)] hover:bg-[color:var(--primary-hover)] md:inline-flex"
         aria-label="Chat WhatsApp"
       >
@@ -1723,6 +1795,8 @@ export default function Page() {
         <div className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-3 shadow-[var(--shadow)] backdrop-blur">
           <a
             href={waCheckoutLink}
+            target="_blank"
+            rel="noreferrer"
             className="flex-1 rounded-xl bg-[color:var(--primary)] px-4 py-3 text-center text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
           >
             Order WA
