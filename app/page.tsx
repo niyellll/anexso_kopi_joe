@@ -968,15 +968,57 @@ export default function Page() {
         </div>
 
         {/* Nav desktop (second row) */}
-        <div className="hidden border-t border-[color:var(--border)] md:block">
-          <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-1 px-3 py-2 text-sm text-[color:var(--muted)] sm:px-4">
-            <a className="hover:opacity-80" href="#produk">Produk</a>
-            <a className="hover:opacity-80" href="#menu-es">Menu Es</a>
-            <a className="hover:opacity-80" href="#training">Training</a>
-            <a className="hover:opacity-80" href="#ebooks">Buku &amp; E-book</a>
-            <a className="hover:opacity-80" href="#media">Media</a>
-            <a className="hover:opacity-80" href="#info-order">Info Order</a>
-            <a className="hover:opacity-80" href="#kontak">Kontak</a>
+        <div className="hidden border-t border-[color:var(--border)] bg-white/30 md:block dark:bg-white/[0.03]">
+          <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-1 gap-y-1 px-2 py-1.5 text-sm sm:px-3">
+            <a
+              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
+              href="#produk"
+            >
+              Produk
+              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
+            </a>
+            <a
+              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
+              href="#menu-es"
+            >
+              Menu Es
+              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
+            </a>
+            <a
+              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
+              href="#training"
+            >
+              Training
+              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
+            </a>
+            <a
+              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
+              href="#ebooks"
+            >
+              Buku &amp; E-book
+              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
+            </a>
+            <a
+              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
+              href="#media"
+            >
+              Media
+              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
+            </a>
+            <a
+              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
+              href="#info-order"
+            >
+              Info Order
+              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
+            </a>
+            <a
+              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
+              href="#kontak"
+            >
+              Kontak
+              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
+            </a>
           </nav>
         </div>
       </header>
@@ -1009,8 +1051,8 @@ export default function Page() {
 
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 md:pb-14 md:pt-14">
-        <div className="gpro-reveal" data-reveal>
-          <div className="max-w-3xl">
+        <div className="gpro-reveal grid gap-10 md:grid-cols-[1.15fr_0.85fr] md:items-center" data-reveal>
+          <div>
             <div>
               <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-2 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
                 <span className="h-2 w-2 rounded-full bg-[color:var(--primary)]" />
@@ -1109,6 +1151,41 @@ export default function Page() {
                   </div>
                 </SoftCard>
               </div>
+            </div>
+          </div>
+
+          {/* Right visual */}
+          <div className="hidden md:block">
+            <SoftCard className="relative overflow-hidden p-0">
+              <div className="relative aspect-[4/5] w-full">
+                <Image
+                  src="/produk-kopi-bubuk-500gr.jpeg"
+                  alt="Pouch kopi bubuk Joe Coffee"
+                  fill
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                  className="object-cover"
+                  priority
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
+                <div className="absolute inset-x-4 bottom-4 rounded-2xl bg-white/90 p-4 backdrop-blur dark:bg-black/60">
+                  <div className="text-xs font-bold uppercase tracking-wide text-[color:var(--primary)]">
+                    Joe Coffee
+                  </div>
+                  <div className="mt-1 text-sm font-black text-[var(--foreground)]">
+                    Mulai {formatIDR(33000)}
+                  </div>
+                  <div className="mt-1 text-xs text-[color:var(--muted)]">Pouch 100gr - 1kg, ready order</div>
+                </div>
+              </div>
+            </SoftCard>
+
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              {TRUST_POINTS.map((point) => (
+                <SoftCard key={point.label} className="p-3 text-center">
+                  <div className="text-lg font-black text-[color:var(--primary)]">{point.value}</div>
+                  <div className="mt-1 text-[11px] text-[color:var(--muted)]">{point.label}</div>
+                </SoftCard>
+              ))}
             </div>
           </div>
         </div>
