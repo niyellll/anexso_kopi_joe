@@ -13,13 +13,11 @@ const TASTE_NOTE = "Kopi pahit tanpa gula.";
 
 const ADDRESS =
   "Gg. kamboja CTX No.36, Karang Asem, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281";
-const PHONE_DISPLAY = "+62 858-9999-3742";
-const PHONE_WA = "6285899993742";
+const PHONE_DISPLAY = "+62 813-9595-5293";
+const PHONE_WA = "6281395955293";
 const EMAIL = "nielpickup@gmail.com";
 const CATALOG_URL = "https://utas.me/oomgaga";
-const WHATSAPP_CATALOG_URL = `https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-  `Halo ${BRAND}, saya mau minta katalog Joe Coffee.`
-)}`;
+const WHATSAPP_CATALOG_URL = "https://wa.me/c/6281395955293";
 
 /** Audio */
 const AUDIO_SRC = "/mars-kopi-joe.mp3";
@@ -47,14 +45,14 @@ const PAYMENT = {
 
 const TRUST_POINTS = [
   { value: "100gr-1kg", label: "Pilihan pouch" },
-  { value: "2 menu", label: "Es kopi" },
+  { value: "3 menu", label: "Es kopi" },
   { value: "WA + QRIS", label: "Order & bayar" },
 ];
 
 type Product = {
   id: string;
   name: string;
-  category: "Kopi Bubuk" | "Es Kopi";
+  category: "Kopi Bubuk" | "Biji Kopi" | "Es Kopi";
   variant: string;
   price: number | null;
   status: string;
@@ -70,7 +68,7 @@ const PRODUCTS: Product[] = [
     category: "Kopi Bubuk",
     variant: "Pouch 100 gram",
     price: 33000,
-    status: "Konfirmasi stok via WA",
+    status: "Estimasi dari katalog",
     note:
       "Ukuran coba atau stok harian kecil. Blend Robusta dan Arabika, tanpa bahan pengawet dan tanpa campuran lainnya.",
     bullets: ["Pouch 100gr", "Blend jujur", "Tanpa campuran"],
@@ -81,11 +79,11 @@ const PRODUCTS: Product[] = [
     name: "Kopi Bubuk 200gr",
     category: "Kopi Bubuk",
     variant: "Pouch 200 gram",
-    price: 63000,
-    status: "Konfirmasi stok via WA",
+    price: 66000,
+    status: "Harga WA Catalog",
     note:
-      "Ukuran favorit untuk persediaan rumah. Takaran seduh 10gr atau 1 sdm munjung untuk satu cangkir.",
-    bullets: ["Pouch 200gr", "Takaran 10gr", "Pahit tanpa gula"],
+      "JOE Kopi Bubuk dikemas 200gr. Ukuran favorit untuk persediaan rumah dengan takaran seduh 10gr.",
+    bullets: ["Pouch 200gr", "IDR 66.000", "Takaran 10gr"],
     image: "/produk-kopi-bubuk-200gr.jpeg",
   },
   {
@@ -105,35 +103,59 @@ const PRODUCTS: Product[] = [
     name: "Kopi Bubuk 1kg",
     category: "Kopi Bubuk",
     variant: "Pouch 1 kilogram",
-    price: null,
-    status: "Tanya harga & stok via WA",
+    price: 285000,
+    status: "Harga WA Catalog",
     note:
-      "Ukuran besar untuk kantor, event, reseller, atau kebutuhan stok lebih lama.",
-    bullets: ["Pouch 1kg", "Untuk kantor/reseller", "Konfirmasi harga"],
+      "JOE Kopi Bubuk dikemas 1kg. Ukuran besar untuk kantor, event, reseller, atau stok lebih lama.",
+    bullets: ["Pouch 1kg", "IDR 285.000", "Untuk stok besar"],
+    image: "/produk-kopi-bubuk-1kg.jpeg",
+  },
+  {
+    id: "kopi-biji-1kg",
+    name: "JOE Biji Kopi 1kg",
+    category: "Biji Kopi",
+    variant: "Biji kopi 1 kilogram",
+    price: 285000,
+    status: "Harga WA Catalog",
+    note:
+      "Biji Kopi JOE dalam kemasan 1kg untuk pelanggan yang ingin grinding sendiri sesuai metode seduh.",
+    bullets: ["Biji kopi", "IDR 285.000", "Grind sendiri"],
     image: "/produk-kopi-bubuk-1kg.jpeg",
   },
   {
     id: "es-kopi-tanpa-ampas",
-    name: "Es Kopi Tanpa Ampas",
+    name: "Iced Black Coffee",
     category: "Es Kopi",
     variant: "Cup dingin",
-    price: null,
-    status: "Tanya harga & ketersediaan via WA",
+    price: 10000,
+    status: "Harga WA Catalog",
     note:
-      "Es kopi hitam tanpa ampas, ringan diminum dingin dan tetap membawa karakter kopi Joe.",
-    bullets: ["Tanpa ampas", "Dingin segar", "Kopi hitam"],
+      "Kopi hitam dingin tanpa ampas dan tanpa gula, ringan diminum dingin dan tetap membawa karakter kopi Joe.",
+    bullets: ["Tanpa ampas", "Tanpa gula", "IDR 10.000"],
     image: "/produk-es-kopi-tanpa-ampas.jpeg",
   },
   {
     id: "es-kopi-susu-gula-aren",
-    name: "Es Kopi Susu Gula Aren",
+    name: "ES KOPI SUSU",
     category: "Es Kopi",
     variant: "Cup dingin",
-    price: null,
-    status: "Tanya harga & ketersediaan via WA",
+    price: 20000,
+    status: "Harga WA Catalog",
     note:
-      "Es kopi susu creamy dengan manis gula aren, cocok untuk teman kerja atau santai.",
-    bullets: ["Gula aren", "Creamy", "Dingin segar"],
+      "Joe Espresso + Susu Diamond + Gula Aren + Es, cocok untuk teman kerja atau santai.",
+    bullets: ["Gula aren", "IDR 20.000", "Creamy"],
+    image: "/produk-es-kopi-susu-gula-aren.jpeg",
+  },
+  {
+    id: "es-ginger-kopi-susu",
+    name: "ES GINGER KOPI SUSU",
+    category: "Es Kopi",
+    variant: "Cup dingin jahe",
+    price: 23000,
+    status: "Harga WA Catalog",
+    note:
+      "Joe Espresso + Susu Diamond + Gula Aren + Es + Jahe untuk rasa creamy dengan hangat jahe.",
+    bullets: ["Jahe", "IDR 23.000", "Gula aren"],
     image: "/produk-es-kopi-susu-gula-aren.jpeg",
   },
 ];
@@ -142,12 +164,12 @@ const INFO_CARDS = [
   {
     title: "Pilih Ukuran",
     meta: "Kopi bubuk pouch",
-    desc: "Tersedia 100gr, 200gr, 500gr, dan 1kg. Harga 500gr dan 1kg dikonfirmasi lewat WhatsApp.",
+    desc: "Tersedia 100gr, 200gr, 500gr, dan 1kg. Harga 200gr dan 1kg mengikuti WA Catalog; 500gr dikonfirmasi lewat chat.",
   },
   {
     title: "Menu Dingin",
     meta: "Es kopi",
-    desc: "Ada Es Kopi Tanpa Ampas dan Es Kopi Susu Gula Aren untuk pesanan harian atau pesanan jumlah banyak.",
+    desc: "Ada Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU sesuai katalog WhatsApp.",
   },
   {
     title: "Konfirmasi Order",
@@ -821,7 +843,7 @@ export default function Page() {
         [
           `Halo ${BRAND}, saya mau tanya produk Joe Coffee.`,
           "",
-          "Katalog yang saya lihat: kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, Es Kopi Tanpa Ampas, dan Es Kopi Susu Gula Aren.",
+          "Katalog yang saya lihat: kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU.",
           "Mohon info stok, harga final, dan ongkir ya.",
         ].join("\n")
       );
@@ -836,7 +858,7 @@ export default function Page() {
       ...cartItems.map((i) => `- ${i.name} (${i.category}, ${i.variant}) x${i.qty} = ${formatSubtotal(i.price, i.qty)}`),
       `Total sementara: ${formatCartTotal(cartTotal, hasOpenPrice)}`,
       "",
-      `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, Es Kopi Tanpa Ampas, dan Es Kopi Susu Gula Aren. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
+      `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
       "",
       "Metode bayar: Transfer Bank / QRIS (JOE Coffee). Mohon info ongkir ya. Terima kasih.",
       `Katalog lengkap: ${CATALOG_URL}`,
@@ -1147,7 +1169,7 @@ export default function Page() {
                 ))}
 
                 <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
-                  Katalog sudah disesuaikan: pouch kopi bubuk 100gr, 200gr, 500gr, 1kg serta dua menu es.
+                  Katalog sudah disesuaikan dengan WA Catalog: pouch kopi bubuk, biji kopi 1kg, dan tiga menu es.
                 </div>
               </div>
             </SoftCard>
@@ -1162,7 +1184,7 @@ export default function Page() {
             <div>
               <h2 className="text-2xl font-black md:text-3xl">Katalog Produk</h2>
               <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
-                Pouch kopi bubuk 100gr, 200gr, 500gr, 1kg plus Es Kopi Tanpa Ampas dan Es Kopi Susu Gula Aren.
+                Pouch kopi bubuk 100gr, 200gr, 500gr, 1kg plus biji kopi 1kg dan menu es dari WA Catalog.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -1305,7 +1327,7 @@ export default function Page() {
             <div>
               <h2 className="text-2xl font-black md:text-3xl">Menu Es Kopi</h2>
               <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Dua menu es yang bisa langsung ditanyakan ketersediaannya lewat WhatsApp.
+                Menu minuman dari WA Catalog yang bisa langsung ditanyakan ketersediaannya lewat WhatsApp.
               </p>
             </div>
             <a
@@ -1320,21 +1342,21 @@ export default function Page() {
 
           <div className="mt-6 grid gap-5 md:grid-cols-3">
             <SoftCard className="p-6" style={revealDelay(0)}>
-              <div className="text-sm font-black">Es Kopi Tanpa Ampas</div>
+              <div className="text-sm font-black">Iced Black Coffee</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Kopi hitam dingin tanpa ampas, praktis diminum dan tetap terasa kopinya.
+                Kopi hitam dingin tanpa ampas dan tanpa gula.
               </div>
             </SoftCard>
             <SoftCard className="p-6" style={revealDelay(1)}>
-              <div className="text-sm font-black">Es Kopi Susu Gula Aren</div>
+              <div className="text-sm font-black">ES KOPI SUSU</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Es kopi susu creamy dengan manis gula aren untuk rasa yang lebih lembut.
+                Joe Espresso + Susu Diamond + Gula Aren + Es.
               </div>
             </SoftCard>
             <SoftCard className="p-6" style={revealDelay(2)}>
-              <div className="text-sm font-black">Pesanan Banyak</div>
+              <div className="text-sm font-black">ES GINGER KOPI SUSU</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Cocok untuk kantor, acara kecil, atau stok minuman dingin. Konfirmasi jadwal via WA.
+                Joe Espresso + Susu Diamond + Gula Aren + Es + Jahe.
               </div>
             </SoftCard>
           </div>
