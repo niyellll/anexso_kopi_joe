@@ -1170,6 +1170,8 @@ export default function Page() {
                 ))}
 
                 <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
+                  Katalog sudah disesuaikan dengan WA Catalog: pouch kopi bubuk, biji kopi 1kg, dan tiga menu es.
+                </div>
               </div>
             </SoftCard>
           </div>
