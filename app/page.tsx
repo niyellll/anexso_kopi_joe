@@ -894,47 +894,34 @@ export default function Page() {
 
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:px-4">
           {/* Brand */}
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <LogoMark />
-            <div className="leading-tight">
-              <div className="text-sm font-black">{BRAND}</div>
-              <div className="text-xs text-[color:var(--muted)]">Sleman • Yogyakarta</div>
+            <div className="min-w-0 leading-tight">
+              <div className="truncate text-sm font-black">{BRAND}</div>
+              <div className="truncate text-xs text-[color:var(--muted)]">Sleman • Yogyakarta</div>
             </div>
           </div>
 
-          {/* Nav desktop */}
-          <nav className="hidden items-center gap-5 text-sm text-[color:var(--muted)] md:flex">
-            <a className="hover:opacity-80" href="#produk">Produk</a>
-            <a className="hover:opacity-80" href="#menu-es">Menu Es</a>
-            <a className="hover:opacity-80" href="#training">Training</a>
-            <a className="hover:opacity-80" href="#ebooks">Buku &amp; E-book</a>
-            <a className="hover:opacity-80" href="#media">Media</a>
-            <a className="hover:opacity-80" href="#info-order">Info Order</a>
-            <a className="hover:opacity-80" href="#kontak">Kontak</a>
-          </nav>
-
           {/* Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             {/* Music */}
             <button
               onClick={toggleMusic}
-              className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[color:var(--border)] bg-white/40 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5"
               aria-label={audioPlaying ? "Matikan musik" : "Nyalakan musik"}
               title={audioPlaying ? "Matikan musik" : "Nyalakan musik"}
             >
               {audioPlaying ? <Icon name="pause" /> : <Icon name="music" />}
-              <span className="hidden sm:inline">Music</span>
             </button>
 
             {/* Theme */}
             <button
               onClick={() => setDark((v) => !v)}
-              className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[color:var(--border)] bg-white/40 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5"
               aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
               title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
             >
               {dark ? <Icon name="moon" /> : <Icon name="sun" />}
-              <span className="hidden sm:inline">{dark ? "Dark" : "Light"}</span>
             </button>
 
             {/* Katalog (desktop) */}
@@ -942,7 +929,7 @@ export default function Page() {
               href={CATALOG_URL}
               target="_blank"
               rel="noreferrer"
-              className="hidden items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5 lg:inline-flex"
+              className="hidden h-10 items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5 lg:inline-flex"
               title="Buka katalog Utas"
             >
               <Icon name="tokopedia" />
@@ -954,7 +941,7 @@ export default function Page() {
               href={waCheckoutLink}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+              className="inline-flex h-10 items-center gap-2 rounded-xl bg-[color:var(--primary)] px-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)] sm:px-4"
               aria-label="Order via WhatsApp"
               title="Order via WhatsApp"
             >
@@ -965,19 +952,32 @@ export default function Page() {
             {/* Cart */}
             <a
               href="#checkout"
-              className="relative inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
+              className="relative inline-flex h-10 items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
               aria-label={`Keranjang, ${cartCount} item`}
               title="Keranjang"
             >
               <Icon name="cart" />
               <span className="hidden sm:inline">Keranjang</span>
               {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 grid h-6 min-w-6 place-items-center rounded-full bg-[color:var(--primary)] px-1 text-xs font-black text-[color:var(--primary-foreground)]">
+                <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-[color:var(--primary)] px-1 text-[10px] font-black text-[color:var(--primary-foreground)]">
                   {cartCount}
                 </span>
               )}
             </a>
           </div>
+        </div>
+
+        {/* Nav desktop (second row) */}
+        <div className="hidden border-t border-[color:var(--border)] md:block">
+          <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-1 px-3 py-2 text-sm text-[color:var(--muted)] sm:px-4">
+            <a className="hover:opacity-80" href="#produk">Produk</a>
+            <a className="hover:opacity-80" href="#menu-es">Menu Es</a>
+            <a className="hover:opacity-80" href="#training">Training</a>
+            <a className="hover:opacity-80" href="#ebooks">Buku &amp; E-book</a>
+            <a className="hover:opacity-80" href="#media">Media</a>
+            <a className="hover:opacity-80" href="#info-order">Info Order</a>
+            <a className="hover:opacity-80" href="#kontak">Kontak</a>
+          </nav>
         </div>
       </header>
 
