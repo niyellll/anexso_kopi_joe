@@ -8,7 +8,7 @@ const LOGO_SRC = "/joe-coffee-logo.jpeg";
 const TAGLINE =
   "Pouch kopi bubuk siap seduh dan menu es kopi segar untuk rumah, kantor, maupun hadiah - rasa konsisten, kemasan rapi, dan layanan cepat.";
 
-const COFFEE_TRUTH = "Blend Robusta + Arabika tanpa dicampur bahan lainnya.";
+const COFFEE_TRUTH = "Blend Robusta + Arabika — tanpa dicampur bahan lainnya.";
 const TASTE_NOTE = "Kopi pahit tanpa gula.";
 
 const ADDRESS =
@@ -1168,8 +1168,6 @@ export default function Page() {
                     </div>
                   </div>
                 ))}
-
-                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
               </div>
             </SoftCard>
           </div>
