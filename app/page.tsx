@@ -1010,7 +1010,7 @@ export default function Page() {
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 md:pb-14 md:pt-14">
         <div className="gpro-reveal" data-reveal>
-          <div className="grid gap-8 md:grid-cols-2 md:items-center">
+          <div className="max-w-3xl">
             <div>
               <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-2 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
                 <span className="h-2 w-2 rounded-full bg-[color:var(--primary)]" />
@@ -1110,68 +1110,6 @@ export default function Page() {
                 </SoftCard>
               </div>
             </div>
-
-            {/* Right card */}
-            <SoftCard className="p-5">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-sm font-black">Cari produk</div>
-                  <div className="text-xs text-[color:var(--muted)]">Ketik nama/varian</div>
-                </div>
-                <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">
-                  {filteredProducts.length} item
-                </span>
-              </div>
-
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Contoh: 500gr, gula aren, tanpa ampas..."
-                className="mt-4 w-full rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5"
-              />
-
-              <div className="mt-5 space-y-3">
-                {filteredProducts.slice(0, 4).map((p) => (
-                  <div
-                    key={p.id}
-                    className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[color:var(--border)] bg-black/10">
-                        <Image
-                          src={p.image}
-                          alt={p.name}
-                          fill
-                          sizes="64px"
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <div className="text-[11px] font-black uppercase text-[color:var(--primary)]">
-                              {p.category}
-                            </div>
-                            <div className="text-sm font-black">{p.name}</div>
-                          </div>
-                          <button
-                            onClick={() => addToCart(p.id)}
-                            className="shrink-0 rounded-xl bg-[color:var(--primary)] px-3 py-2 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                            aria-label={`Tambah ${p.name} ke keranjang`}
-                          >
-                            +
-                          </button>
-                        </div>
-                        <div className="text-xs text-[color:var(--muted)]">
-                          {p.variant} • {formatPrice(p.price)}
-                        </div>
-                        <div className="mt-2 line-clamp-2 text-xs text-[color:var(--muted)]">{p.note}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </SoftCard>
           </div>
         </div>
       </section>
@@ -1217,8 +1155,18 @@ export default function Page() {
             </div>
           </div>
 
+          <div className="mt-5">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Cari produk: 500gr, gula aren, tanpa ampas..."
+              className="w-full max-w-md rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5"
+            />
+            <div className="mt-2 text-xs text-[color:var(--muted)]">{filteredProducts.length} produk ditemukan</div>
+          </div>
+
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {PRODUCTS.map((p, index) => {
+            {filteredProducts.map((p, index) => {
               const qty = cart[p.id] ?? 0;
               return (
                 <SoftCard key={p.id} className="overflow-hidden" style={revealDelay(index)}>
