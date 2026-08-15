@@ -565,6 +565,7 @@ export default function Page() {
 
   // search & cart
   const [query, setQuery] = useState("");
+  const [payMethod, setPayMethod] = useState<"bank" | "qris" | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
   const [storageReady, setStorageReady] = useState(false);
 
@@ -1693,22 +1694,71 @@ export default function Page() {
               </a>
 
               {/* Payment methods */}
-              <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5 whitespace-pre-line">
+              <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
                 <div className="text-sm font-black text-[var(--foreground)]">Pembayaran</div>
-                <div className="mt-2">✅ Transfer Bank / ✅ QRIS</div>
-                <div className="mt-3 font-semibold text-[var(--foreground)]">Info Transfer</div>
-                <div className="mt-1">{PAYMENT.bankNote}</div>
+                <div className="mt-1">Pilih metode pembayaran dulu ya:</div>
 
-                <div className="mt-4 font-semibold text-[var(--foreground)]">QRIS JOE Coffee</div>
-                <div className="relative mt-2 aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white p-3">
-                  <Image
-                    src={PAYMENT.qrisImage}
-                    alt="QRIS JOE Coffee"
-                    fill
-                    sizes="(min-width: 1024px) 240px, 100vw"
-                    className="object-contain p-2"
-                  />
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPayMethod((m) => (m === "bank" ? null : "bank"))}
+                    className={cx(
+                      "rounded-xl border px-3 py-3 text-center text-xs font-black transition",
+                      payMethod === "bank"
+                        ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                        : "border-[color:var(--border)] bg-white/60 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5"
+                    )}
+                    aria-pressed={payMethod === "bank"}
+                  >
+                    🏦 Transfer Bank
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPayMethod((m) => (m === "qris" ? null : "qris"))}
+                    className={cx(
+                      "rounded-xl border px-3 py-3 text-center text-xs font-black transition",
+                      payMethod === "qris"
+                        ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                        : "border-[color:var(--border)] bg-white/60 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5"
+                    )}
+                    aria-pressed={payMethod === "qris"}
+                  >
+                    📱 QRIS
+                  </button>
                 </div>
+
+                {payMethod === "bank" && (
+                  <div className="mt-3 whitespace-pre-line rounded-xl border border-[color:var(--border)] bg-white/70 p-3 dark:bg-white/10">
+                    <div className="font-semibold text-[var(--foreground)]">Info Transfer</div>
+                    <div className="mt-1">{PAYMENT.bankNote}</div>
+                  </div>
+                )}
+
+                {payMethod === "qris" && (
+                  <div className="mt-3 rounded-xl border border-[color:var(--border)] bg-white/70 p-3 dark:bg-white/10">
+                    <div className="font-semibold text-[var(--foreground)]">QRIS JOE Coffee</div>
+                    <div className="relative mt-2 aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white p-3">
+                      <Image
+                        src={PAYMENT.qrisImage}
+                        alt="QRIS JOE Coffee"
+                        fill
+                        sizes="(min-width: 1024px) 240px, 100vw"
+                        className="object-contain p-2"
+                      />
+                    </div>
+                    <a
+                      href={PAYMENT.qrisImage}
+                      download="QRIS-JOE-Coffee.jpg"
+                      className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2.5 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+                    >
+                      <Icon name="image" />
+                      Simpan QRIS ke Galeri
+                    </a>
+                    <div className="mt-2 text-[11px]">
+                      Di HP: tekan lama gambar QRIS di atas lalu pilih &quot;Simpan gambar&quot;, atau pakai tombol di atas.
+                    </div>
+                  </div>
+                )}
               </div>
 
               <a
