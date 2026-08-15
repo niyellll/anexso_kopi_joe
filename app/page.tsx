@@ -1010,9 +1010,9 @@ export default function Page() {
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 md:pb-14 md:pt-14">
         <div className="gpro-reveal" data-reveal>
-          <div className="max-w-3xl">
+          <div className="mx-auto max-w-3xl text-center">
             <div>
-              <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-2 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
+              <div className="inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white/40 px-3 py-2 text-xs font-semibold text-[color:var(--muted)] dark:bg-white/5">
                 <span className="h-2 w-2 rounded-full bg-[color:var(--primary)]" />
                 Pouch 100gr - 1kg • Es kopi siap pesan
                 <span className="mx-2 hidden sm:inline">•</span>
@@ -1028,11 +1028,11 @@ export default function Page() {
                 dari rasa sampai pelayanan.
               </h1>
 
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-[color:var(--muted)]">
+              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[color:var(--muted)]">
                 {TAGLINE} {COFFEE_TRUTH} {TASTE_NOTE}
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <a
                   href={waCheckoutLink}
                   target="_blank"
@@ -1072,8 +1072,8 @@ export default function Page() {
                 </a>
               </div>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <SoftCard className="p-4">
+              <div className="mx-auto mt-6 grid max-w-2xl gap-3 sm:grid-cols-3">
+                <SoftCard className="p-4 text-left">
                   <div className="flex items-start gap-3">
                     <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
                       <Icon name="shield" />
@@ -1085,7 +1085,7 @@ export default function Page() {
                   </div>
                 </SoftCard>
 
-                <SoftCard className="p-4">
+                <SoftCard className="p-4 text-left">
                   <div className="flex items-start gap-3">
                     <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
                       <Icon name="truck" />
@@ -1097,7 +1097,7 @@ export default function Page() {
                   </div>
                 </SoftCard>
 
-                <SoftCard className="p-4">
+                <SoftCard className="p-4 text-left">
                   <div className="flex items-start gap-3">
                     <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
                       <Icon name="heart" />
