@@ -906,6 +906,8 @@ export default function Page() {
           <nav className="hidden items-center gap-5 text-sm text-[color:var(--muted)] md:flex">
             <a className="hover:opacity-80" href="#produk">Produk</a>
             <a className="hover:opacity-80" href="#menu-es">Menu Es</a>
+            <a className="hover:opacity-80" href="#training">Training</a>
+            <a className="hover:opacity-80" href="#ebooks">Buku &amp; E-book</a>
             <a className="hover:opacity-80" href="#media">Media</a>
             <a className="hover:opacity-80" href="#info-order">Info Order</a>
             <a className="hover:opacity-80" href="#kontak">Kontak</a>
@@ -1168,8 +1170,6 @@ export default function Page() {
                     </div>
                   </div>
                 ))}
-
-                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
               </div>
             </SoftCard>
           </div>
@@ -1359,6 +1359,83 @@ export default function Page() {
               </div>
             </SoftCard>
           </div>
+        </div>
+      </section>
+
+      {/* Training & Short Course */}
+      <section id="training" className="mx-auto max-w-6xl px-4 py-12">
+        <div className="gpro-reveal" data-reveal>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <span className="text-xs font-black uppercase tracking-wide text-[color:var(--primary)]">
+                TQ Business Learning Center
+              </span>
+              <h2 className="mt-1 text-2xl font-black md:text-3xl">Training &amp; Short Course</h2>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                Materi praktis untuk pemilik usaha, supervisor, HR, dan profesional.
+              </p>
+            </div>
+          </div>
+
+          <SoftCard className="mt-6 p-8 text-center">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
+              <Icon name="clock" />
+            </div>
+            <div className="mt-4 text-lg font-black">Segera Hadir</div>
+            <p className="mx-auto mt-2 max-w-md text-sm text-[color:var(--muted)]">
+              Daftar training dan short course dari TQ Business Learning Center sedang disusun. Chat WA kalau mau
+              diinfokan begitu tersedia.
+            </p>
+            <a
+              href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+                `Halo ${BRAND}, saya mau info kalau training/short course TQ Business Learning Center sudah tersedia.`
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+            >
+              <Icon name="whatsapp" />
+              Kabari saya via WhatsApp
+            </a>
+          </SoftCard>
+        </div>
+      </section>
+
+      {/* Buku & E-book */}
+      <section id="ebooks" className="mx-auto max-w-6xl px-4 py-12">
+        <div className="gpro-reveal" data-reveal>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <span className="text-xs font-black uppercase tracking-wide text-[color:var(--primary)]">
+                Digital Product
+              </span>
+              <h2 className="mt-1 text-2xl font-black md:text-3xl">Buku &amp; E-book</h2>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">
+                Produk fisik dan digital yang bisa dibaca langsung atau diunduh.
+              </p>
+            </div>
+          </div>
+
+          <SoftCard className="mt-6 p-8 text-center">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
+              <Icon name="clock" />
+            </div>
+            <div className="mt-4 text-lg font-black">Segera Hadir</div>
+            <p className="mx-auto mt-2 max-w-md text-sm text-[color:var(--muted)]">
+              Daftar buku dan e-book sedang disiapkan. Chat WA kalau mau diinfokan begitu tersedia.
+            </p>
+            <a
+              href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
+                `Halo ${BRAND}, saya mau info kalau buku/e-book sudah tersedia.`
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
+            >
+              <Icon name="whatsapp" />
+              Kabari saya via WhatsApp
+            </a>
+          </SoftCard>
         </div>
       </section>
 
