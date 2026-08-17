@@ -17,7 +17,7 @@ header a[href="#home"] > div:first-child {
 /* Hero: gambar ANEXSO + TQ + JOE menjadi visual utama halaman depan. */
 #home > div > div:nth-child(2) > div {
   background-color: #ffffff !important;
-  background-image: url("/anexso-main-logo.webp") !important;
+  background-image: url("/anexso-hero-hd.webp") !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: contain !important;
