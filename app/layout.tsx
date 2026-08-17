@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import React from "react";
+import SiteControls from "./site-controls";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id" suppressHydrationWarning>
       <body className="antialiased">
         <ThemeInitScript />
+        <SiteControls />
         {children}
       </body>
     </html>
