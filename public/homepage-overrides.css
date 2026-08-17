@@ -14,10 +14,10 @@ header a[href="#home"] > div:first-child {
   font-size: 0 !important;
 }
 
-/* Hero: gambar ANEXSO + TQ + JOE menjadi visual utama halaman depan. */
+/* Hero: tampilkan visual ANEXSO yang sudah terverifikasi tampil di deployment. */
 #home > div > div:nth-child(2) > div {
   background-color: #ffffff !important;
-  background-image: url("/anexso-hero-hd.webp") !important;
+  background-image: url("/anexso-main-logo.webp") !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: contain !important;
