@@ -1,4 +1,4 @@
-/* Header: kembalikan logo JOE Coffee sebelumnya. */
+/* Header: gunakan logo JOE Coffee. */
 header a[href="#home"] > div:first-child {
   width: 52px !important;
   height: 52px !important;
@@ -14,15 +14,16 @@ header a[href="#home"] > div:first-child {
   font-size: 0 !important;
 }
 
-/* Hero: tampilkan visual ANEXSO yang sudah terverifikasi tampil di deployment. */
+/* Hero ANEXSO: coba versi HD, dengan versi lama sebagai fallback. */
 #home > div > div:nth-child(2) > div {
   background-color: #ffffff !important;
-  background-image: url("/anexso-main-logo.webp") !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-size: contain !important;
+  background-image: url("/anexso-hero-hd.webp"), url("/anexso-main-logo.webp") !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-size: contain, contain !important;
 }
 
+/* Sembunyikan foto kopi dan overlay bawaan hero. */
 #home > div > div:nth-child(2) > div > img {
   opacity: 0 !important;
 }
