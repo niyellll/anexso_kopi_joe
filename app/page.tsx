@@ -124,14 +124,14 @@ const PRODUCTS: Product[] = [
   },
   {
     id: "es-kopi-tanpa-ampas",
-    name: "Iced Black Coffee",
+    name: "Es Kopi Hitam",
     category: "Es Kopi",
     variant: "Cup dingin",
     price: 10000,
     status: "Harga WA Catalog",
     note:
-      "Kopi hitam dingin tanpa ampas dan tanpa gula, ringan diminum dingin dan tetap membawa karakter kopi Joe.",
-    bullets: ["Tanpa ampas", "Tanpa gula", "IDR 10.000"],
+      "Joe Coffee bubuk 10 gr diseduh tanpa ampas, diberi es batu. Segar dan nikmat rasa kopinya.",
+    bullets: ["10 gr kopi", "Tanpa ampas", "Es batu"],
     image: "/produk-es-kopi-tanpa-ampas.jpeg",
   },
   {
@@ -169,7 +169,7 @@ const INFO_CARDS = [
   {
     title: "Menu Dingin",
     meta: "Es kopi",
-    desc: "Ada Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU sesuai katalog WhatsApp.",
+    desc: "Ada Es Kopi Hitam, ES KOPI SUSU, dan ES GINGER KOPI SUSU sesuai katalog WhatsApp.",
   },
   {
     title: "Konfirmasi Order",
@@ -181,7 +181,7 @@ const INFO_CARDS = [
 const MEDIA_IMAGES = [
   { label: "Pouch kopi bubuk", src: "/produk-kopi-bubuk-500gr.jpeg", note: "Kemasan pouch Joe Coffee." },
   { label: "Pouch 1kg", src: "/produk-kopi-bubuk-1kg.jpeg", note: "Ukuran besar untuk stok." },
-  { label: "Es kopi tanpa ampas", src: "/produk-es-kopi-tanpa-ampas.jpeg", note: "Cup dingin tanpa ampas." },
+  { label: "Es Kopi Hitam", src: "/produk-es-kopi-tanpa-ampas.jpeg", note: "Joe Coffee bubuk 10 gr, diseduh tanpa ampas dan diberi es batu." },
   { label: "Es kopi susu gula aren", src: "/produk-es-kopi-susu-gula-aren.jpeg", note: "Creamy dengan gula aren." },
   { label: "Es kopi botol", src: "/media-es-kopi-botol.jpeg", note: "Foto produk es kopi botol." },
   { label: "Kopi sachet", src: "/media-kopi-sachet.jpeg", note: "Kemasan kopi bubuk kecil." },
@@ -276,7 +276,6 @@ function Icon({
             stroke="currentColor"
             strokeWidth="1.6"
             strokeLinecap="round"
-            strokeLinejoin="round"
           />
         </svg>
       );
@@ -844,7 +843,7 @@ export default function Page() {
         [
           `Halo ${BRAND}, saya mau tanya produk Joe Coffee.`,
           "",
-          "Katalog yang saya lihat: kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU.",
+          "Katalog yang saya lihat: kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Es Kopi Hitam, ES KOPI SUSU, dan ES GINGER KOPI SUSU.",
           "Mohon info stok, harga final, dan ongkir ya.",
         ].join("\n")
       );
@@ -859,7 +858,7 @@ export default function Page() {
       ...cartItems.map((i) => `- ${i.name} (${i.category}, ${i.variant}) x${i.qty} = ${formatSubtotal(i.price, i.qty)}`),
       `Total sementara: ${formatCartTotal(cartTotal, hasOpenPrice)}`,
       "",
-      `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
+      `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Es Kopi Hitam, ES KOPI SUSU, dan ES GINGER KOPI SUSU. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
       "",
       "Metode bayar: Transfer Bank / QRIS (JOE Coffee). Mohon info ongkir ya. Terima kasih.",
       `Katalog lengkap: ${CATALOG_URL}`,
@@ -970,55 +969,13 @@ export default function Page() {
         {/* Nav desktop (second row) */}
         <div className="hidden border-t border-[color:var(--border)] bg-white/30 md:block dark:bg-white/[0.03]">
           <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-1 gap-y-1 px-2 py-1.5 text-sm sm:px-3">
-            <a
-              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
-              href="#produk"
-            >
-              Produk
-              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
-            </a>
-            <a
-              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
-              href="#menu-es"
-            >
-              Menu Es
-              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
-            </a>
-            <a
-              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
-              href="#training"
-            >
-              Training
-              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
-            </a>
-            <a
-              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
-              href="#ebooks"
-            >
-              Buku &amp; E-book
-              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
-            </a>
-            <a
-              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
-              href="#media"
-            >
-              Media
-              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
-            </a>
-            <a
-              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
-              href="#info-order"
-            >
-              Info Order
-              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
-            </a>
-            <a
-              className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10"
-              href="#kontak"
-            >
-              Kontak
-              <span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" />
-            </a>
+            <a className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10" href="#produk">Produk<span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" /></a>
+            <a className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10" href="#menu-es">Menu Es<span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" /></a>
+            <a className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10" href="#training">Training<span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" /></a>
+            <a className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10" href="#ebooks">Buku &amp; E-book<span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" /></a>
+            <a className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10" href="#media">Media<span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" /></a>
+            <a className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10" href="#info-order">Info Order<span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" /></a>
+            <a className="group relative rounded-lg px-3 py-1.5 font-semibold text-[color:var(--muted)] transition hover:bg-white/60 hover:text-[var(--foreground)] dark:hover:bg-white/10" href="#kontak">Kontak<span className="pointer-events-none absolute inset-x-3 -bottom-[7px] h-[2px] scale-x-0 rounded-full bg-[color:var(--primary)] transition-transform duration-200 group-hover:scale-x-100" /></a>
           </nav>
         </div>
       </header>
@@ -1075,81 +1032,16 @@ export default function Page() {
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <a
-                  href={waCheckoutLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                >
-                  <Icon name="whatsapp" />
-                  Order via WhatsApp
-                </a>
-
-                <a
-                  href={CATALOG_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"
-                >
-                  <Icon name="tokopedia" />
-                  Lihat Katalog
-                </a>
-
-                <a
-                  href={`tel:${PHONE_WA}`}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-                >
-                  <Icon name="phone" />
-                  Telepon
-                </a>
-
-                <a
-                  href={mapsLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-                >
-                  <Icon name="map" />
-                  Lokasi
-                </a>
+                <a href={waCheckoutLink} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"><Icon name="whatsapp" />Order via WhatsApp</a>
+                <a href={CATALOG_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"><Icon name="tokopedia" />Lihat Katalog</a>
+                <a href={`tel:${PHONE_WA}`} className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="phone" />Telepon</a>
+                <a href={mapsLink} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="map" />Lokasi</a>
               </div>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <SoftCard className="p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
-                      <Icon name="shield" />
-                    </span>
-                    <div>
-                      <div className="text-sm font-black">Blend Jujur</div>
-                      <div className="text-xs text-[color:var(--muted)]">{COFFEE_TRUTH}</div>
-                    </div>
-                  </div>
-                </SoftCard>
-
-                <SoftCard className="p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
-                      <Icon name="truck" />
-                    </span>
-                    <div>
-                      <div className="text-sm font-black">Packing Aman</div>
-                      <div className="text-xs text-[color:var(--muted)]">Rapi, cocok juga untuk hadiah.</div>
-                    </div>
-                  </div>
-                </SoftCard>
-
-                <SoftCard className="p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
-                      <Icon name="heart" />
-                    </span>
-                    <div>
-                      <div className="text-sm font-black">Taste</div>
-                      <div className="text-xs text-[color:var(--muted)]">{TASTE_NOTE}</div>
-                    </div>
-                  </div>
-                </SoftCard>
+                <SoftCard className="p-4"><div className="flex items-start gap-3"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"><Icon name="shield" /></span><div><div className="text-sm font-black">Blend Jujur</div><div className="text-xs text-[color:var(--muted)]">{COFFEE_TRUTH}</div></div></div></SoftCard>
+                <SoftCard className="p-4"><div className="flex items-start gap-3"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"><Icon name="truck" /></span><div><div className="text-sm font-black">Packing Aman</div><div className="text-xs text-[color:var(--muted)]">Rapi, cocok juga untuk hadiah.</div></div></div></SoftCard>
+                <SoftCard className="p-4"><div className="flex items-start gap-3"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"><Icon name="heart" /></span><div><div className="text-sm font-black">Taste</div><div className="text-xs text-[color:var(--muted)]">{TASTE_NOTE}</div></div></div></SoftCard>
               </div>
             </div>
           </div>
@@ -1158,22 +1050,11 @@ export default function Page() {
           <div className="hidden md:block">
             <SoftCard className="relative overflow-hidden p-0">
               <div className="relative aspect-[4/5] w-full">
-                <Image
-                  src="/produk-kopi-bubuk-500gr.jpeg"
-                  alt="Pouch kopi bubuk Joe Coffee"
-                  fill
-                  sizes="(min-width: 768px) 40vw, 100vw"
-                  className="object-cover"
-                  priority
-                />
+                <Image src="/produk-kopi-bubuk-500gr.jpeg" alt="Pouch kopi bubuk Joe Coffee" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" priority />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
                 <div className="absolute inset-x-4 bottom-4 rounded-2xl bg-white/90 p-4 backdrop-blur dark:bg-black/60">
-                  <div className="text-xs font-bold uppercase tracking-wide text-[color:var(--primary)]">
-                    Joe Coffee
-                  </div>
-                  <div className="mt-1 text-sm font-black text-[var(--foreground)]">
-                    Mulai {formatIDR(33000)}
-                  </div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-[color:var(--primary)]">Joe Coffee</div>
+                  <div className="mt-1 text-sm font-black text-[var(--foreground)]">Mulai {formatIDR(33000)}</div>
                   <div className="mt-1 text-xs text-[color:var(--muted)]">Pouch 100gr - 1kg, ready order</div>
                 </div>
               </div>
@@ -1181,10 +1062,7 @@ export default function Page() {
 
             <div className="mt-4 grid grid-cols-3 gap-3">
               {TRUST_POINTS.map((point) => (
-                <SoftCard key={point.label} className="p-3 text-center">
-                  <div className="text-lg font-black text-[color:var(--primary)]">{point.value}</div>
-                  <div className="mt-1 text-[11px] text-[color:var(--muted)]">{point.label}</div>
-                </SoftCard>
+                <SoftCard key={point.label} className="p-3 text-center"><div className="text-lg font-black text-[color:var(--primary)]">{point.value}</div><div className="mt-1 text-[11px] text-[color:var(--muted)]">{point.label}</div></SoftCard>
               ))}
             </div>
           </div>
@@ -1197,48 +1075,17 @@ export default function Page() {
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
               <h2 className="text-2xl font-black md:text-3xl">Katalog Produk</h2>
-              <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">
-                Pouch kopi bubuk 100gr, 200gr, 500gr, 1kg plus biji kopi 1kg dan menu es dari WA Catalog.
-              </p>
+              <p className="mt-2 max-w-2xl text-sm text-[color:var(--muted)]">Pouch kopi bubuk 100gr, 200gr, 500gr, 1kg plus biji kopi 1kg dan menu es dari WA Catalog.</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <a
-                href={CATALOG_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-              >
-                <Icon name="tokopedia" />
-                Katalog Utas
-              </a>
-              <a
-                href={WHATSAPP_CATALOG_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-              >
-                <Icon name="whatsapp" />
-                WA Catalog
-              </a>
-              <a
-                href={waCheckoutLink}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-              >
-                <Icon name="whatsapp" />
-                Order WA
-              </a>
+              <a href={CATALOG_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="tokopedia" />Katalog Utas</a>
+              <a href={WHATSAPP_CATALOG_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="whatsapp" />WA Catalog</a>
+              <a href={waCheckoutLink} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"><Icon name="whatsapp" />Order WA</a>
             </div>
           </div>
 
           <div className="mt-5">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Cari produk: 500gr, gula aren, tanpa ampas..."
-              className="w-full max-w-md rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5"
-            />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari produk: 500gr, gula aren, tanpa ampas..." className="w-full max-w-md rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5" />
             <div className="mt-2 text-xs text-[color:var(--muted)]">{filteredProducts.length} produk ditemukan</div>
           </div>
 
@@ -1248,94 +1095,30 @@ export default function Page() {
               return (
                 <SoftCard key={p.id} className="overflow-hidden" style={revealDelay(index)}>
                   <div className="relative aspect-[4/3] border-b border-[color:var(--border)] bg-black/10">
-                    <Image
-                      src={p.image}
-                      alt={p.name}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover"
-                    />
-                    <span className="absolute left-3 top-3 rounded-full bg-[color:var(--surface-strong)] px-3 py-1 text-xs font-black text-[color:var(--surface-strong-foreground)] shadow-[var(--shadow-soft)]">
-                      {p.category}
-                    </span>
+                    <Image src={p.image} alt={p.name} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover" />
+                    <span className="absolute left-3 top-3 rounded-full bg-[color:var(--surface-strong)] px-3 py-1 text-xs font-black text-[color:var(--surface-strong-foreground)] shadow-[var(--shadow-soft)]">{p.category}</span>
                   </div>
                   <div className="p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="text-xs font-bold text-[color:var(--muted)]">{p.variant}</div>
-                      <div className="text-lg font-black leading-tight">{p.name}</div>
+                    <div className="flex items-start justify-between gap-3">
+                      <div><div className="text-xs font-bold text-[color:var(--muted)]">{p.variant}</div><div className="text-lg font-black leading-tight">{p.name}</div></div>
+                      <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">{formatPrice(p.price)}</span>
                     </div>
-                    <span className="rounded-full bg-white/50 px-3 py-1 text-xs font-black dark:bg-white/10">
-                      {formatPrice(p.price)}
-                    </span>
-                  </div>
-
-                  <p className="mt-3 text-sm text-[color:var(--muted)]">{p.note}</p>
-
-                  <div className="mt-3 text-xs font-bold text-[color:var(--muted)]">
-                    {p.status}
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {p.bullets.map((b) => (
-                      <span
-                        key={b}
-                        className="rounded-full border border-[color:var(--border)] bg-white/50 px-3 py-1 text-xs font-semibold dark:bg-white/10"
-                      >
-                        {b}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-5 flex items-center justify-between gap-3">
-                    {qty > 0 ? (
-                      <div className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/50 px-2 py-1 dark:bg-white/10">
-                        <button
-                          onClick={() => decFromCart(p.id)}
-                          className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
-                          aria-label={`Kurangi ${p.name}`}
-                        >
-                          −
-                        </button>
-                        <div className="min-w-8 text-center text-sm font-black">{qty}</div>
-                        <button
-                          onClick={() => addToCart(p.id)}
-                          className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
-                          aria-label={`Tambah ${p.name}`}
-                        >
-                          +
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => addToCart(p.id)}
-                        className="rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                        aria-label={`Tambah ${p.name} ke keranjang`}
-                      >
-                        + Keranjang
-                      </button>
-                    )}
-
-                    <a
-                      href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                        `Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info harga final, stok, dan ongkir ya. ${COFFEE_TRUTH} ${TASTE_NOTE}`
-                      )}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80"
-                    >
-                      Chat WA →
-                    </a>
-                  </div>
-
-                  {qty > 0 && (
-                    <button
-                      onClick={() => removeFromCart(p.id)}
-                      className="mt-3 w-full rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-xs font-black hover:opacity-90 dark:bg-white/5"
-                    >
-                      Hapus dari keranjang
-                    </button>
-                  )}
+                    <p className="mt-3 text-sm text-[color:var(--muted)]">{p.note}</p>
+                    <div className="mt-3 text-xs font-bold text-[color:var(--muted)]">{p.status}</div>
+                    <div className="mt-4 flex flex-wrap gap-2">{p.bullets.map((b) => (<span key={b} className="rounded-full border border-[color:var(--border)] bg-white/50 px-3 py-1 text-xs font-semibold dark:bg-white/10">{b}</span>))}</div>
+                    <div className="mt-5 flex items-center justify-between gap-3">
+                      {qty > 0 ? (
+                        <div className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/50 px-2 py-1 dark:bg-white/10">
+                          <button onClick={() => decFromCart(p.id)} className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10" aria-label={`Kurangi ${p.name}`}>−</button>
+                          <div className="min-w-8 text-center text-sm font-black">{qty}</div>
+                          <button onClick={() => addToCart(p.id)} className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10" aria-label={`Tambah ${p.name}`}>+</button>
+                        </div>
+                      ) : (
+                        <button onClick={() => addToCart(p.id)} className="rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]" aria-label={`Tambah ${p.name} ke keranjang`}>+ Keranjang</button>
+                      )}
+                      <a href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(`Halo ${BRAND}, saya mau pesan ${p.name} (${p.variant}). Mohon info harga final, stok, dan ongkir ya. ${COFFEE_TRUTH} ${TASTE_NOTE}`)}`} target="_blank" rel="noreferrer" className="text-sm font-semibold text-[color:var(--primary)] hover:opacity-80">Chat WA →</a>
+                    </div>
+                    {qty > 0 && (<button onClick={() => removeFromCart(p.id)} className="mt-3 w-full rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-xs font-black hover:opacity-90 dark:bg-white/5">Hapus dari keranjang</button>)}
                   </div>
                 </SoftCard>
               );
@@ -1348,41 +1131,17 @@ export default function Page() {
       <section id="menu-es" className="mx-auto max-w-6xl px-4 py-12">
         <div className="gpro-reveal" data-reveal>
           <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-black md:text-3xl">Menu Es Kopi</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Menu minuman dari WA Catalog yang bisa langsung ditanyakan ketersediaannya lewat WhatsApp.
-              </p>
-            </div>
-            <a
-              href={waCheckoutLink}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)] sm:inline-flex"
-            >
-              Pesan menu es via WA
-            </a>
+            <div><h2 className="text-2xl font-black md:text-3xl">Menu Es Kopi</h2><p className="mt-2 text-sm text-[color:var(--muted)]">Menu minuman dari WA Catalog yang bisa langsung ditanyakan ketersediaannya lewat WhatsApp.</p></div>
+            <a href={waCheckoutLink} target="_blank" rel="noreferrer" className="hidden rounded-xl bg-[color:var(--primary)] px-4 py-2 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)] sm:inline-flex">Pesan menu es via WA</a>
           </div>
 
           <div className="mt-6 grid gap-5 md:grid-cols-3">
             <SoftCard className="p-6" style={revealDelay(0)}>
-              <div className="text-sm font-black">Iced Black Coffee</div>
-              <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Kopi hitam dingin tanpa ampas dan tanpa gula.
-              </div>
+              <div className="text-sm font-black">Es Kopi Hitam</div>
+              <div className="mt-2 text-sm text-[color:var(--muted)]">Joe Coffee bubuk 10 gr diseduh tanpa ampas, diberi es batu. Segar dan nikmat rasa kopinya.</div>
             </SoftCard>
-            <SoftCard className="p-6" style={revealDelay(1)}>
-              <div className="text-sm font-black">ES KOPI SUSU</div>
-              <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Joe Espresso + Susu Diamond + Gula Aren + Es.
-              </div>
-            </SoftCard>
-            <SoftCard className="p-6" style={revealDelay(2)}>
-              <div className="text-sm font-black">ES GINGER KOPI SUSU</div>
-              <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Joe Espresso + Susu Diamond + Gula Aren + Es + Jahe.
-              </div>
-            </SoftCard>
+            <SoftCard className="p-6" style={revealDelay(1)}><div className="text-sm font-black">ES KOPI SUSU</div><div className="mt-2 text-sm text-[color:var(--muted)]">Joe Espresso + Susu Diamond + Gula Aren + Es.</div></SoftCard>
+            <SoftCard className="p-6" style={revealDelay(2)}><div className="text-sm font-black">ES GINGER KOPI SUSU</div><div className="mt-2 text-sm text-[color:var(--muted)]">Joe Espresso + Susu Diamond + Gula Aren + Es + Jahe.</div></SoftCard>
           </div>
         </div>
       </section>
@@ -1390,38 +1149,12 @@ export default function Page() {
       {/* Training & Short Course */}
       <section id="training" className="mx-auto max-w-6xl px-4 py-12">
         <div className="gpro-reveal" data-reveal>
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-black uppercase tracking-wide text-[color:var(--primary)]">
-                TQ Business Learning Center
-              </span>
-              <h2 className="mt-1 text-2xl font-black md:text-3xl">Training &amp; Short Course</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Materi praktis untuk pemilik usaha, supervisor, HR, dan profesional.
-              </p>
-            </div>
-          </div>
-
+          <div className="flex items-end justify-between gap-4"><div><span className="text-xs font-black uppercase tracking-wide text-[color:var(--primary)]">TQ Business Learning Center</span><h2 className="mt-1 text-2xl font-black md:text-3xl">Training &amp; Short Course</h2><p className="mt-2 text-sm text-[color:var(--muted)]">Materi praktis untuk pemilik usaha, supervisor, HR, dan profesional.</p></div></div>
           <SoftCard className="mt-6 p-8 text-center">
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
-              <Icon name="clock" />
-            </div>
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]"><Icon name="clock" /></div>
             <div className="mt-4 text-lg font-black">Segera Hadir</div>
-            <p className="mx-auto mt-2 max-w-md text-sm text-[color:var(--muted)]">
-              Daftar training dan short course dari TQ Business Learning Center sedang disusun. Chat WA kalau mau
-              diinfokan begitu tersedia.
-            </p>
-            <a
-              href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                `Halo ${BRAND}, saya mau info kalau training/short course TQ Business Learning Center sudah tersedia.`
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-            >
-              <Icon name="whatsapp" />
-              Kabari saya via WhatsApp
-            </a>
+            <p className="mx-auto mt-2 max-w-md text-sm text-[color:var(--muted)]">Daftar training dan short course dari TQ Business Learning Center sedang disusun. Chat WA kalau mau diinfokan begitu tersedia.</p>
+            <a href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(`Halo ${BRAND}, saya mau info kalau training/short course TQ Business Learning Center sudah tersedia.`)}`} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"><Icon name="whatsapp" />Kabari saya via WhatsApp</a>
           </SoftCard>
         </div>
       </section>
@@ -1429,37 +1162,12 @@ export default function Page() {
       {/* Buku & E-book */}
       <section id="ebooks" className="mx-auto max-w-6xl px-4 py-12">
         <div className="gpro-reveal" data-reveal>
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-black uppercase tracking-wide text-[color:var(--primary)]">
-                Digital Product
-              </span>
-              <h2 className="mt-1 text-2xl font-black md:text-3xl">Buku &amp; E-book</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Produk fisik dan digital yang bisa dibaca langsung atau diunduh.
-              </p>
-            </div>
-          </div>
-
+          <div className="flex items-end justify-between gap-4"><div><span className="text-xs font-black uppercase tracking-wide text-[color:var(--primary)]">Digital Product</span><h2 className="mt-1 text-2xl font-black md:text-3xl">Buku &amp; E-book</h2><p className="mt-2 text-sm text-[color:var(--muted)]">Produk fisik dan digital yang bisa dibaca langsung atau diunduh.</p></div></div>
           <SoftCard className="mt-6 p-8 text-center">
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]">
-              <Icon name="clock" />
-            </div>
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[color:var(--primary)]/10 text-[color:var(--primary)]"><Icon name="clock" /></div>
             <div className="mt-4 text-lg font-black">Segera Hadir</div>
-            <p className="mx-auto mt-2 max-w-md text-sm text-[color:var(--muted)]">
-              Daftar buku dan e-book sedang disiapkan. Chat WA kalau mau diinfokan begitu tersedia.
-            </p>
-            <a
-              href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                `Halo ${BRAND}, saya mau info kalau buku/e-book sudah tersedia.`
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-            >
-              <Icon name="whatsapp" />
-              Kabari saya via WhatsApp
-            </a>
+            <p className="mx-auto mt-2 max-w-md text-sm text-[color:var(--muted)]">Daftar buku dan e-book sedang disiapkan. Chat WA kalau mau diinfokan begitu tersedia.</p>
+            <a href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(`Halo ${BRAND}, saya mau info kalau buku/e-book sudah tersedia.`)}`} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"><Icon name="whatsapp" />Kabari saya via WhatsApp</a>
           </SoftCard>
         </div>
       </section>
@@ -1468,80 +1176,30 @@ export default function Page() {
       <section id="media" className="mx-auto max-w-6xl px-4 py-12">
         <div className="gpro-reveal" data-reveal>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="text-2xl font-black md:text-3xl">Media</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Foto produk Joe Coffee: kemasan pouch, cup es kopi, dan materi pendukung katalog.
-              </p>
-            </div>
-
+            <div><h2 className="text-2xl font-black md:text-3xl">Media</h2><p className="mt-2 text-sm text-[color:var(--muted)]">Foto produk Joe Coffee: kemasan pouch, cup es kopi, dan materi pendukung katalog.</p></div>
             <div className="flex flex-wrap gap-2">
-              <a href={SOCIAL.instagram} target="_blank" rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5">
-                <Icon name="instagram" /> IG
-              </a>
-              <a href={SOCIAL.tiktok} target="_blank" rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5">
-                <Icon name="tiktok" /> TikTok
-              </a>
-              <a href={SOCIAL.facebook} target="_blank" rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5">
-                <Icon name="facebook" /> FB
-              </a>
-              <a href={SOCIAL.youtube} target="_blank" rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5">
-                <Icon name="youtube" /> YouTube
-              </a>
+              <a href={SOCIAL.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="instagram" /> IG</a>
+              <a href={SOCIAL.tiktok} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="tiktok" /> TikTok</a>
+              <a href={SOCIAL.facebook} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="facebook" /> FB</a>
+              <a href={SOCIAL.youtube} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="youtube" /> YouTube</a>
             </div>
           </div>
 
-          {/* image grid */}
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {MEDIA_IMAGES.map((m, index) => (
               <SoftCard key={m.label} className="overflow-hidden" style={revealDelay(index)}>
-                <div className="relative aspect-[16/10] border-b border-[color:var(--border)] bg-black/10">
-                  <Image
-                    src={m.src}
-                    alt={m.label}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-4 text-xs text-[color:var(--muted)]">
-                  <div className="text-sm font-black text-[var(--foreground)]">{m.label}</div>
-                  <div className="mt-1">{m.note}</div>
-                </div>
+                <div className="relative aspect-[16/10] border-b border-[color:var(--border)] bg-black/10"><Image src={m.src} alt={m.label} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover" /></div>
+                <div className="p-4 text-xs text-[color:var(--muted)]"><div className="text-sm font-black text-[var(--foreground)]">{m.label}</div><div className="mt-1">{m.note}</div></div>
               </SoftCard>
             ))}
           </div>
 
-          {/* youtube embeds */}
           <div className="mt-8">
-            <div className="flex items-center gap-2 text-sm font-black">
-              <Icon name="video" /> Video (YouTube)
-            </div>
-
+            <div className="flex items-center gap-2 text-sm font-black"><Icon name="video" /> Video (YouTube)</div>
             {YOUTUBE_IDS.length ? (
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
-                {YOUTUBE_IDS.map((id) => (
-                  <SoftCard key={id} className="overflow-hidden">
-                    <div className="aspect-video">
-                      <iframe
-                        className="h-full w-full"
-                        src={`https://www.youtube.com/embed/${id}`}
-                        title="YouTube video"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    </div>
-                  </SoftCard>
-                ))}
-              </div>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">{YOUTUBE_IDS.map((id) => (<SoftCard key={id} className="overflow-hidden"><div className="aspect-video"><iframe className="h-full w-full" src={`https://www.youtube.com/embed/${id}`} title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen /></div></SoftCard>))}</div>
             ) : (
-              <SoftCard className="mt-3 p-6">
-                <div className="text-sm font-black">Placeholder Video</div>
-              </SoftCard>
+              <SoftCard className="mt-3 p-6"><div className="text-sm font-black">Placeholder Video</div></SoftCard>
             )}
           </div>
         </div>
@@ -1551,30 +1209,11 @@ export default function Page() {
       <section id="kenapa" className="py-14">
         <div className="mx-auto max-w-6xl px-4">
           <div className="gpro-reveal" data-reveal>
-            <div
-              className="rounded-[var(--radius)] border border-[color:var(--border)] p-8 shadow-[var(--shadow)] md:p-10"
-              style={{
-                background: "linear-gradient(180deg, rgba(42,26,16,0.92), rgba(42,26,16,0.86))",
-                color: "#fff7ee",
-              }}
-            >
+            <div className="rounded-[var(--radius)] border border-[color:var(--border)] p-8 shadow-[var(--shadow)] md:p-10" style={{ background: "linear-gradient(180deg, rgba(42,26,16,0.92), rgba(42,26,16,0.86))", color: "#fff7ee" }}>
               <h2 className="text-center text-3xl font-black md:text-4xl">Kenapa Pilih JOE Coffee?</h2>
               <p className="mt-2 text-center text-sm opacity-85">Komitmen kami untuk kepuasan Anda</p>
-
-              <div className="mt-10 grid gap-8 md:grid-cols-4">
-                <Reason icon={<Icon name="shield" />} title="Blend Jujur" desc={COFFEE_TRUTH} />
-                <Reason icon={<Icon name="truck" />} title="Pengiriman Cepat" desc="Proses cepat sesuai antrian & packing aman." />
-                <Reason icon={<Icon name="clock" />} title="Fresh & Wangi" desc="Aroma maksimal untuk pengalaman coffee lovers." />
-                <Reason icon={<Icon name="heart" />} title="Taste" desc={TASTE_NOTE} />
-              </div>
-
-              <div className="mt-10 rounded-[var(--radius)] bg-white/10 p-6">
-                <div className="grid gap-6 text-center md:grid-cols-3">
-                  {TRUST_POINTS.map((point) => (
-                    <StatBig key={point.label} value={point.value} label={point.label} />
-                  ))}
-                </div>
-              </div>
+              <div className="mt-10 grid gap-8 md:grid-cols-4"><Reason icon={<Icon name="shield" />} title="Blend Jujur" desc={COFFEE_TRUTH} /><Reason icon={<Icon name="truck" />} title="Pengiriman Cepat" desc="Proses cepat sesuai antrian & packing aman." /><Reason icon={<Icon name="clock" />} title="Fresh & Wangi" desc="Aroma maksimal untuk pengalaman coffee lovers." /><Reason icon={<Icon name="heart" />} title="Taste" desc={TASTE_NOTE} /></div>
+              <div className="mt-10 rounded-[var(--radius)] bg-white/10 p-6"><div className="grid gap-6 text-center md:grid-cols-3">{TRUST_POINTS.map((point) => (<StatBig key={point.label} value={point.value} label={point.label} />))}</div></div>
             </div>
           </div>
         </div>
@@ -1584,290 +1223,51 @@ export default function Page() {
       <section id="info-order" className="mx-auto max-w-6xl px-4 py-14">
         <div className="gpro-reveal" data-reveal>
           <h2 className="text-2xl font-black md:text-3xl">Info Order</h2>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {INFO_CARDS.map((item, index) => (
-              <SoftCard key={item.title} className="p-6" style={revealDelay(index)}>
-                <p className="text-sm leading-relaxed text-[color:var(--muted)]">{item.desc}</p>
-                <div className="mt-4 text-sm font-black">{item.title}</div>
-                <div className="text-xs text-[color:var(--muted)]">{item.meta}</div>
-              </SoftCard>
-            ))}
-          </div>
-
-          <div className="mt-10 grid gap-3 md:grid-cols-2">
-            <Faq q="Bisa kirim luar kota?" a="Bisa. Packing aman dan pengiriman sesuai layanan ekspedisi yang tersedia." />
-            <Faq q="Bisa untuk kantor / reseller?" a="Bisa. Varian 1 Kg cocok untuk kantor, event, atau reseller. Chat WA untuk diskusi." />
-            <Faq q="Pembayaran bagaimana?" a="Pembayaran bisa transfer bank atau QRIS (JOE Coffee sudah punya QRIS)." />
-            <Faq q="Bisa tanya rekomendasi?" a="Bisa. Ceritakan selera kamu (pahit/medium/smooth), nanti kami bantu rekomendasi." />
-          </div>
+          <div className="mt-8 grid gap-5 md:grid-cols-3">{INFO_CARDS.map((item, index) => (<SoftCard key={item.title} className="p-6" style={revealDelay(index)}><p className="text-sm leading-relaxed text-[color:var(--muted)]">{item.desc}</p><div className="mt-4 text-sm font-black">{item.title}</div><div className="text-xs text-[color:var(--muted)]">{item.meta}</div></SoftCard>))}</div>
+          <div className="mt-10 grid gap-3 md:grid-cols-2"><Faq q="Bisa kirim luar kota?" a="Bisa. Packing aman dan pengiriman sesuai layanan ekspedisi yang tersedia." /><Faq q="Bisa untuk kantor / reseller?" a="Bisa. Varian 1 Kg cocok untuk kantor, event, atau reseller. Chat WA untuk diskusi." /><Faq q="Pembayaran bagaimana?" a="Pembayaran bisa transfer bank atau QRIS (JOE Coffee sudah punya QRIS)." /><Faq q="Bisa tanya rekomendasi?" a="Bisa. Ceritakan selera kamu (pahit/medium/smooth), nanti kami bantu rekomendasi." /></div>
         </div>
       </section>
 
       {/* Checkout */}
       <section id="checkout" className="mx-auto max-w-6xl px-4 pb-16 pt-6">
         <div className="gpro-reveal" data-reveal>
-          <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
-            <div>
-              <h2 className="text-2xl font-black md:text-3xl">Checkout</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Keranjang akan dibuat menjadi pesan otomatis untuk WhatsApp.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={clearCart}
-                className="rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-              >
-                Kosongkan
-              </button>
-              <a
-                href={waCheckoutLink}
-                target="_blank"
-                rel="noreferrer"
-                className={cx(
-                  "inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-black",
-                  cartItems.length
-                    ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                    : "cursor-not-allowed bg-white/40 text-[color:var(--muted)] dark:bg-white/5"
-                )}
-                aria-disabled={!cartItems.length}
-                onClick={(e) => {
-                  if (!cartItems.length) e.preventDefault();
-                }}
-              >
-                <Icon name="whatsapp" />
-                Kirim via WA
-              </a>
-              <a
-                href={CATALOG_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-black hover:opacity-90 dark:bg-white/5"
-              >
-                <Icon name="tokopedia" />
-                Katalog
-              </a>
-            </div>
-          </div>
+          <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end"><div><h2 className="text-2xl font-black md:text-3xl">Checkout</h2><p className="mt-2 text-sm text-[color:var(--muted)]">Keranjang akan dibuat menjadi pesan otomatis untuk WhatsApp.</p></div><div className="flex flex-wrap gap-2"><button onClick={clearCart} className="rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-semibold hover:opacity-90 dark:bg-white/5">Kosongkan</button><a href={waCheckoutLink} target="_blank" rel="noreferrer" className={cx("inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-black", cartItems.length ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]" : "cursor-not-allowed bg-white/40 text-[color:var(--muted)] dark:bg-white/5")} aria-disabled={!cartItems.length} onClick={(e) => { if (!cartItems.length) e.preventDefault(); }}><Icon name="whatsapp" />Kirim via WA</a><a href={CATALOG_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-2 text-sm font-black hover:opacity-90 dark:bg-white/5"><Icon name="tokopedia" />Katalog</a></div></div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-5">
-            {/* Left */}
             <SoftCard className="p-6 lg:col-span-3">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-black">Data pembeli & pengiriman</div>
-                <div className="text-xs text-[color:var(--muted)]">akan ikut di pesan WA</div>
-              </div>
-
+              <div className="flex items-center justify-between"><div className="text-sm font-black">Data pembeli & pengiriman</div><div className="text-xs text-[color:var(--muted)]">akan ikut di pesan WA</div></div>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div>
-                  <div className="text-xs font-bold text-[color:var(--muted)]">Nama pembeli</div>
-                  <input
-                    value={buyerName}
-                    onChange={(e) => setBuyerName(e.target.value)}
-                    placeholder="Contoh: Budi"
-                    className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5"
-                  />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-[color:var(--muted)]">Alamat tujuan</div>
-                  <input
-                    value={shipTo}
-                    onChange={(e) => setShipTo(e.target.value)}
-                    placeholder="Contoh: Jl. ..., RT/RW, Kota..."
-                    className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5"
-                  />
-                  <div className="mt-1 text-[11px] text-[color:var(--muted)]">
-                    Tips: bisa juga cukup tulis patokan, lalu nanti shareloc via WA.
-                  </div>
-                </div>
+                <div><div className="text-xs font-bold text-[color:var(--muted)]">Nama pembeli</div><input value={buyerName} onChange={(e) => setBuyerName(e.target.value)} placeholder="Contoh: Budi" className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5" /></div>
+                <div><div className="text-xs font-bold text-[color:var(--muted)]">Alamat tujuan</div><input value={shipTo} onChange={(e) => setShipTo(e.target.value)} placeholder="Contoh: Jl. ..., RT/RW, Kota..." className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-3 text-sm outline-none placeholder:text-[color:var(--muted)] dark:bg-white/5" /><div className="mt-1 text-[11px] text-[color:var(--muted)]">Tips: bisa juga cukup tulis patokan, lalu nanti shareloc via WA.</div></div>
               </div>
-
-              <div className="mt-6 flex items-center justify-between">
-                <div className="text-sm font-black">Item di keranjang</div>
-                <div className="text-xs text-[color:var(--muted)]">{cartCount} item</div>
-              </div>
-
+              <div className="mt-6 flex items-center justify-between"><div className="text-sm font-black">Item di keranjang</div><div className="text-xs text-[color:var(--muted)]">{cartCount} item</div></div>
               <div className="mt-4 space-y-3">
-                {cartItems.length ? (
-                  cartItems.map((i) => (
-                    <div
-                      key={i.id}
-                      className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <div className="text-sm font-black">{i.name}</div>
-                          <div className="text-xs text-[color:var(--muted)]">
-                            {i.variant} • {formatPrice(i.price)}
-                          </div>
-                          <div className="mt-2 text-xs font-black">Subtotal: {formatSubtotal(i.price, i.qty)}</div>
-                        </div>
-
-                        <div className="flex flex-col items-end gap-2">
-                          <div className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/50 px-2 py-1 dark:bg-white/10">
-                            <button
-                              onClick={() => decFromCart(i.id)}
-                              className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
-                              aria-label={`Kurangi ${i.name}`}
-                            >
-                              −
-                            </button>
-                            <div className="min-w-8 text-center text-sm font-black">{i.qty}</div>
-                            <button
-                              onClick={() => addToCart(i.id)}
-                              className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10"
-                              aria-label={`Tambah ${i.name}`}
-                            >
-                              +
-                            </button>
-                          </div>
-                          <button
-                            onClick={() => removeFromCart(i.id)}
-                            className="text-xs font-black text-[color:var(--primary)] hover:opacity-80"
-                          >
-                            Hapus
-                          </button>
-                        </div>
-                      </div>
+                {cartItems.length ? cartItems.map((i) => (
+                  <div key={i.id} className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div><div className="text-sm font-black">{i.name}</div><div className="text-xs text-[color:var(--muted)]">{i.variant} • {formatPrice(i.price)}</div><div className="mt-2 text-xs font-black">Subtotal: {formatSubtotal(i.price, i.qty)}</div></div>
+                      <div className="flex flex-col items-end gap-2"><div className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/50 px-2 py-1 dark:bg-white/10"><button onClick={() => decFromCart(i.id)} className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10" aria-label={`Kurangi ${i.name}`}>−</button><div className="min-w-8 text-center text-sm font-black">{i.qty}</div><button onClick={() => addToCart(i.id)} className="grid h-8 w-8 place-items-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10" aria-label={`Tambah ${i.name}`}>+</button></div><button onClick={() => removeFromCart(i.id)} className="text-xs font-black text-[color:var(--primary)] hover:opacity-80">Hapus</button></div>
                     </div>
-                  ))
-                ) : (
-                  <div className="rounded-2xl border border-dashed border-[color:var(--border)] p-6 text-sm text-[color:var(--muted)]">
-                    Keranjang kosong. Tambahkan produk dari bagian{" "}
-                    <a className="font-black underline" href="#produk">
-                      Produk
-                    </a>
-                    .
                   </div>
-                )}
+                )) : (<div className="rounded-2xl border border-dashed border-[color:var(--border)] p-6 text-sm text-[color:var(--muted)]">Keranjang kosong. Tambahkan produk dari bagian{" "}<a className="font-black underline" href="#produk">Produk</a>.</div>)}
               </div>
             </SoftCard>
 
-            {/* Right */}
             <SoftCard className="p-6 lg:col-span-2">
               <div className="text-sm font-black">Ringkasan</div>
-
-              <div className="mt-4 space-y-2 text-sm">
-                <div className="flex items-center justify-between text-[color:var(--muted)]">
-                  <span>Total item</span>
-                  <span className="font-black text-[var(--foreground)]">{cartCount}</span>
-                </div>
-                <div className="flex items-center justify-between text-[color:var(--muted)]">
-                  <span>Total harga</span>
-                  <span className="font-black text-[var(--foreground)]">{formatCartTotal(cartTotal, hasOpenPrice)}</span>
-                </div>
-
-                <div className="mt-3 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
-                  Ongkir & ketersediaan dikonfirmasi via WhatsApp sesuai alamat pengiriman (boleh shareloc).
-                </div>
-              </div>
-
-              <a
-                href={waCheckoutLink}
-                target="_blank"
-                rel="noreferrer"
-                className={cx(
-                  "mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black",
-                  cartItems.length
-                    ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                    : "cursor-not-allowed bg-white/40 text-[color:var(--muted)] dark:bg-white/5"
-                )}
-                aria-disabled={!cartItems.length}
-                onClick={(e) => {
-                  if (!cartItems.length) e.preventDefault();
-                }}
-              >
-                <Icon name="whatsapp" />
-                Checkout via WhatsApp
-              </a>
-
-              <a
-                href={CATALOG_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"
-              >
-                <Icon name="tokopedia" />
-                Beli via Katalog
-              </a>
-
-              {/* Payment methods */}
+              <div className="mt-4 space-y-2 text-sm"><div className="flex items-center justify-between text-[color:var(--muted)]"><span>Total item</span><span className="font-black text-[var(--foreground)]">{cartCount}</span></div><div className="flex items-center justify-between text-[color:var(--muted)]"><span>Total harga</span><span className="font-black text-[var(--foreground)]">{formatCartTotal(cartTotal, hasOpenPrice)}</span></div><div className="mt-3 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">Ongkir & ketersediaan dikonfirmasi via WhatsApp sesuai alamat pengiriman (boleh shareloc).</div></div>
+              <a href={waCheckoutLink} target="_blank" rel="noreferrer" className={cx("mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black", cartItems.length ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]" : "cursor-not-allowed bg-white/40 text-[color:var(--muted)] dark:bg-white/5")} aria-disabled={!cartItems.length} onClick={(e) => { if (!cartItems.length) e.preventDefault(); }}><Icon name="whatsapp" />Checkout via WhatsApp</a>
+              <a href={CATALOG_URL} target="_blank" rel="noreferrer" className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-black hover:opacity-90 dark:bg-white/5"><Icon name="tokopedia" />Beli via Katalog</a>
               <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
-                <div className="text-sm font-black text-[var(--foreground)]">Pembayaran</div>
-                <div className="mt-1">Pilih metode pembayaran dulu ya:</div>
-
+                <div className="text-sm font-black text-[var(--foreground)]">Pembayaran</div><div className="mt-1">Pilih metode pembayaran dulu ya:</div>
                 <div className="mt-3 grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPayMethod((m) => (m === "bank" ? null : "bank"))}
-                    className={cx(
-                      "rounded-xl border px-3 py-3 text-center text-xs font-black transition",
-                      payMethod === "bank"
-                        ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                        : "border-[color:var(--border)] bg-white/60 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5"
-                    )}
-                    aria-pressed={payMethod === "bank"}
-                  >
-                    🏦 Transfer Bank
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPayMethod((m) => (m === "qris" ? null : "qris"))}
-                    className={cx(
-                      "rounded-xl border px-3 py-3 text-center text-xs font-black transition",
-                      payMethod === "qris"
-                        ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
-                        : "border-[color:var(--border)] bg-white/60 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5"
-                    )}
-                    aria-pressed={payMethod === "qris"}
-                  >
-                    📱 QRIS
-                  </button>
+                  <button type="button" onClick={() => setPayMethod((m) => (m === "bank" ? null : "bank"))} className={cx("rounded-xl border px-3 py-3 text-center text-xs font-black transition", payMethod === "bank" ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]" : "border-[color:var(--border)] bg-white/60 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5")} aria-pressed={payMethod === "bank"}>🏦 Transfer Bank</button>
+                  <button type="button" onClick={() => setPayMethod((m) => (m === "qris" ? null : "qris"))} className={cx("rounded-xl border px-3 py-3 text-center text-xs font-black transition", payMethod === "qris" ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]" : "border-[color:var(--border)] bg-white/60 text-[var(--foreground)] hover:opacity-90 dark:bg-white/5")} aria-pressed={payMethod === "qris"}>📱 QRIS</button>
                 </div>
-
-                {payMethod === "bank" && (
-                  <div className="mt-3 whitespace-pre-line rounded-xl border border-[color:var(--border)] bg-white/70 p-3 dark:bg-white/10">
-                    <div className="font-semibold text-[var(--foreground)]">Info Transfer</div>
-                    <div className="mt-1">{PAYMENT.bankNote}</div>
-                  </div>
-                )}
-
-                {payMethod === "qris" && (
-                  <div className="mt-3 rounded-xl border border-[color:var(--border)] bg-white/70 p-3 dark:bg-white/10">
-                    <div className="font-semibold text-[var(--foreground)]">QRIS JOE Coffee</div>
-                    <div className="relative mt-2 aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white p-3">
-                      <Image
-                        src={PAYMENT.qrisImage}
-                        alt="QRIS JOE Coffee"
-                        fill
-                        sizes="(min-width: 1024px) 240px, 100vw"
-                        className="object-contain p-2"
-                      />
-                    </div>
-                    <a
-                      href={PAYMENT.qrisImage}
-                      download="QRIS-JOE-Coffee.jpg"
-                      className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2.5 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                    >
-                      <Icon name="image" />
-                      Simpan QRIS ke Galeri
-                    </a>
-                    <div className="mt-2 text-[11px]">
-                      Di HP: tekan lama gambar QRIS di atas lalu pilih &quot;Simpan gambar&quot;, atau pakai tombol di atas.
-                    </div>
-                  </div>
-                )}
+                {payMethod === "bank" && (<div className="mt-3 whitespace-pre-line rounded-xl border border-[color:var(--border)] bg-white/70 p-3 dark:bg-white/10"><div className="font-semibold text-[var(--foreground)]">Info Transfer</div><div className="mt-1">{PAYMENT.bankNote}</div></div>)}
+                {payMethod === "qris" && (<div className="mt-3 rounded-xl border border-[color:var(--border)] bg-white/70 p-3 dark:bg-white/10"><div className="font-semibold text-[var(--foreground)]">QRIS JOE Coffee</div><div className="relative mt-2 aspect-[3/4] overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white p-3"><Image src={PAYMENT.qrisImage} alt="QRIS JOE Coffee" fill sizes="(min-width: 1024px) 240px, 100vw" className="object-contain p-2" /></div><a href={PAYMENT.qrisImage} download="QRIS-JOE-Coffee.jpg" className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-4 py-2.5 text-xs font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"><Icon name="image" />Simpan QRIS ke Galeri</a><div className="mt-2 text-[11px]">Di HP: tekan lama gambar QRIS di atas lalu pilih &quot;Simpan gambar&quot;, atau pakai tombol di atas.</div></div>)}
               </div>
-
-              <a
-                href={`tel:${PHONE_WA}`}
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"
-              >
-                <Icon name="phone" />
-                {PHONE_DISPLAY}
-              </a>
+              <a href={`tel:${PHONE_WA}`} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--border)] bg-white/40 px-5 py-3 text-sm font-semibold hover:opacity-90 dark:bg-white/5"><Icon name="phone" />{PHONE_DISPLAY}</a>
             </SoftCard>
           </div>
         </div>
@@ -1878,188 +1278,42 @@ export default function Page() {
         <div className="gpro-reveal" data-reveal>
           <div className="grid gap-6 lg:grid-cols-2">
             <SoftCard className="p-6">
-              <h2 className="text-2xl font-black md:text-3xl">Hubungi Kami</h2>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">Ada pertanyaan? Kami siap membantu.</p>
-
+              <h2 className="text-2xl font-black md:text-3xl">Hubungi Kami</h2><p className="mt-2 text-sm text-[color:var(--muted)]">Ada pertanyaan? Kami siap membantu.</p>
               <div className="mt-5 space-y-3">
-                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5">
-                  <div className="flex items-start gap-3">
-                    <span className="mt-0.5 text-[color:var(--primary)]">
-                      <Icon name="map" />
-                    </span>
-                    <div>
-                      <div className="text-sm font-black">Alamat</div>
-                      <div className="mt-1 text-sm text-[color:var(--muted)]">{ADDRESS}</div>
-                      <a
-                        href={mapsLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-2 inline-flex items-center gap-2 text-sm font-black text-[color:var(--primary)] hover:opacity-80"
-                      >
-                        Buka di Google Maps →
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <a
-                    href={waCheckoutLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 hover:opacity-90 dark:bg-white/5"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-[color:var(--primary)]">
-                        <Icon name="whatsapp" />
-                      </span>
-                      <div>
-                        <div className="text-sm font-black">WhatsApp</div>
-                        <div className="text-sm text-[color:var(--muted)]">{PHONE_DISPLAY}</div>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a
-                    href={`mailto:${EMAIL}`}
-                    className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 hover:opacity-90 dark:bg-white/5"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-[color:var(--primary)]">
-                        <Icon name="mail" />
-                      </span>
-                      <div>
-                        <div className="text-sm font-black">Email</div>
-                        <div className="text-sm text-[color:var(--muted)]">{EMAIL}</div>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-
-                <a
-                  href={CATALOG_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-                >
-                  <Icon name="tokopedia" />
-                  Kunjungi Katalog Resmi
-                </a>
+                <div className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 dark:bg-white/5"><div className="flex items-start gap-3"><span className="mt-0.5 text-[color:var(--primary)]"><Icon name="map" /></span><div><div className="text-sm font-black">Alamat</div><div className="mt-1 text-sm text-[color:var(--muted)]">{ADDRESS}</div><a href={mapsLink} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-2 text-sm font-black text-[color:var(--primary)] hover:opacity-80">Buka di Google Maps →</a></div></div></div>
+                <div className="grid gap-3 sm:grid-cols-2"><a href={waCheckoutLink} target="_blank" rel="noreferrer" className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 hover:opacity-90 dark:bg-white/5"><div className="flex items-center gap-3"><span className="text-[color:var(--primary)]"><Icon name="whatsapp" /></span><div><div className="text-sm font-black">WhatsApp</div><div className="text-sm text-[color:var(--muted)]">{PHONE_DISPLAY}</div></div></div></a><a href={`mailto:${EMAIL}`} className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 hover:opacity-90 dark:bg-white/5"><div className="flex items-center gap-3"><span className="text-[color:var(--primary)]"><Icon name="mail" /></span><div><div className="text-sm font-black">Email</div><div className="text-sm text-[color:var(--muted)]">{EMAIL}</div></div></div></a></div>
+                <a href={CATALOG_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--primary)] px-5 py-3 text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"><Icon name="tokopedia" />Kunjungi Katalog Resmi</a>
               </div>
             </SoftCard>
 
             <SoftCard className="p-6">
-              <h3 className="text-lg font-black">Kirim Pesan Cepat</h3>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Klik tombol untuk langsung chat (pesan otomatis).
-              </p>
-
-              <div className="mt-5 grid gap-3">
-                <QuickMessage
-                  label="Tanya stok & rekomendasi"
-                  href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                    `Halo ${BRAND}, saya mau tanya stok & rekomendasi kopi yang cocok untuk saya. (${COFFEE_TRUTH} ${TASTE_NOTE})`
-                  )}`}
-                />
-                <QuickMessage
-                  label="Tanya ongkir & estimasi kirim (boleh shareloc)"
-                  href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                    `Halo ${BRAND}, saya mau tanya ongkir & estimasi pengiriman. Saya bisa shareloc untuk patokan alamat ya.`
-                  )}`}
-                />
-                <QuickMessage
-                  label="Kerja sama / reseller"
-                  href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-                    `Halo ${BRAND}, saya tertarik kerja sama/reseller. Mohon info syarat & harga grosir.`
-                  )}`}
-                />
-              </div>
-
-              <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">
-                © {new Date().getFullYear()} {BRAND}. All rights reserved.
-              </div>
+              <h3 className="text-lg font-black">Kirim Pesan Cepat</h3><p className="mt-2 text-sm text-[color:var(--muted)]">Klik tombol untuk langsung chat (pesan otomatis).</p>
+              <div className="mt-5 grid gap-3"><QuickMessage label="Tanya stok & rekomendasi" href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(`Halo ${BRAND}, saya mau tanya stok & rekomendasi kopi yang cocok untuk saya. (${COFFEE_TRUTH} ${TASTE_NOTE})`)}`} /><QuickMessage label="Tanya ongkir & estimasi kirim (boleh shareloc)" href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(`Halo ${BRAND}, saya mau tanya ongkir & estimasi pengiriman. Saya bisa shareloc untuk patokan alamat ya.`)}`} /><QuickMessage label="Kerja sama / reseller" href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(`Halo ${BRAND}, saya tertarik kerja sama/reseller. Mohon info syarat & harga grosir.`)}`} /></div>
+              <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-white/60 p-4 text-xs text-[color:var(--muted)] dark:bg-white/5">© {new Date().getFullYear()} {BRAND}. All rights reserved.</div>
             </SoftCard>
           </div>
         </div>
       </section>
 
-      {/* Floating WA (desktop) */}
-      <a
-        href={waCheckoutLink}
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-5 right-5 z-50 hidden items-center gap-2 rounded-full bg-[color:var(--primary)] px-4 py-3 text-sm font-black text-[color:var(--primary-foreground)] shadow-[var(--shadow)] hover:bg-[color:var(--primary-hover)] md:inline-flex"
-        aria-label="Chat WhatsApp"
-      >
-        <Icon name="whatsapp" />
-        Chat WhatsApp
-      </a>
+      <a href={waCheckoutLink} target="_blank" rel="noreferrer" className="fixed bottom-5 right-5 z-50 hidden items-center gap-2 rounded-full bg-[color:var(--primary)] px-4 py-3 text-sm font-black text-[color:var(--primary-foreground)] shadow-[var(--shadow)] hover:bg-[color:var(--primary-hover)] md:inline-flex" aria-label="Chat WhatsApp"><Icon name="whatsapp" />Chat WhatsApp</a>
 
-      {/* Sticky bottom bar (mobile) */}
-      <div className="fixed bottom-3 left-1/2 z-50 w-[min(680px,calc(100%-24px))] -translate-x-1/2 md:hidden">
-        <div className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-3 shadow-[var(--shadow)] backdrop-blur">
-          <a
-            href={waCheckoutLink}
-            target="_blank"
-            rel="noreferrer"
-            className="flex-1 rounded-xl bg-[color:var(--primary)] px-4 py-3 text-center text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]"
-          >
-            Order WA
-          </a>
-          <a
-            href={CATALOG_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="flex-1 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-3 text-center text-sm font-black hover:opacity-90 dark:bg-white/5"
-          >
-            Katalog
-          </a>
-        </div>
-      </div>
+      <div className="fixed bottom-3 left-1/2 z-50 w-[min(680px,calc(100%-24px))] -translate-x-1/2 md:hidden"><div className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-3 shadow-[var(--shadow)] backdrop-blur"><a href={waCheckoutLink} target="_blank" rel="noreferrer" className="flex-1 rounded-xl bg-[color:var(--primary)] px-4 py-3 text-center text-sm font-black text-[color:var(--primary-foreground)] hover:bg-[color:var(--primary-hover)]">Order WA</a><a href={CATALOG_URL} target="_blank" rel="noreferrer" className="flex-1 rounded-xl border border-[color:var(--border)] bg-white/40 px-4 py-3 text-center text-sm font-black hover:opacity-90 dark:bg-white/5">Katalog</a></div></div>
     </div>
   );
 }
 
 function Reason({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
-  return (
-    <div className="text-center">
-      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/15">
-        <span className="text-white">{icon}</span>
-      </div>
-      <div className="mt-3 text-sm font-black">{title}</div>
-      <div className="mt-2 text-xs opacity-85">{desc}</div>
-    </div>
-  );
+  return (<div className="text-center"><div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/15"><span className="text-white">{icon}</span></div><div className="mt-3 text-sm font-black">{title}</div><div className="mt-2 text-xs opacity-85">{desc}</div></div>);
 }
 
 function StatBig({ value, label }: { value: string; label: string }) {
-  return (
-    <div>
-      <div className="text-3xl font-black md:text-4xl">{value}</div>
-      <div className="mt-1 text-xs opacity-85">{label}</div>
-    </div>
-  );
+  return (<div><div className="text-3xl font-black md:text-4xl">{value}</div><div className="mt-1 text-xs opacity-85">{label}</div></div>);
 }
 
 function Faq({ q, a }: { q: string; a: string }) {
-  return (
-    <details className="gpro-card rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] p-4 shadow-[var(--shadow-soft)]">
-      <summary className="cursor-pointer text-sm font-black">{q}</summary>
-      <p className="mt-2 text-sm text-[color:var(--muted)]">{a}</p>
-    </details>
-  );
+  return (<details className="gpro-card rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] p-4 shadow-[var(--shadow-soft)]"><summary className="cursor-pointer text-sm font-black">{q}</summary><p className="mt-2 text-sm text-[color:var(--muted)]">{a}</p></details>);
 }
 
 function QuickMessage({ label, href }: { label: string; href: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="gpro-card inline-flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-4 text-sm font-black hover:opacity-90 dark:bg-white/5"
-    >
-      <span>{label}</span>
-      <span className="text-[color:var(--primary)]">→</span>
-    </a>
-  );
+  return (<a href={href} target="_blank" rel="noreferrer" className="gpro-card inline-flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-white/60 px-4 py-4 text-sm font-black hover:opacity-90 dark:bg-white/5"><span>{label}</span><span className="text-[color:var(--primary)]">→</span></a>);
 }
