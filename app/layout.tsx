@@ -41,6 +41,9 @@ function ThemeInitScript() {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" suppressHydrationWarning>
+      <head>
+        <link rel="stylesheet" href="/homepage-overrides.css" />
+      </head>
       <body className="antialiased">
         <ThemeInitScript />
         <SiteControls />
