@@ -6,6 +6,7 @@ import {
   DASHBOARD_CATEGORIES,
   EBOOKS,
   JOE_COFFEE,
+  JOE_COFFEE_DESCRIPTION,
   TESTIMONIALS,
   TRAINERS,
   TRAINING_PHOTOS,
@@ -45,7 +46,7 @@ function EmptyVisual({ label, ratio = "aspect-[4/3]" }: { label: string; ratio?:
   return (
     <div className={`grid ${ratio} place-items-center border-b border-[color:var(--border)] bg-black/[0.03] p-6 text-center dark:bg-white/[0.04]`}>
       <div>
-        <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-dashed border-[color:var(--border)] text-xl">＋</div>
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-[color:var(--border)] text-xl">JOE</div>
         <div className="mt-3 text-xs font-bold text-[color:var(--muted)]">{label}</div>
       </div>
     </div>
@@ -66,7 +67,7 @@ function CatalogCard({ item }: { item: CatalogItem }) {
           />
         </div>
       ) : (
-        <EmptyVisual label="Foto / cover dapat ditambahkan" />
+        <EmptyVisual label={item.label ?? item.name} />
       )}
       <div className="p-5">
         <div className="flex flex-wrap items-start justify-between gap-2">
@@ -83,7 +84,9 @@ function CatalogCard({ item }: { item: CatalogItem }) {
           )}
         </div>
         <p className="mt-3 text-sm font-semibold">{item.intro}</p>
-        <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">{item.description}</p>
+        {item.description && (
+          <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">{item.description}</p>
+        )}
         {item.status && <div className="mt-4 text-xs font-bold text-[color:var(--muted)]">{item.status}</div>}
       </div>
     </article>
@@ -109,12 +112,9 @@ function TestimonialCard({ item }: { item: Testimonial }) {
 
 function PlaceholderTestimonial({ title }: { title: string }) {
   return (
-    <article className="rounded-[var(--radius)] border border-dashed border-[color:var(--border)] bg-[color:var(--card)] p-6 text-center">
-      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-dashed border-[color:var(--border)] text-xl">＋</div>
+    <article className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 text-center shadow-[var(--shadow-soft)]">
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-[color:var(--border)] text-3xl font-black text-[color:var(--primary)]">“</div>
       <div className="mt-4 text-sm font-black">{title}</div>
-      <div className="mt-2 text-xs leading-relaxed text-[color:var(--muted)]">
-        Foto, nama, jabatan/instansi, program atau produk, dan isi testimoni dapat ditambahkan di sini.
-      </div>
     </article>
   );
 }
@@ -196,7 +196,7 @@ export default function DashboardPage() {
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-[color:var(--muted)]">
               <span>✓ Produk fisik & digital</span>
               <span>✓ Training & short course</span>
-              <span>✓ Konten mudah ditambah</span>
+              <span>✓ Pilihan produk & program</span>
             </div>
           </div>
 
@@ -219,7 +219,7 @@ export default function DashboardPage() {
           <SectionHead
             eyebrow="Dashboard"
             title="Pilih area utama"
-            description="Tiga area utama ditampilkan lebih dulu seperti pola pada referensi: Joe Coffee, TQ Business Learning Center, dan Buku & E-Books. Kuliner dan Testimoni tersedia sebagai area berikutnya."
+            description="Temukan Joe Coffee, program TQ Business Learning Center, buku & e-book, pilihan kuliner, serta pengalaman pelanggan dan peserta."
           />
           <div className="grid gap-4 lg:grid-cols-3">
             {primaryCategories.map((category) => <DashboardCard key={category.number} category={category} />)}
@@ -234,7 +234,7 @@ export default function DashboardPage() {
         <SectionHead
           eyebrow="01 • Joe Coffee"
           title="Joe Coffee"
-          description="Empat produk utama kopi JOE dengan tempat untuk nama produk, pendahuluan, deskripsi, harga, dan foto."
+          description={JOE_COFFEE_DESCRIPTION}
         />
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {JOE_COFFEE.map((item) => <CatalogCard key={item.name} item={item} />)}
@@ -246,7 +246,7 @@ export default function DashboardPage() {
           <SectionHead
             eyebrow="02 • TQ Business Learning Center"
             title="Modul Pelatihan"
-            description="Topik pelatihan, Company Profile, Team Pengajar, foto-foto kegiatan, dan testimoni peserta berada dalam satu area yang jelas."
+            description="Training dan short course praktis untuk pengembangan leadership, communication, people, systems, dan business performance."
           />
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -265,7 +265,6 @@ export default function DashboardPage() {
               <h3 className="mt-2 text-xl font-black">{COMPANY_PROFILE.title}</h3>
               <p className="mt-3 text-sm font-semibold">{COMPANY_PROFILE.intro}</p>
               <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">{COMPANY_PROFILE.description}</p>
-              <div className="mt-5 rounded-2xl border border-dashed border-[color:var(--border)] p-5 text-sm text-[color:var(--muted)]">Logo, profil perusahaan, pengalaman, klien, dan materi pendukung dapat ditambahkan di area ini.</div>
             </article>
 
             <article className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-[var(--shadow-soft)]">
@@ -287,22 +286,15 @@ export default function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <div className="mt-5 grid grid-cols-3 gap-3">
-                  {["Pengajar 1", "Pengajar 2", "Pengajar 3"].map((name) => (
-                    <div key={name} className="grid aspect-square place-items-center rounded-2xl border border-dashed border-[color:var(--border)] text-center text-xs font-bold text-[color:var(--muted)]">{name}<br />foto & profil menyusul</div>
-                  ))}
-                </div>
+                <div className="mt-5 text-sm text-[color:var(--muted)]">Professional Trainer & Facilitator</div>
               )}
             </article>
           </div>
 
           <div className="mt-9">
-            <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
-              <div>
-                <div className="text-xs font-black uppercase tracking-[0.18em] text-[color:var(--primary)]">Dokumentasi</div>
-                <h3 className="mt-1 text-xl font-black">Foto-foto Pelatihan</h3>
-              </div>
-              <span className="text-xs text-[color:var(--muted)]">Foto asli dapat ditambahkan setelah materi diterima.</span>
+            <div className="mb-4">
+              <div className="text-xs font-black uppercase tracking-[0.18em] text-[color:var(--primary)]">Dokumentasi</div>
+              <h3 className="mt-1 text-xl font-black">Foto-foto Pelatihan</h3>
             </div>
             {TRAINING_PHOTOS.length ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -323,13 +315,8 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {["Dokumentasi Training 1", "Dokumentasi Training 2", "Dokumentasi Training 3"].map((label) => (
-                  <div key={label} className="overflow-hidden rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] shadow-[var(--shadow-soft)]">
-                    <EmptyVisual label={label} ratio="aspect-[16/10]" />
-                    <div className="p-4 text-sm font-black">{label}</div>
-                  </div>
-                ))}
+              <div className="overflow-hidden rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] shadow-[var(--shadow-soft)] sm:max-w-md">
+                <EmptyVisual label="Dokumentasi Pelatihan" ratio="aspect-[16/10]" />
               </div>
             )}
           </div>
@@ -345,7 +332,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="grid gap-5 md:grid-cols-3">
-                {["Peserta Pelatihan 1", "Peserta Pelatihan 2", "Peserta Pelatihan 3"].map((label) => <PlaceholderTestimonial key={label} title={label} />)}
+                {["Leadership", "Team Building", "Business Learning"].map((label) => <PlaceholderTestimonial key={label} title={label} />)}
               </div>
             )}
           </div>
@@ -356,7 +343,7 @@ export default function DashboardPage() {
         <SectionHead
           eyebrow="03 • Buku & E-Books"
           title="Buku dan E-Book"
-          description="Buku cetak dan produk digital dipisahkan agar calon pembeli mudah melihat jenis produk, pendahuluan, deskripsi, cover, dan cara mendapatkannya."
+          description="Koleksi buku cetak dan bacaan digital dari TQ Business Learning Center."
         />
         <div>
           <div className="mb-4 text-lg font-black">Buku</div>
@@ -377,7 +364,7 @@ export default function DashboardPage() {
           <SectionHead
             eyebrow="04 • Kuliner"
             title="Produk Kuliner"
-            description="Mie Kriuk, Nasgomer, Mie Godhog Kuah Merah, Es Kopi Susu Gula Aren, dan Es Kopi Susu Jahe. Foto, harga, pendahuluan, serta deskripsi dapat dilengkapi bertahap."
+            description="Mie Kriuk, Nasgomer, Mie Godhog Kuah Merah, Es Kopi Susu Gula Aren, dan Es Kopi Susu Jahe."
           />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {CULINARY.map((item) => <CatalogCard key={item.name} item={item} />)}
@@ -388,8 +375,8 @@ export default function DashboardPage() {
       <section id="testimoni" className="mx-auto max-w-7xl px-4 py-14">
         <SectionHead
           eyebrow="05 • Testimoni"
-          title="Testimoni pelanggan, peserta, pembaca & mitra"
-          description="Area testimoni umum untuk pengalaman terhadap produk Joe Coffee, kuliner, pelatihan, buku, e-book, maupun kerja sama."
+          title="Cerita dari pelanggan, peserta, pembaca & mitra"
+          description="Pengalaman bersama Joe Coffee, TQ Business Learning Center, produk kuliner, buku, e-book, dan berbagai bentuk kerja sama."
         />
         {TESTIMONIALS.length ? (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -397,7 +384,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {["Testimoni Pelanggan", "Testimoni Peserta", "Testimoni Pembaca", "Testimoni Mitra"].map((label) => <PlaceholderTestimonial key={label} title={label} />)}
+            {["Pelanggan", "Peserta Pelatihan", "Pembaca", "Mitra"].map((label) => <PlaceholderTestimonial key={label} title={label} />)}
           </div>
         )}
       </section>
