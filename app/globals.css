@@ -235,6 +235,22 @@ a {
   }
 }
 
+/* Logo resmi Joe Coffee pada header dashboard */
+header a[href="#home"] > div:first-child {
+  width: 52px !important;
+  height: 52px !important;
+  flex: 0 0 52px;
+  border-radius: 14px !important;
+  background-color: #050505 !important;
+  background-image: url("/joe-coffee-logo-brand.webp") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  box-shadow: 0 4px 14px rgba(21, 17, 10, 0.18);
+}
+
 /* Accessibility: reduce motion */
 @media (prefers-reduced-motion: reduce) {
   html {
