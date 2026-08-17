@@ -124,14 +124,14 @@ const PRODUCTS: Product[] = [
   },
   {
     id: "es-kopi-tanpa-ampas",
-    name: "Iced Black Coffee",
+    name: "Es Kopi Hitam",
     category: "Es Kopi",
     variant: "Cup dingin",
     price: 10000,
     status: "Harga WA Catalog",
     note:
-      "Kopi hitam dingin tanpa ampas dan tanpa gula, ringan diminum dingin dan tetap membawa karakter kopi Joe.",
-    bullets: ["Tanpa ampas", "Tanpa gula", "IDR 10.000"],
+      "Joe Coffee bubuk 10 gr diseduh tanpa ampas, diberi es batu. Segar dan nikmat rasa kopinya.",
+    bullets: ["10 gr kopi", "Tanpa ampas", "Es batu"],
     image: "/produk-es-kopi-tanpa-ampas.jpeg",
   },
   {
@@ -169,7 +169,7 @@ const INFO_CARDS = [
   {
     title: "Menu Dingin",
     meta: "Es kopi",
-    desc: "Ada Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU sesuai katalog WhatsApp.",
+    desc: "Ada Es Kopi Hitam, ES KOPI SUSU, dan ES GINGER KOPI SUSU sesuai katalog WhatsApp.",
   },
   {
     title: "Konfirmasi Order",
@@ -181,7 +181,7 @@ const INFO_CARDS = [
 const MEDIA_IMAGES = [
   { label: "Pouch kopi bubuk", src: "/produk-kopi-bubuk-500gr.jpeg", note: "Kemasan pouch Joe Coffee." },
   { label: "Pouch 1kg", src: "/produk-kopi-bubuk-1kg.jpeg", note: "Ukuran besar untuk stok." },
-  { label: "Es kopi tanpa ampas", src: "/produk-es-kopi-tanpa-ampas.jpeg", note: "Cup dingin tanpa ampas." },
+  { label: "Es Kopi Hitam", src: "/produk-es-kopi-tanpa-ampas.jpeg", note: "Joe Coffee bubuk 10 gr, diseduh tanpa ampas dan diberi es batu." },
   { label: "Es kopi susu gula aren", src: "/produk-es-kopi-susu-gula-aren.jpeg", note: "Creamy dengan gula aren." },
   { label: "Es kopi botol", src: "/media-es-kopi-botol.jpeg", note: "Foto produk es kopi botol." },
   { label: "Kopi sachet", src: "/media-kopi-sachet.jpeg", note: "Kemasan kopi bubuk kecil." },
@@ -844,7 +844,7 @@ export default function Page() {
         [
           `Halo ${BRAND}, saya mau tanya produk Joe Coffee.`,
           "",
-          "Katalog yang saya lihat: kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU.",
+          "Katalog yang saya lihat: kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Es Kopi Hitam, ES KOPI SUSU, dan ES GINGER KOPI SUSU.",
           "Mohon info stok, harga final, dan ongkir ya.",
         ].join("\n")
       );
@@ -859,7 +859,7 @@ export default function Page() {
       ...cartItems.map((i) => `- ${i.name} (${i.category}, ${i.variant}) x${i.qty} = ${formatSubtotal(i.price, i.qty)}`),
       `Total sementara: ${formatCartTotal(cartTotal, hasOpenPrice)}`,
       "",
-      `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Iced Black Coffee, ES KOPI SUSU, dan ES GINGER KOPI SUSU. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
+      `Catatan katalog: tersedia kopi bubuk pouch 100gr, 200gr, 500gr, 1kg, JOE Biji Kopi 1kg, Es Kopi Hitam, ES KOPI SUSU, dan ES GINGER KOPI SUSU. ${COFFEE_TRUTH} ${TASTE_NOTE}`,
       "",
       "Metode bayar: Transfer Bank / QRIS (JOE Coffee). Mohon info ongkir ya. Terima kasih.",
       `Katalog lengkap: ${CATALOG_URL}`,
@@ -1366,9 +1366,9 @@ export default function Page() {
 
           <div className="mt-6 grid gap-5 md:grid-cols-3">
             <SoftCard className="p-6" style={revealDelay(0)}>
-              <div className="text-sm font-black">Iced Black Coffee</div>
+              <div className="text-sm font-black">Es Kopi Hitam</div>
               <div className="mt-2 text-sm text-[color:var(--muted)]">
-                Kopi hitam dingin tanpa ampas dan tanpa gula.
+                Joe Coffee bubuk 10 gr diseduh tanpa ampas, diberi es batu. Segar dan nikmat rasa kopinya.
               </div>
             </SoftCard>
             <SoftCard className="p-6" style={revealDelay(1)}>
