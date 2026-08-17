@@ -20,19 +20,22 @@ export type Testimonial = {
   image?: string;
 };
 
+export const JOE_COFFEE_DESCRIPTION =
+  "Joe Coffee is a blend of Arabica and Robusta coffee beans from Temanggung, Wonosobo, and surrounding areas. The blend is crafted for a balanced cup—not too acidic and not too bitter.";
+
 export const DASHBOARD_CATEGORIES = [
   {
     number: "01",
     title: "Joe Coffee",
     href: "#joe-coffee",
-    intro: "Produk utama Joe Coffee dalam empat pilihan kemasan.",
+    intro: JOE_COFFEE_DESCRIPTION,
     items: ["Joe 100", "Joe 200", "Joe 500", "Joe 1kg"],
   },
   {
     number: "02",
     title: "TQ Business Learning Center",
     href: "#tq-business",
-    intro: "Training, company profile, team pengajar, dokumentasi kegiatan, dan testimoni peserta.",
+    intro: "Training dan short course praktis untuk pengembangan people, systems, dan business performance.",
     items: ["Topik Pelatihan", "Foto-foto", "Company Profile", "Team Pengajar", "Testimoni Pelatihan"],
   },
   {
@@ -46,14 +49,14 @@ export const DASHBOARD_CATEGORIES = [
     number: "04",
     title: "Kuliner",
     href: "#kuliner",
-    intro: "Pilihan makanan dan minuman JOE yang dapat dipesan dan dikembangkan sebagai katalog kuliner.",
+    intro: "Pilihan makanan dan minuman JOE untuk menemani waktu santai, bekerja, maupun berkumpul.",
     items: ["Mie Kriuk", "Nasgomer", "Mie Godhog Kuah Merah", "Es Kopi Susu Gula Aren", "Es Kopi Susu Jahe"],
   },
   {
     number: "05",
     title: "Testimoni",
     href: "#testimoni",
-    intro: "Pengalaman pelanggan, peserta pelatihan, pembaca, dan mitra.",
+    intro: "Cerita dan pengalaman pelanggan, peserta pelatihan, pembaca, dan mitra.",
     items: ["Peserta Training", "Pelanggan", "Pembaca", "Mitra"],
   },
 ] as const;
@@ -62,32 +65,32 @@ export const JOE_COFFEE: CatalogItem[] = [
   {
     name: "Joe 100",
     label: "100 gram",
-    intro: "Ukuran praktis untuk mencoba rasa JOE Coffee atau stok harian kecil.",
-    description: "Blend Robusta dan Arabika, tanpa bahan pengawet dan tanpa campuran lainnya.",
+    intro: "Ukuran praktis untuk mencoba Joe Coffee atau menemani kebutuhan kopi harian.",
+    description: JOE_COFFEE_DESCRIPTION,
     price: "Rp33.000",
     image: "/produk-kopi-bubuk-100gr.jpeg",
   },
   {
     name: "Joe 200",
     label: "200 gram",
-    intro: "Ukuran favorit untuk persediaan kopi di rumah.",
-    description: "JOE Kopi Bubuk dikemas 200 gram dengan takaran seduh sekitar 10 gram per sajian.",
+    intro: "Ukuran yang pas untuk persediaan kopi di rumah.",
+    description: JOE_COFFEE_DESCRIPTION,
     price: "Rp66.000",
     image: "/produk-kopi-bubuk-200gr.jpeg",
   },
   {
     name: "Joe 500",
     label: "500 gram",
-    intro: "Ukuran sedang untuk peminum rutin, kantor kecil, atau stok mingguan.",
-    description: "Harga dan ketersediaan dapat dikonfirmasi melalui WhatsApp.",
+    intro: "Pilihan untuk peminum rutin, kantor kecil, atau persediaan mingguan.",
+    description: JOE_COFFEE_DESCRIPTION,
     price: "Konfirmasi harga",
     image: "/produk-kopi-bubuk-500gr.jpeg",
   },
   {
     name: "Joe 1kg",
     label: "1 kilogram",
-    intro: "Ukuran besar untuk kantor, event, reseller, atau stok lebih lama.",
-    description: "JOE Kopi Bubuk dalam kemasan 1 kilogram untuk kebutuhan yang lebih besar.",
+    intro: "Kemasan besar untuk kantor, event, reseller, atau kebutuhan kopi yang lebih banyak.",
+    description: JOE_COFFEE_DESCRIPTION,
     price: "Rp285.000",
     image: "/produk-kopi-bubuk-1kg.jpeg",
   },
@@ -107,7 +110,7 @@ export const COMPANY_PROFILE = {
   title: "TQ Business Learning Center",
   intro: "Pusat pembelajaran bisnis dan pengembangan sumber daya manusia.",
   description:
-    "Bagian Company Profile disiapkan untuk menjelaskan latar belakang, pengalaman, kompetensi, layanan, pendekatan pembelajaran, serta rekam jejak TQ Business Learning Center. Materi final dapat ditambahkan tanpa mengubah layout halaman.",
+    "TQ Business Learning Center menghadirkan training dan short course praktis untuk pemilik usaha, supervisor, HR, dan profesional. Pembelajaran diarahkan pada pengembangan people, systems, leadership, communication, performance, dan strategic management.",
 };
 
 export const TRAINING_PHOTOS: { title: string; image?: string; caption?: string }[] = [];
@@ -119,21 +122,18 @@ export const TRAINING_TESTIMONIALS: Testimonial[] = [];
 export const CULINARY: CatalogItem[] = [
   {
     name: "Mie Kriuk",
-    intro: "Produk kuliner JOE.",
-    description: "Foto, harga, pendahuluan produk, dan deskripsi lengkap dapat ditambahkan saat materi final tersedia.",
-    status: "Materi produk disiapkan",
+    intro: "Menu kuliner JOE.",
+    description: "",
   },
   {
     name: "Nasgomer",
-    intro: "Produk kuliner JOE.",
-    description: "Foto, harga, pendahuluan produk, dan deskripsi lengkap dapat ditambahkan saat materi final tersedia.",
-    status: "Materi produk disiapkan",
+    intro: "Menu kuliner JOE.",
+    description: "",
   },
   {
     name: "Mie Godhog Kuah Merah",
-    intro: "Produk kuliner JOE.",
-    description: "Foto, harga, pendahuluan produk, dan deskripsi lengkap dapat ditambahkan saat materi final tersedia.",
-    status: "Materi produk disiapkan",
+    intro: "Menu kuliner JOE.",
+    description: "",
   },
   {
     name: "Es Kopi Susu Gula Aren",
@@ -154,15 +154,13 @@ export const BOOKS: CatalogItem[] = [
     name: "Geguritan Merapi",
     label: "Buku",
     intro: "Buku cetak.",
-    description: "Cover, pendahuluan, sinopsis, harga, dan informasi pemesanan dapat ditambahkan saat materi final tersedia.",
-    status: "Materi buku disiapkan",
+    description: "",
   },
   {
     name: "Pinesthi",
     label: "Buku",
     intro: "Buku cetak.",
-    description: "Cover, pendahuluan, sinopsis, harga, dan informasi pemesanan dapat ditambahkan saat materi final tersedia.",
-    status: "Materi buku disiapkan",
+    description: "",
   },
 ];
 
@@ -170,16 +168,14 @@ export const EBOOKS: CatalogItem[] = [
   {
     name: "Mengapa Tuhan Seakan Diam",
     label: "E-Book",
-    intro: "Produk bacaan digital.",
-    description: "Cover, pendahuluan, sinopsis, harga, dan tautan akses dapat ditambahkan saat materi final tersedia.",
-    status: "Materi e-book disiapkan",
+    intro: "Bacaan digital.",
+    description: "",
   },
   {
     name: "Warung Ramai Ramai Untungnya Kemana",
     label: "E-Book",
-    intro: "Produk bacaan digital.",
-    description: "Cover, pendahuluan, sinopsis, harga, dan tautan akses dapat ditambahkan saat materi final tersedia.",
-    status: "Materi e-book disiapkan",
+    intro: "Bacaan digital.",
+    description: "",
   },
 ];
 
