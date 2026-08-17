@@ -235,20 +235,63 @@ a {
   }
 }
 
-/* Logo resmi Joe Coffee pada header dashboard */
+/* Identitas utama ANEXSO pada header */
 header a[href="#home"] > div:first-child {
-  width: 52px !important;
-  height: 52px !important;
-  flex: 0 0 52px;
-  border-radius: 14px !important;
-  background-color: #050505 !important;
-  background-image: url("/joe-coffee-logo-brand.webp") !important;
+  width: 78px !important;
+  height: 58px !important;
+  flex: 0 0 78px;
+  border-radius: 12px !important;
+  border: 1px solid var(--border);
+  background-color: #ffffff !important;
+  background-image: url("/anexso-main-logo.webp") !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
-  background-size: cover !important;
+  background-size: contain !important;
   color: transparent !important;
   font-size: 0 !important;
   box-shadow: 0 4px 14px rgba(21, 17, 10, 0.18);
+}
+
+header a[href="#home"] > div:nth-child(2) > div:first-child {
+  font-size: 0 !important;
+  line-height: 1.15;
+}
+
+header a[href="#home"] > div:nth-child(2) > div:first-child::after {
+  content: "WIRAUSAHA DAN PENGEMBANGAN SDM";
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+header a[href="#home"] > div:nth-child(2) > div:nth-child(2) {
+  font-size: 0 !important;
+  line-height: 1.2;
+}
+
+header a[href="#home"] > div:nth-child(2) > div:nth-child(2)::after {
+  content: "COFFEE • TRAINING • LEARNING";
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  header a[href="#home"] > div:first-child {
+    width: 64px !important;
+    height: 48px !important;
+    flex-basis: 64px;
+  }
+
+  header a[href="#home"] > div:nth-child(2) > div:first-child::after {
+    font-size: 0.68rem;
+  }
+
+  header a[href="#home"] > div:nth-child(2) > div:nth-child(2)::after {
+    font-size: 0.58rem;
+    letter-spacing: 0.05em;
+  }
 }
 
 /* Accessibility: reduce motion */
