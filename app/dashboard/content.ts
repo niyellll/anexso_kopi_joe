@@ -7,7 +7,7 @@ export const JOE_COFFEE_DESCRIPTION = "Joe Coffee is a blend of Arabica and Robu
 export const DASHBOARD_CATEGORIES = [
   { number: "01", title: "Joe Coffee", href: "#joe-coffee", intro: JOE_COFFEE_DESCRIPTION, items: ["Joe 100", "Joe 200", "Joe 500", "Joe 1kg"] },
   { number: "02", title: "TQ Business Learning Center", href: "#tq-business", intro: "Training dan short course praktis untuk pengembangan people, systems, dan business performance.", items: ["Topik Pelatihan", "Foto-foto", "Company Profile", "Team Pengajar", "Testimoni Pelatihan"] },
-  { number: "03", title: "Buku & E-Books", href: "#buku-ebook", intro: "Buku cetak dan e-book untuk bacaan, refleksi, pembelajaran, dan pengembangan usaha.", items: ["Geguritan Merapi", "Pinesthi", "Mengapa Tuhan Seakan Diam", "Warung Ramai Ramai Untungnya Kemana"] },
+  { number: "03", title: "Buku & E-Books", href: "#buku-ebook", intro: "Buku fisik dan e-book.", items: ["PINESTHI", "MERAPI", "Mengapa Tuhan Seakan Diam", "Warung Ramai, Ramai, Untungnya Kemana?"] },
   { number: "04", title: "Kuliner", href: "#kuliner", intro: "Pilihan makanan dan minuman JOE.", items: ["Mie Ayam Kriuk", "Nasgomer (Nasi Goreng Merah)", "Mie Godhog Merah", "Es Kopi", "Es Kopi Susu", "Es Kopi Jahe Serai", "Joe Espresso", "Joe Kopi Susu 1 Liter", "Monin - Tofico Coffee"] },
   { number: "05", title: "Testimoni", href: "#testimoni", intro: "Cerita dan pengalaman pelanggan, peserta pelatihan, pembaca, dan mitra.", items: ["Peserta Training", "Pelanggan", "Pembaca", "Mitra"] },
 ] as const;
@@ -47,11 +47,13 @@ export const CULINARY: CatalogItem[] = [
 ];
 
 export const BOOKS: CatalogItem[] = [
-  { name: "Geguritan Merapi", label: "Buku", intro: "Buku cetak.", description: "" },
-  { name: "Pinesthi", label: "Buku", intro: "Buku cetak.", description: "" },
+  { name: "PINESTHI", label: "Buku Fisik", intro: "Novel Bahasa Jawa.", description: "", image: "/pinesthi.jpg" },
+  { name: "MERAPI", label: "Buku Fisik", intro: "Antologi Geguritan Basa Jawa.", description: "", image: "/merapi.jpg" },
 ];
+
 export const EBOOKS: CatalogItem[] = [
-  { name: "Mengapa Tuhan Seakan Diam", label: "E-Book", intro: "Bacaan digital.", description: "" },
-  { name: "Warung Ramai Ramai Untungnya Kemana", label: "E-Book", intro: "Bacaan digital.", description: "" },
+  { name: "Mengapa Tuhan Seakan Diam", label: "E-Book", intro: "Rohani Kristen.", description: "", image: "/mengapa-tuhan-seakan-diam.jpg" },
+  { name: "Warung Ramai, Ramai, Untungnya Kemana?", label: "E-Book", intro: "Seri UMKM.", description: "", image: "/warung-ramai-untung-kemana.jpg" },
 ];
+
 export const TESTIMONIALS: Testimonial[] = [];
