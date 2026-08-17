@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ANEXSO Kopi JOE
 
-## Getting Started
+Website resmi ANEXSO yang menjadi hub untuk:
 
-First, run the development server:
+- Joe Coffee
+- TQ Business Learning Center
+- Kuliner
+- Buku fisik & e-book
+- Testimoni
+
+Stack utama: Next.js 16, React 19, Tailwind CSS 4, dan `next/image`.
+
+## Menjalankan project
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build produksi:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Struktur konten
 
-## Learn More
+- `app/page.tsx` — entry point
+- `app/dashboard/page.tsx` — layout halaman utama
+- `app/dashboard/content.ts` — data produk, topik training, buku, e-book, dan testimoni
+- `app/site-config.ts` — URL situs dan nomor WhatsApp
+- `app/layout.tsx` — metadata SEO, font, dark mode, musik
+- `app/robots.ts` — robots.txt
+- `app/sitemap.ts` — sitemap.xml
 
-To learn more about Next.js, take a look at the following resources:
+## Menambah produk
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Edit array yang sesuai di `app/dashboard/content.ts`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```ts
+{
+  name: "Nama Produk",
+  label: "Jenis / ukuran",
+  intro: "Pendahuluan singkat.",
+  description: "Deskripsi produk.",
+  price: "Rp00.000",
+  image: "/nama-foto.webp",
+}
+```
 
-## Deploy on Vercel
+Simpan foto di folder `public/`. Gunakan WebP bila memungkinkan dan usahakan ukuran file di bawah 150 KB. `next/image` menangani resize dan lazy loading pada halaman.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Jika `price` tidak diisi, kartu tetap tampil dan tombol WhatsApp berubah menjadi **Tanya via WA**.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Menambah materi pelatihan
+
+Judul topik berada di `TRAINING_TOPICS`. Materi dan deskripsi dapat ditambahkan setelah naskah final tersedia. Foto training, team pengajar, dan testimoni tidak ditampilkan jika array datanya masih kosong.
+
+## Menambah testimoni
+
+Tambahkan ke `TESTIMONIALS` atau `TRAINING_TESTIMONIALS`:
+
+```ts
+{
+  name: "Nama",
+  role: "Jabatan / instansi",
+  quote: "Isi testimoni",
+  image: "/foto-testimoni.webp",
+}
+```
+
+Section Testimoni otomatis muncul setelah terdapat data asli.
+
+## WhatsApp
+
+Setiap kartu produk membuat pesan WhatsApp berdasarkan nama produk dan harga. Nomor tujuan diatur melalui `PHONE_WA` pada `app/site-config.ts`.
+
+## SEO
+
+Project menyediakan metadata Open Graph, Twitter Card, JSON-LD, `robots.txt`, `sitemap.xml`, dan manifest. Untuk domain custom, set:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://domain-anda.com
+```
+
+Tanpa environment variable tersebut, situs menggunakan domain produksi Vercel.
