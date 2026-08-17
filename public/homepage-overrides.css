@@ -1,0 +1,40 @@
+/* Header: kembalikan logo JOE Coffee sebelumnya. */
+header a[href="#home"] > div:first-child {
+  width: 52px !important;
+  height: 52px !important;
+  flex: 0 0 52px !important;
+  border-radius: 14px !important;
+  border: 0 !important;
+  background-color: #050505 !important;
+  background-image: url("/joe-coffee-logo-brand.webp") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+/* Hero: gambar ANEXSO + TQ + JOE menjadi visual utama halaman depan. */
+#home > div > div:nth-child(2) > div {
+  background-color: #ffffff !important;
+  background-image: url("/anexso-main-logo.webp") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+
+#home > div > div:nth-child(2) > div > img {
+  opacity: 0 !important;
+}
+
+#home > div > div:nth-child(2) > div > div {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  header a[href="#home"] > div:first-child {
+    width: 48px !important;
+    height: 48px !important;
+    flex-basis: 48px !important;
+  }
+}
