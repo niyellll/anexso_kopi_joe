@@ -4,6 +4,7 @@ export type Product = {
   price: number;
   image: string;
   category?: string;
+  kind?: string;
 };
 
 export type TqProgram = {
@@ -42,10 +43,10 @@ export const culinaryProducts: Product[] = [
 ];
 
 export const bookProducts = [
-  { name: "PINESTHI", subtitle: "Novel Bahasa Jawa", price: 59000, image: "/pinesthi.jpg", kind: "Buku Fisik" },
-  { name: "MERAPI", subtitle: "Antologi Geguritan Basa Jawa", price: 49000, image: "/merapi.jpg", kind: "Buku Fisik" },
-  { name: "Mengapa Tuhan Seakan Diam", subtitle: "Bacaan reflektif rohani Kristen", price: 39000, image: "/mengapa-tuhan-seakan-diam.jpg", kind: "E-Book (PDF)" },
-  { name: "Warung Ramai, Untungnya ke Mana?", subtitle: "Seri praktis pengembangan UMKM", price: 39000, image: "/warung-ramai-untung-kemana.jpg", kind: "E-Book (PDF)" },
+  { name: "PINESTHI", subtitle: "Novel Bahasa Jawa", price: 59000, image: "/pinesthi-hd.png", kind: "Buku Fisik", category: "Buku" },
+  { name: "MERAPI", subtitle: "Antologi Geguritan Basa Jawa", price: 49000, image: "/merapi-hd.png", kind: "Buku Fisik", category: "Buku" },
+  { name: "Mengapa Tuhan Seakan Diam", subtitle: "Bacaan reflektif rohani Kristen", price: 39000, image: "/mengapa-tuhan-seakan-diam.jpg", kind: "E-Book (PDF)", category: "E-Book" },
+  { name: "Warung Ramai, Untungnya ke Mana?", subtitle: "Seri praktis pengembangan UMKM", price: 39000, image: "/warung-ramai-untung-kemana.jpg", kind: "E-Book (PDF)", category: "E-Book" },
 ];
 
 export const tqPrograms: TqProgram[] = [

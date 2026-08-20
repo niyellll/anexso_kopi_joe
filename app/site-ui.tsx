@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { BuyButton, CartNavLink } from "./client-widgets";
+import { CONTACT_WA } from "./site-config";
 import { formatRupiah, type Product, type TqProgram } from "./site-data";
 
 const nav = [
@@ -25,9 +27,9 @@ export function SiteHeader({ active = "" }: { active?: string }) {
             {nav.map(([label, href]) => <Link className={active === label ? "active" : ""} key={href} href={href}>{label}</Link>)}
           </nav>
           <div className="nav-actions">
-            <Link className="icon-btn" href="/keranjang" aria-label="Keranjang">🛒<b>2</b></Link>
+            <CartNavLink />
             <Link className="icon-btn" href="/tentang-kami#kontak" aria-label="Akun">♙</Link>
-            <Link className="gold-btn compact" href="/tentang-kami#kontak">Hubungi Kami ↗</Link>
+            <a className="gold-btn compact" href={CONTACT_WA} target="_blank" rel="noreferrer">Hubungi Kami ↗</a>
           </div>
         </div>
         <div className="mobile-nav container">{nav.map(([label, href]) => <Link className={active === label ? "active" : ""} key={href} href={href}>{label}</Link>)}</div>
@@ -43,7 +45,7 @@ export function Footer() {
         <div><div className="brand footer-brand"><img src="/joe-coffee-logo-brand.webp" alt="Joe Coffee" /><div><strong>ANEXSO | JOE COFFEE</strong><span>Coffee • Business • Learning</span></div></div><p>Ekosistem kopi, pembelajaran, kuliner, buku, dan pengembangan bisnis.</p></div>
         <div><h4>Jelajahi</h4><Link href="/joe-coffee">Joe Coffee</Link><Link href="/tq-business">TQ Business</Link><Link href="/buku-ebook">Buku & E-Book</Link><Link href="/kuliner">Kuliner</Link></div>
         <div><h4>TQ Business</h4><Link href="/tq-business">10 Program Unggulan</Link><Link href="/tq-business/konsultasi">Konsultasi Program</Link><Link href="/tq-business/daftar?program=the-new-manager">Daftar Program</Link></div>
-        <div><h4>Hubungi Kami</h4><p>Silakan gunakan tombol Hubungi Kami atau form konsultasi untuk kebutuhan perusahaan dan program pelatihan.</p><Link className="outline-btn" href="/tq-business/konsultasi">Konsultasi TQ →</Link></div>
+        <div><h4>Hubungi Kami</h4><p>Chat langsung melalui WhatsApp untuk produk Joe Coffee, buku, kuliner, dan informasi program.</p><a className="outline-btn" href={CONTACT_WA} target="_blank" rel="noreferrer">Chat WhatsApp →</a></div>
       </div>
       <div className="container copyright">© 2026 ANEXSO | Joe Coffee. Minum. Belajar. Bertumbuh.</div>
     </footer>
@@ -66,7 +68,7 @@ export function ProductCard({ product, button = "Beli Sekarang", href = "/keranj
   return <article className="product-card">
     <div className="product-image"><img src={product.image} alt={product.name} /></div>
     <h3>{product.name}</h3><p>{product.subtitle}</p><strong>{formatRupiah(product.price)}</strong>
-    <Link href={href} className="small-gold-btn">{button} →</Link>
+    {href === "/keranjang" ? <BuyButton product={product} label={button} /> : <Link href={href} className="small-gold-btn">{button} →</Link>}
   </article>;
 }
 
