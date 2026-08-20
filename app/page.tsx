@@ -13,7 +13,7 @@ export default function HomePage() {
       <section className="home-categories section-pad"><div className="container"><SectionTitle title="SATU EKOSISTEM, BANYAK MANFAAT"/><div className="category-grid">
         <Link href="/joe-coffee" className="category-card"><img src="/produk-kopi-bubuk-100gr.jpeg" alt="Joe Coffee"/><h3>JOE COFFEE</h3><p>Kopi blend Robusta & Arabika pilihan untuk menemani setiap momen Anda.</p><span>Jelajahi Joe Coffee →</span></Link>
         <Link href="/tq-business" className="category-card"><div className="category-art tq-art"><TqMark/></div><h3>TQ BUSINESS & LEARNING CENTER</h3><p>Program training, short course, coaching dan pengembangan SDM untuk individu maupun perusahaan.</p><span>Lihat Program TQ →</span></Link>
-        <Link href="/buku-ebook" className="category-card"><div className="book-stack"><img src="/pinesthi.jpg" alt="Buku"/><img src="/merapi.jpg" alt="Buku"/></div><h3>BUKU & E-BOOK</h3><p>Pengetahuan praktis yang dapat dipelajari kapan saja dan diterapkan langsung.</p><span>Lihat Buku & E-Book →</span></Link>
+        <Link href="/buku-ebook" className="category-card"><div className="book-stack"><img src="/pinesthi-hd.png" alt="Buku Pinesthi"/><img src="/merapi-hd.png" alt="Buku Merapi"/></div><h3>BUKU & E-BOOK</h3><p>Pengetahuan praktis yang dapat dipelajari kapan saja dan diterapkan langsung.</p><span>Lihat Buku & E-Book →</span></Link>
         <Link href="/kuliner" className="category-card"><img src="/nasgomer.jpg" alt="Kuliner"/><h3>KULINER</h3><p>Makanan dan minuman lezat untuk dinikmati bersama kopi dan orang-orang yang Anda sayangi.</p><span>Lihat Menu Kuliner →</span></Link>
       </div></div></section>
       <TrustStrip/>

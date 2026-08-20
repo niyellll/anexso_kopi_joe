@@ -69,8 +69,11 @@ export function CartClient() {
   const [customer, setCustomer] = useState({ name: "", whatsapp: "", address: "" });
 
   useEffect(() => {
-    setItems(readCart());
-    setReady(true);
+    const frame = window.requestAnimationFrame(() => {
+      setItems(readCart());
+      setReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {

@@ -19,7 +19,12 @@ export default function SiteControls() {
   const [playing, setPlaying] = useState(false);
   const [audioError, setAudioError] = useState(false);
 
-  useEffect(() => { setDark(document.documentElement.classList.contains("dark")); }, []);
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setDark(document.documentElement.classList.contains("dark"));
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   function toggleTheme() {
     const nextDark = !dark;
