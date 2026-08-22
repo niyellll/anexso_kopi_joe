@@ -8,6 +8,11 @@ import { formatRupiah, joeProducts, type Product, type TqProgram } from "./site-
 
 const CART_KEY = "anexso-cart-v1";
 const CART_EVENT = "anexso-cart-change";
+const JOE_COFFEE_MIN_QTY = 10;
+
+function minimumQty(product: Pick<Product, "category" | "kind">) {
+  return !product.category && !product.kind ? JOE_COFFEE_MIN_QTY : 1;
+}
 
 type CartItem = Product & { qty: number };
 
@@ -15,7 +20,9 @@ function readCart(): CartItem[] {
   try {
     const parsed = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((item): item is CartItem => Boolean(item?.name && item?.image && item?.price && item?.qty));
+    return parsed
+      .filter((item): item is CartItem => Boolean(item?.name && item?.image && item?.price && item?.qty))
+      .map((item) => ({ ...item, qty: Math.max(minimumQty(item), Number(item.qty) || minimumQty(item)) }));
   } catch {
     return [];
   }
@@ -29,8 +36,8 @@ function writeCart(items: CartItem[]) {
 function addCartItem(items: CartItem[], product: Product) {
   const exists = items.some((item) => item.name === product.name);
   return exists
-    ? items.map((item) => item.name === product.name ? { ...item, qty: item.qty + 1 } : item)
-    : [...items, { ...product, qty: 1 }];
+    ? items.map((item) => item.name === product.name ? { ...item, qty: Math.max(minimumQty(item), item.qty + 1) } : item)
+    : [...items, { ...product, qty: minimumQty(product) }];
 }
 
 export function BuyButton({ product, label = "Beli Sekarang", className = "small-gold-btn" }: { product: Product; label?: string; className?: string }) {
@@ -83,7 +90,7 @@ export function CartClient() {
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.qty, 0), [items]);
   const shipping = subtotal >= 100000 ? 0 : 10000;
   const total = subtotal + shipping;
-  const changeQty = (name: string, delta: number) => setItems((prev) => prev.map((item) => item.name === name ? { ...item, qty: Math.max(1, item.qty + delta) } : item));
+  const changeQty = (name: string, delta: number) => setItems((prev) => prev.map((item) => item.name === name ? { ...item, qty: Math.max(minimumQty(item), item.qty + delta) } : item));
   const remove = (name: string) => setItems((prev) => prev.filter((item) => item.name !== name));
   const checkoutWa = useMemo(() => waLink([
     "Halo ANEXSO | Joe Coffee, saya ingin konfirmasi pesanan:",
@@ -112,7 +119,7 @@ export function CartClient() {
           {!ready ? <div className="cart-empty">Memuat keranjang...</div> : items.length === 0 ? <div className="cart-empty"><h2>Keranjang masih kosong</h2><p>Pilih produk Joe Coffee, buku, e-book, atau kuliner yang Anda inginkan.</p><Link className="gold-btn" href="/joe-coffee">Mulai Belanja →</Link></div> : items.map((item) => <div className="cart-row" key={item.name}>
             <div className="cart-product"><img src={item.image} alt={item.name}/><div><strong>{item.name}</strong><span>{item.category || item.kind || "Joe Coffee"}</span><span>{item.subtitle}</span></div></div>
             <b>{formatRupiah(item.price)}</b>
-            <div className="qty"><button type="button" aria-label={`Kurangi ${item.name}`} onClick={() => changeQty(item.name, -1)}>−</button><span>{item.qty}</span><button type="button" aria-label={`Tambah ${item.name}`} onClick={() => changeQty(item.name, 1)}>+</button></div>
+            <div className="qty"><button type="button" aria-label={`Kurangi ${item.name}`} disabled={item.qty <= minimumQty(item)} onClick={() => changeQty(item.name, -1)}>−</button><span>{item.qty}</span><button type="button" aria-label={`Tambah ${item.name}`} onClick={() => changeQty(item.name, 1)}>+</button></div>
             <div className="subtotal-cell"><b>{formatRupiah(item.price * item.qty)}</b><button type="button" aria-label={`Hapus ${item.name}`} onClick={() => remove(item.name)}>⌫</button></div>
           </div>)}
         </div>
