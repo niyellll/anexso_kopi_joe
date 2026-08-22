@@ -1,0 +1,36 @@
+name: Apply Joe Coffee Minimum Quantity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/joe-min-qty-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: python .github/scripts/patch_joe_min_qty.py
+      - run: npm run build
+      - name: Commit patched cart
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/client-widgets.tsx
+          if git diff --cached --quiet; then
+            echo "No cart changes to commit"
+          else
+            git commit -m "fix: enforce minimum 10 pcs for Joe Coffee"
+            git push origin main
+          fi
