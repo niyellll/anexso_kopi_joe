@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BuyButton, CartNavLink } from "./client-widgets";
+import { BuyButton, CartNavLink } from "./commerce-widgets-v14";
 import { CONTACT_WA } from "./site-config";
 import { formatRupiah, type Product, type TqProgram } from "./site-data";
 
