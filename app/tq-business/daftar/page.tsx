@@ -1,4 +1,4 @@
-import { RegistrationForm } from "../../client-widgets";
+import { RegistrationForm } from "../../commerce-widgets-v14";
 import { PageShell } from "../../site-ui";
 import { tqPrograms } from "../../site-data";
 
