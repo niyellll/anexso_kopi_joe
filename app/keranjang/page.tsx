@@ -1,4 +1,4 @@
-import { CartClient } from "../client-widgets";
+import { CartClient } from "../commerce-widgets-v14";
 import { CartRulesMigration } from "../cart-rules";
 import { BenefitStrip, PageShell } from "../site-ui";
 
