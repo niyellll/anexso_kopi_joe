@@ -62,7 +62,7 @@ export default function PrintOrderPage() {
     if (!phone) return "";
     const message = isTraining
       ? `Halo ${payload?.name || ""}, pendaftaran program ${payload?.program || "TQ Business"} sudah kami terima. Berikut dokumen konfirmasi Anda.`
-      : `Halo ${payload?.name || ""}, pesanan ANEXSO | Joe Coffee Anda sedang kami proses.`;
+      : `Halo ${payload?.name || ""}, pesanan Anda di ANEXSO|Joe Coffee sedang kami proses`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   }, [isTraining, payload]);
 
