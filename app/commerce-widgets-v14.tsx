@@ -74,6 +74,10 @@ function isBookProduct(item: Product) {
   return item.category === "Buku" || item.category === "E-Book" || Boolean(item.kind?.includes("Buku") || item.kind?.includes("E-Book"));
 }
 
+function isEbookProduct(item: Product) {
+  return item.category === "E-Book" || Boolean(item.kind?.includes("E-Book"));
+}
+
 export function BuyButton({ product, label = "Beli Sekarang", className = "small-gold-btn" }: { product: Product; label?: string; className?: string }) {
   const router = useRouter();
   function buy() {
@@ -107,7 +111,8 @@ export function CartClient() {
   const [ready, setReady] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [payment, setPayment] = useState<"QRIS" | "Transfer Bank">("QRIS");
-  const [customer, setCustomer] = useState({ name: "", whatsapp: "", address: "" });
+  const [customer, setCustomer] = useState({ name: "", whatsapp: "", email: "", address: "" });
+  const [ebookDelivery, setEbookDelivery] = useState<"WhatsApp" | "Email">("WhatsApp");
   const [checkoutError, setCheckoutError] = useState("");
   const [completed, setCompleted] = useState(false);
 
@@ -125,8 +130,15 @@ export function CartClient() {
   }, [items, ready]);
 
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.qty, 0), [items]);
-  const shipping = subtotal >= 100000 ? 0 : 10000;
+  const hasEbook = items.some(isEbookProduct);
+  const hasPhysical = items.some((item) => !isEbookProduct(item));
+  const physicalSubtotal = useMemo(
+    () => items.filter((item) => !isEbookProduct(item)).reduce((sum, item) => sum + item.price * item.qty, 0),
+    [items],
+  );
+  const shipping = hasPhysical ? (physicalSubtotal >= 100000 ? 0 : 10000) : 0;
   const total = subtotal + shipping;
+  const ebookOnlyCart = items.length > 0 && hasEbook && !hasPhysical;
   const bookOnlyCart = items.length > 0 && items.every(isBookProduct);
   const recommendations = (bookOnlyCart ? bookProducts : joeProducts).filter((product) => !items.some((item) => item.name === product.name)).slice(0, 5);
   const changeQty = (name: string, delta: number) => setItems((prev) => prev.map((item) => item.name === name ? { ...item, qty: Math.max(minimumQty(item), item.qty + delta) } : item));
@@ -148,39 +160,63 @@ export function CartClient() {
   }
 
   function confirmOrder() {
-    if (!customer.name.trim() || !customer.whatsapp.trim() || !customer.address.trim()) {
-      setCheckoutError("Lengkapi nama, nomor WhatsApp, dan alamat pengiriman terlebih dahulu.");
+    if (!customer.name.trim()) {
+      setCheckoutError("Lengkapi nama penerima terlebih dahulu.");
       return;
     }
+    if (hasPhysical && (!customer.whatsapp.trim() || !customer.address.trim())) {
+      setCheckoutError("Lengkapi nomor WhatsApp dan alamat pengiriman untuk produk fisik.");
+      return;
+    }
+    if (hasEbook && ebookDelivery === "WhatsApp" && !customer.whatsapp.trim()) {
+      setCheckoutError("Tuliskan nomor WhatsApp tujuan pengiriman e-book.");
+      return;
+    }
+    if (hasEbook && ebookDelivery === "Email") {
+      const email = customer.email.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setCheckoutError("Tuliskan alamat email yang valid untuk pengiriman e-book.");
+        return;
+      }
+    }
+
     setCheckoutError("");
-    const labelUrl = printUrl({
+    const ebookRecipient = ebookDelivery === "WhatsApp" ? customer.whatsapp.trim() : customer.email.trim();
+    const labelUrl = hasPhysical ? printUrl({
       type: "order",
       name: customer.name.trim(),
       whatsapp: customer.whatsapp.trim(),
+      email: customer.email.trim(),
       address: customer.address.trim(),
+      ebookDelivery: hasEbook ? ebookDelivery : "",
+      ebookRecipient: hasEbook ? ebookRecipient : "",
       payment,
       subtotal,
       shipping,
       total,
       items: items.map((item) => ({ name: item.name, qty: item.qty, price: item.price })),
-    });
+    }) : "";
+
     const message = [
       "PESANAN BARU - ANEXSO | JOE COFFEE",
       "",
       ...items.map((item) => `- ${item.name} x${item.qty}: ${formatRupiah(item.price * item.qty)}`),
       `Subtotal: ${formatRupiah(subtotal)}`,
-      `Ongkir: ${shipping ? formatRupiah(shipping) : "Gratis"}`,
+      `Ongkir: ${hasPhysical ? (shipping ? formatRupiah(shipping) : "Gratis") : "Rp 0 (E-book / produk digital)"}`,
       `Total: ${formatRupiah(total)}`,
       `Pembayaran: ${payment}`,
       "",
       `Nama: ${customer.name.trim()}`,
-      `No. HP/WA: ${customer.whatsapp.trim()}`,
-      `Alamat: ${customer.address.trim()}`,
+      ...(hasPhysical ? [`No. HP/WA: ${customer.whatsapp.trim()}`, `Alamat: ${customer.address.trim()}`] : []),
+      ...(hasEbook ? [
+        `Pengiriman E-book: ${ebookDelivery}`,
+        `${ebookDelivery === "WhatsApp" ? "Nomor WhatsApp" : "Email"}: ${ebookRecipient}`,
+      ] : []),
       "",
-      `CETAK LABEL PEMBELI: ${labelUrl}`,
-      "",
+      ...(hasPhysical ? [`CETAK LABEL PEMBELI: ${labelUrl}`, ""] : []),
       `Saya akan mengirim bukti ${payment === "QRIS" ? "pembayaran QRIS" : "transfer"} di chat ini.`,
     ].join("\n");
+
     window.open(waLink(message), "_blank", "noopener,noreferrer");
     writeCart([]);
     setItems([]);
@@ -202,16 +238,16 @@ export function CartClient() {
             <div className="subtotal-cell"><b>{formatRupiah(item.price * item.qty)}</b><button type="button" aria-label={`Hapus ${item.name}`} onClick={() => remove(item.name)}>⌫</button></div>
           </div>)}
         </div>
-        {items.length > 0 ? <div className="promo-row"><div><strong>Punya Kode Promo?</strong><div className="promo-input"><input placeholder="Masukkan kode promo"/><button type="button">Gunakan</button></div></div><div className="shipping-note"><span>🚚</span><div><strong>{shipping === 0 ? "Gratis Ongkir" : "Ongkir Hemat"}</strong><small>Belanja minimal Rp100.000</small></div><b>✓</b></div></div> : null}
+        {items.length > 0 ? <div className="promo-row"><div><strong>Punya Kode Promo?</strong><div className="promo-input"><input placeholder="Masukkan kode promo"/><button type="button">Gunakan</button></div></div><div className="shipping-note"><span>{ebookOnlyCart ? "📩" : "🚚"}</span><div><strong>{ebookOnlyCart ? "E-book Tanpa Ongkir" : shipping === 0 ? "Gratis Ongkir" : "Ongkir Hemat"}</strong><small>{ebookOnlyCart ? "Dikirim digital via WhatsApp atau Email" : "Belanja produk fisik minimal Rp100.000"}</small></div><b>✓</b></div></div> : null}
         {items.length > 0 ? <><h2 className="recommend-title">Anda Mungkin Juga Suka</h2><div className="recommend-grid">{recommendations.map((product) => <article key={product.name}><img src={product.image} alt={product.name}/><strong>{product.name}</strong><span>{product.subtitle}</span><b>{formatRupiah(product.price)}</b><button type="button" onClick={() => setItems((prev) => addCartItem(prev, product))}>＋ Keranjang</button></article>)}</div></> : null}
       </section>
-      <aside className="order-summary"><h2>RINGKASAN PESANAN</h2><div><span>Subtotal ({items.reduce((sum, item) => sum + item.qty, 0)} produk)</span><b>{formatRupiah(subtotal)}</b></div><div><span>Ongkos Kirim</span><b>{items.length ? (shipping ? formatRupiah(shipping) : "Gratis") : "-"}</b></div><div><span>Promo</span><b>- Rp 0</b></div><hr/><div className="total"><span>Total Pembayaran</span><b>{formatRupiah(items.length ? total : 0)}</b></div><button type="button" disabled={!items.length} onClick={continueCheckout} className="gold-btn wide">Lanjut ke Pengiriman →</button><small>🔒 Transaksi aman dan data Anda terjaga</small></aside>
+      <aside className="order-summary"><h2>RINGKASAN PESANAN</h2><div><span>Subtotal ({items.reduce((sum, item) => sum + item.qty, 0)} produk)</span><b>{formatRupiah(subtotal)}</b></div><div><span>Ongkos Kirim</span><b>{items.length ? (ebookOnlyCart ? "Rp 0" : shipping ? formatRupiah(shipping) : "Gratis") : "-"}</b></div><div><span>Promo</span><b>- Rp 0</b></div><hr/><div className="total"><span>Total Pembayaran</span><b>{formatRupiah(items.length ? total : 0)}</b></div><button type="button" disabled={!items.length} onClick={continueCheckout} className="gold-btn wide">{ebookOnlyCart ? "Lanjut ke Pengiriman E-book →" : "Lanjut ke Pengiriman →"}</button><small>🔒 Transaksi aman dan data Anda terjaga</small></aside>
     </div>
     {checkoutOpen && items.length > 0 ? <section id="checkout-payment" className="checkout-payment container">
-      <div className="checkout-customer form-card"><h2>DATA PENGIRIMAN</h2><div className="form-grid two"><label>Nama Lengkap *<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Masukkan nama lengkap"/></label><label>Nomor WhatsApp *<input required value={customer.whatsapp} onChange={(event) => setCustomer({ ...customer, whatsapp: event.target.value })} placeholder="08xxxxxxxxxx"/></label></div><label>Alamat Pengiriman *<textarea required rows={4} value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} placeholder="Tuliskan alamat lengkap dan patokan"/></label>{checkoutError ? <p role="alert"><b>{checkoutError}</b></p> : null}</div>
+      <div className="checkout-customer form-card"><h2>{ebookOnlyCart ? "DATA PENGIRIMAN E-BOOK" : "DATA PENGIRIMAN"}</h2><div className="form-grid two"><label>Nama Lengkap *<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Masukkan nama lengkap"/></label>{hasPhysical ? <label>Nomor WhatsApp *<input required value={customer.whatsapp} onChange={(event) => setCustomer({ ...customer, whatsapp: event.target.value })} placeholder="08xxxxxxxxxx"/></label> : null}</div>{hasPhysical ? <label>Alamat Pengiriman *<textarea required rows={4} value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} placeholder="Tuliskan alamat lengkap dan patokan"/></label> : null}{hasEbook ? <div style={{marginTop:18}}><p><b>E-book dikirim melalui *</b></p><div className="payment-grid two-payments"><button type="button" onClick={() => setEbookDelivery("WhatsApp")} className={ebookDelivery === "WhatsApp" ? "payment active" : "payment"}><span>💬</span><b>WhatsApp</b><small>E-book dikirim ke nomor WhatsApp yang Anda tulis.</small></button><button type="button" onClick={() => setEbookDelivery("Email")} className={ebookDelivery === "Email" ? "payment active" : "payment"}><span>✉</span><b>Email</b><small>E-book dikirim ke alamat email yang Anda tulis.</small></button></div>{ebookDelivery === "WhatsApp" ? (!hasPhysical ? <label style={{display:"block",marginTop:14}}>Nomor WhatsApp penerima *<input required value={customer.whatsapp} onChange={(event) => setCustomer({ ...customer, whatsapp: event.target.value })} placeholder="08xxxxxxxxxx"/></label> : <p style={{marginTop:12}}>E-book akan dikirim ke nomor WhatsApp yang tercantum di atas.</p>) : <label style={{display:"block",marginTop:14}}>Email penerima *<input required type="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} placeholder="nama@email.com"/></label>}</div> : null}{checkoutError ? <p role="alert"><b>{checkoutError}</b></p> : null}</div>
       <div className="checkout-method form-card"><h2>METODE PEMBAYARAN</h2><p>Pilih metode pembayaran. Setelah membayar, klik tombol konfirmasi untuk membuka WhatsApp dan kirim bukti pembayaran.</p><div className="payment-grid two-payments">{(["QRIS", "Transfer Bank"] as const).map((method) => <button type="button" key={method} onClick={() => setPayment(method)} className={payment === method ? "payment active" : "payment"}><span>{method === "QRIS" ? "▦" : "🏦"}</span><b>{method}</b><small>{method === "QRIS" ? "Pindai atau simpan gambar QRIS." : "Minta rekening resmi melalui WhatsApp."}</small></button>)}</div>{payment === "QRIS" ? <div className="payment-detail qris-detail"><div><h3>QRIS JOE COFFEE (ANEXSO)</h3><p>Pindai dari aplikasi pembayaran atau simpan gambarnya ke galeri.</p><a className="gold-btn" href={QRIS_IMAGE} download="QRIS-Joe-Coffee.jpeg">Simpan QRIS ↓</a></div><img src={QRIS_IMAGE} alt="QRIS JOE Coffee ANEXSO"/></div> : <div className="payment-detail bank-detail"><div><h3>TRANSFER BANK</h3><p>Demi keamanan, nomor rekening resmi diberikan lewat WhatsApp.</p></div><a className="gold-btn" href={requestBankWa} target="_blank" rel="noreferrer">Minta Rekening Resmi ↗</a></div>}<button className="gold-btn wide confirm-order" type="button" onClick={confirmOrder}>Konfirmasi & Kirim Bukti via WhatsApp →</button></div>
     </section> : null}
-    {completed ? <section id="order-complete" className="checkout-payment container"><div className="form-card success-card"><span>✓</span><div><h2>PESANAN TERKONFIRMASI</h2><h3>Keranjang sudah dikosongkan.</h3><p>WhatsApp telah dibuka dengan detail pesanan dan link cetak label pembeli untuk admin.</p><Link className="gold-btn" href="/">Kembali ke Beranda →</Link></div></div></section> : null}
+    {completed ? <section id="order-complete" className="checkout-payment container"><div className="form-card success-card"><span>✓</span><div><h2>PESANAN TERKONFIRMASI</h2><h3>Keranjang sudah dikosongkan.</h3><p>WhatsApp telah dibuka dengan detail pesanan untuk admin. E-book akan dikirim sesuai pilihan WhatsApp atau Email Anda.</p><Link className="gold-btn" href="/">Kembali ke Beranda →</Link></div></div></section> : null}
   </>;
 }
 
@@ -227,6 +263,13 @@ function parseDate(key: string) {
   return new Date(year, month - 1, day, 12);
 }
 
+function parseRupiahLabelV16(value: string) {
+  const match = String(value || "").match(/Rp\s*([\d.]+)/i);
+  if (!match) return 0;
+  const amount = Number(match[1].replace(/\./g, ""));
+  return Number.isFinite(amount) ? amount : 0;
+}
+
 export function RegistrationForm({ program }: { program: TqProgram }) {
   const [success, setSuccess] = useState(false);
   const [format, setFormat] = useState("Online");
@@ -234,6 +277,7 @@ export function RegistrationForm({ program }: { program: TqProgram }) {
   const [calendarMonth, setCalendarMonth] = useState(() => new Date(2026, 8, 1, 12));
   const [selectedDate, setSelectedDate] = useState("2026-09-18");
   const [participant, setParticipant] = useState<Participant>({ name: "", email: "", whatsapp: "", company: "", position: "" });
+  const [inHouseParticipantsV16, setInHouseParticipantsV16] = useState("");
 
   const selectedStart = parseDate(selectedDate);
   const selectedEnd = new Date(selectedStart);
@@ -241,8 +285,22 @@ export function RegistrationForm({ program }: { program: TqProgram }) {
   const scheduleLabel = `${DATE_FORMATTER.format(selectedStart)} - ${DATE_FORMATTER.format(selectedEnd)}`;
   const monthDays = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
   const monthOffset = (new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay() + 6) % 7;
-  const paymentWa = waLink(`Halo TQ Business & Learning Center, saya ${participant.name || "peserta"} mendaftar program ${program.title} pada ${scheduleLabel} dan memilih pembayaran Transfer Bank. Mohon kirimkan rekening resmi.`);
-  const trainingAdminUrl = printUrl({ type: "training", ...participant, program: program.title, date: scheduleLabel, format, payment, investment: program.openTraining });
+  const isInHouseV16 = format === "In-House Training";
+  const inHouseBaseV16 = parseRupiahLabelV16(program.inHouse);
+  const inHousePerParticipantV16 = inHouseBaseV16 > 0 ? Math.round(inHouseBaseV16 / 10) : 0;
+  const enteredParticipantsV16 = Number(inHouseParticipantsV16);
+  const validInHouseParticipantsV16 = Number.isInteger(enteredParticipantsV16) && enteredParticipantsV16 >= 10 && enteredParticipantsV16 <= 25;
+  const participantCountV16 = isInHouseV16 ? (validInHouseParticipantsV16 ? enteredParticipantsV16 : 0) : 1;
+  const participantLabelV16 = isInHouseV16 ? (validInHouseParticipantsV16 ? `${enteredParticipantsV16} Orang` : "Belum diisi") : "1 Orang";
+  const unitInvestmentLabelV16 = isInHouseV16 ? `${formatRupiah(inHousePerParticipantV16)}/orang` : program.openTraining;
+  const totalInvestmentAmountV16 = isInHouseV16
+    ? (validInHouseParticipantsV16 ? inHousePerParticipantV16 * enteredParticipantsV16 : 0)
+    : parseRupiahLabelV16(program.openTraining);
+  const totalInvestmentLabelV16 = isInHouseV16 && !validInHouseParticipantsV16
+    ? "Isi jumlah peserta (10–25)"
+    : formatRupiah(totalInvestmentAmountV16);
+  const paymentWa = waLink(`Halo TQ Business & Learning Center, saya ${participant.name || "peserta"} mendaftar program ${program.title} pada ${scheduleLabel}${isInHouseV16 && validInHouseParticipantsV16 ? ` untuk ${enteredParticipantsV16} peserta` : ""} dan memilih pembayaran Transfer Bank. Mohon kirimkan rekening resmi.`);
+  const trainingAdminUrl = printUrl({ type: "training", ...participant, program: program.title, date: scheduleLabel, format, payment, participants: participantLabelV16, investment: totalInvestmentLabelV16 });
   const trainingWa = waLink([
     "PENDAFTARAN TRAINING BARU - TQ BUSINESS",
     "",
@@ -253,8 +311,9 @@ export function RegistrationForm({ program }: { program: TqProgram }) {
     `Jabatan: ${participant.position || "-"}`,
     `Program: ${program.title}`,
     `Format: ${format}`,
+    `Jumlah Peserta: ${participantLabelV16}`,
     `Tanggal: ${scheduleLabel}`,
-    `Investasi: ${program.openTraining}`,
+    `Investasi: ${totalInvestmentLabelV16}`,
     `Pembayaran: ${payment}`,
     "",
     `TEMPLATE ADMIN / SIMPAN PDF: ${trainingAdminUrl}`,
@@ -267,15 +326,15 @@ export function RegistrationForm({ program }: { program: TqProgram }) {
   }
 
   return <>
-    <section className="registration-hero"><div className="container registration-hero-grid"><div><span className="eyebrow">◌ PENDAFTARAN PROGRAM</span><h1>Mulai Perjalanan Belajar<br/>Anda Bersama TQ</h1><p>Lengkapi data pendaftaran di bawah ini untuk mengikuti program pilihan Anda.</p></div><div className="selected-program"><span>PROGRAM YANG DIPILIH</span><h2>{program.title}</h2><p>{program.tagline}</p><div className="selected-meta"><b>◷ {program.duration}</b><b>▣ {format}</b><b>▣ {program.openTraining}</b></div><h4>YANG ANDA DAPATKAN</h4><ul>{program.benefits.slice(0,6).map((item) => <li key={item}>✓ {item}</li>)}</ul></div></div></section>
+    <section className="registration-hero"><div className="container registration-hero-grid"><div><span className="eyebrow">◌ PENDAFTARAN PROGRAM</span><h1>Mulai Perjalanan Belajar<br/>Anda Bersama TQ</h1><p>Lengkapi data pendaftaran di bawah ini untuk mengikuti program pilihan Anda.</p></div><div className="selected-program"><span>PROGRAM YANG DIPILIH</span><h2>{program.title}</h2><p>{program.tagline}</p><div className="selected-meta"><b>◷ {program.duration}</b><b>▣ {format}</b><b>▣ {isInHouseV16 ? totalInvestmentLabelV16 : program.openTraining}</b></div><h4>YANG ANDA DAPATKAN</h4><ul>{program.benefits.slice(0,6).map((item) => <li key={item}>✓ {item}</li>)}</ul></div></div></section>
     <form className="registration-form container" onSubmit={(event) => { event.preventDefault(); setSuccess(true); window.setTimeout(() => document.querySelector(".success-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 50); }}>
       <section className="form-card participant-card"><h2>DATA PESERTA</h2><p>Informasi Pribadi</p><div className="form-grid two"><label>Nama Lengkap *<input required value={participant.name} onChange={(event) => setParticipant({ ...participant, name: event.target.value })} placeholder="Masukkan nama lengkap Anda"/></label><label>Email *<input required type="email" value={participant.email} onChange={(event) => setParticipant({ ...participant, email: event.target.value })} placeholder="nama@email.com"/></label><label>Nomor WhatsApp *<input required value={participant.whatsapp} onChange={(event) => setParticipant({ ...participant, whatsapp: event.target.value })} placeholder="08xxxxxxxxxx"/></label><label>Nama Perusahaan / Instansi<input value={participant.company} onChange={(event) => setParticipant({ ...participant, company: event.target.value })} placeholder="Masukkan nama perusahaan / instansi"/></label><label>Jabatan / Posisi<input value={participant.position} onChange={(event) => setParticipant({ ...participant, position: event.target.value })} placeholder="Masukkan jabatan / posisi Anda"/></label></div></section>
-      <section className="form-card format-card"><h2>PILIH FORMAT PELATIHAN</h2><p>Pilih format yang paling sesuai dengan kebutuhan Anda.</p><div className="choice-grid three">{["Online", "Offline", "In-House Training"].map((choice) => <button type="button" onClick={() => setFormat(choice)} className={format === choice ? "choice active" : "choice"} key={choice}><span>{choice === "Online" ? "💻" : choice === "Offline" ? "👥" : "🏢"}</span><b>{choice}</b><small>{choice === "Online" ? "Mengikuti pelatihan secara virtual dari mana saja." : choice === "Offline" ? "Mengikuti pelatihan langsung di lokasi yang telah ditentukan." : "Program khusus untuk perusahaan atau organisasi Anda."}</small></button>)}</div></section>
+      <section className="form-card format-card"><h2>PILIH FORMAT PELATIHAN</h2><p>Pilih format yang paling sesuai dengan kebutuhan Anda.</p><div className="choice-grid three">{["Online", "Offline", "In-House Training"].map((choice) => <button type="button" onClick={() => setFormat(choice)} className={format === choice ? "choice active" : "choice"} key={choice}><span>{choice === "Online" ? "💻" : choice === "Offline" ? "👥" : "🏢"}</span><b>{choice}</b><small>{choice === "Online" ? "Mengikuti pelatihan secara virtual dari mana saja." : choice === "Offline" ? "Mengikuti pelatihan langsung di lokasi yang telah ditentukan." : "Program khusus untuk perusahaan atau organisasi Anda."}</small></button>)}</div>{isInHouseV16 ? <div className="form-grid two" style={{marginTop:18}}><label>Jumlah Peserta *<input required type="number" min={10} max={25} step={1} inputMode="numeric" value={inHouseParticipantsV16} onChange={(event) => setInHouseParticipantsV16(event.target.value)} onBlur={(event) => { if (!event.target.value) return; const next = Math.min(25, Math.max(10, Math.round(Number(event.target.value) || 10))); setInHouseParticipantsV16(String(next)); }} placeholder="10 - 25"/><small style={{display:"block",marginTop:6}}>Minimum 10 peserta, maksimum 25 peserta.</small></label><div style={{border:"1px solid var(--border)",borderRadius:10,padding:"14px 16px",background:"var(--bg)",display:"grid",alignContent:"center",gap:5}}><span style={{fontSize:12,color:"var(--text-muted)",fontWeight:700}}>TOTAL INVESTASI IN-HOUSE</span><b style={{fontSize:22}}>{totalInvestmentLabelV16}</b><small style={{color:"var(--text-muted)"}}>Paket minimum {program.inHouse}. Total menyesuaikan jumlah peserta.</small></div></div> : null}</section>
       <section className="form-card schedule-card"><h2>PILIH JADWAL</h2><p>Klik tanggal mulai yang Anda inginkan. Jadwal berlangsung selama dua hari.</p><div className="schedule-layout"><div className="calendar"><div className="calendar-head"><button type="button" onClick={() => moveMonth(-1)} aria-label="Bulan sebelumnya">‹</button><b>{MONTH_FORMATTER.format(calendarMonth)}</b><button type="button" onClick={() => moveMonth(1)} aria-label="Bulan berikutnya">›</button></div><div className="days"><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>{Array.from({ length: monthOffset }, (_, index) => <i key={`blank-${index}`} />)}{Array.from({ length: monthDays }, (_, index) => { const day = index + 1; const current = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day, 12); const currentKey = dateKey(current); return <button type="button" className={selectedDate === currentKey ? "selected-day" : ""} aria-label={`Pilih ${DATE_FORMATTER.format(current)}`} aria-pressed={selectedDate === currentKey} onClick={() => setSelectedDate(currentKey)} key={currentKey}>{day}</button>; })}</div></div><div className="schedule-detail"><h3>Detail Jadwal</h3><p>▣ <b>{scheduleLabel}</b></p><p>◷ <b>09.00 - 16.00 WIB</b></p><p>⌖ <b>{format === "Online" ? "Online (Zoom Meeting)" : "Lokasi menyesuaikan format"}</b></p><p>✓ <b>Tanggal pilihan Anda sudah tersimpan</b></p></div></div></section>
-      <section className="form-card summary-card"><h2>RINGKASAN PENDAFTARAN</h2><div><span>Program</span><b>{program.title}</b></div><div><span>Format</span><b>{format}</b></div><div><span>Tanggal</span><b>{scheduleLabel}</b></div><div><span>Peserta</span><b>1 Orang</b></div><div><span>Investasi per peserta</span><b>{program.openTraining}</b></div><hr/><div className="summary-total"><span>TOTAL INVESTASI</span><b>{program.openTraining}</b></div></section>
+      <section className="form-card summary-card"><h2>RINGKASAN PENDAFTARAN</h2><div><span>Program</span><b>{program.title}</b></div><div><span>Format</span><b>{format}</b></div><div><span>Tanggal</span><b>{scheduleLabel}</b></div><div><span>Peserta</span><b>{participantLabelV16}</b></div><div><span>Investasi per peserta</span><b>{unitInvestmentLabelV16}</b></div><hr/><div className="summary-total"><span>TOTAL INVESTASI</span><b>{totalInvestmentLabelV16}</b></div></section>
       <section className="form-card confirm-card"><h2>KONFIRMASI PENDAFTARAN</h2><label className="check"><input required type="checkbox"/> Saya telah membaca dan menyetujui Syarat & Ketentuan TQ Business & Learning Center.</label><label className="check"><input required type="checkbox"/> Saya menyetujui penggunaan data saya untuk kebutuhan administrasi pendaftaran program.</label><button className="gold-btn" type="submit">KONFIRMASI & LANJUTKAN →</button></section>
       <section className="form-card payment-card"><h2>PEMBAYARAN</h2><p>Pilih metode pembayaran. Setelah membayar, gunakan tombol WhatsApp di bagian konfirmasi untuk mengirim bukti.</p><div className="payment-grid two-payments">{(["QRIS", "Transfer Bank"] as const).map((method) => <button type="button" onClick={() => setPayment(method)} className={payment === method ? "payment active" : "payment"} key={method}><span>{method === "QRIS" ? "▦" : "🏦"}</span><b>{method}</b><small>{method === "QRIS" ? "Pindai atau simpan gambar QRIS." : "Minta rekening resmi TQ melalui WhatsApp."}</small></button>)}</div>{payment === "QRIS" ? <div className="payment-detail qris-detail"><div><h3>QRIS JOE COFFEE (ANEXSO)</h3><p>Pindai QRIS atau simpan gambarnya ke galeri.</p><a className="gold-btn" href={QRIS_IMAGE} download="QRIS-Joe-Coffee.jpeg">Simpan QRIS ↓</a></div><img src={QRIS_IMAGE} alt="QRIS JOE Coffee ANEXSO"/></div> : <div className="payment-detail bank-detail"><div><h3>TRANSFER BANK</h3><p>Nomor rekening resmi diberikan melalui WhatsApp agar data pembayaran tetap terverifikasi.</p></div><a className="gold-btn" href={paymentWa} target="_blank" rel="noreferrer">Minta Rekening Resmi ↗</a></div>}</section>
-      {success ? <section className="form-card success-card"><span>✓</span><div><h2>PENDAFTARAN BERHASIL!</h2><h3>Selamat! Pendaftaran Anda Berhasil.</h3><p>Setelah melakukan pembayaran, klik tombol WhatsApp berikut dan kirim bukti transfer/QRIS di chat yang terbuka.</p><div className="success-meta"><b>Program: {program.title}</b><b>Tanggal: {scheduleLabel}</b><b>Pembayaran: {payment}</b><b>Status: Pendaftaran diterima</b></div><a className="gold-btn" href={trainingWa} target="_blank" rel="noreferrer">Kirim Bukti Pembayaran via WhatsApp →</a></div></section> : null}
+      {success ? <section className="form-card success-card"><span>✓</span><div><h2>PENDAFTARAN BERHASIL!</h2><h3>Selamat! Pendaftaran Anda Berhasil.</h3><p>Setelah melakukan pembayaran, klik tombol WhatsApp berikut dan kirim bukti transfer/QRIS di chat yang terbuka.</p><div className="success-meta"><b>Program: {program.title}</b><b>Peserta: {participantLabelV16}</b><b>Investasi: {totalInvestmentLabelV16}</b><b>Tanggal: {scheduleLabel}</b><b>Pembayaran: {payment}</b><b>Status: Pendaftaran diterima</b></div><a className="gold-btn" href={trainingWa} target="_blank" rel="noreferrer">Kirim Bukti Pembayaran via WhatsApp →</a></div></section> : null}
     </form>
   </>;
 }

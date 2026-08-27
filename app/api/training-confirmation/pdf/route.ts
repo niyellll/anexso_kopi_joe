@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-type TrainingPayload = { type?: string; name?: string; email?: string; whatsapp?: string; company?: string; position?: string; program?: string; date?: string; format?: string; payment?: string; investment?: string };
+type TrainingPayload = { type?: string; name?: string; email?: string; whatsapp?: string; company?: string; position?: string; program?: string; date?: string; format?: string; payment?: string; participants?: string; investment?: string };
 
 const clean = (value: unknown) => String(value ?? "").trim();
 
@@ -29,7 +29,7 @@ function buildPdf(payload: TrainingPayload) {
   const add = (text: string, y: number, size = 11, bold = false) => ops.push(`BT /${bold ? "F2" : "F1"} ${size} Tf 50 ${y} Td (${pdfText(text)}) Tj ET`);
   const field = (label: string, value: unknown, y: number) => { add(label.toUpperCase(), y, 8, true); const lines = wrap(value); lines.forEach((line, i) => add(line, y - 14 - i * 14)); return y - 21 - lines.length * 14; };
   add("ANEXSO | TQ BUSINESS & LEARNING CENTER", 800, 15, true); add("DOKUMEN KONFIRMASI PENDAFTARAN PROGRAM", 776, 12, true); add("Status: PENDAFTARAN DITERIMA", 750, 11, true);
-  let y = 718; y = field("Nama Peserta", payload.name, y); y = field("Nomor WhatsApp", payload.whatsapp, y); y = field("Email", payload.email, y); y = field("Perusahaan / Instansi", payload.company || "-", y); y = field("Jabatan / Posisi", payload.position || "-", y); y = field("Program", payload.program, y); y = field("Format", payload.format, y); y = field("Jadwal", payload.date, y); y = field("Investasi", payload.investment, y); y = field("Metode Pembayaran", payload.payment, y);
+  let y = 718; y = field("Nama Peserta", payload.name, y); y = field("Nomor WhatsApp", payload.whatsapp, y); y = field("Email", payload.email, y); y = field("Perusahaan / Instansi", payload.company || "-", y); y = field("Jabatan / Posisi", payload.position || "-", y); y = field("Program", payload.program, y); y = field("Format", payload.format, y); y = field("Jumlah Peserta", payload.participants || "1 Orang", y); y = field("Jadwal", payload.date, y); y = field("Investasi", payload.investment, y); y = field("Metode Pembayaran", payload.payment, y);
   wrap("Konfirmasi akhir peserta dilakukan setelah bukti pembayaran diverifikasi oleh tim TQ Business & Learning Center.", 88).forEach((line, i) => add(line, Math.max(82, y - 4) - i * 12, 9)); add("ANEXSO | TQ Business & Learning Center - Minum. Belajar. Bertumbuh.", 48, 8);
   const stream = ops.join("\n");
   const objects = ["1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n", "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n", "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>\nendobj\n", "4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n", "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n", `6 0 obj\n<< /Length ${Buffer.byteLength(stream, "latin1")} >>\nstream\n${stream}\nendstream\nendobj\n`];
