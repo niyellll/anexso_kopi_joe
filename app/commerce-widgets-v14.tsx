@@ -74,6 +74,10 @@ function isBookProduct(item: Product) {
   return item.category === "Buku" || item.category === "E-Book" || Boolean(item.kind?.includes("Buku") || item.kind?.includes("E-Book"));
 }
 
+function isEbookProduct(item: Product) {
+  return item.category === "E-Book" || Boolean(item.kind?.includes("E-Book"));
+}
+
 export function BuyButton({ product, label = "Beli Sekarang", className = "small-gold-btn" }: { product: Product; label?: string; className?: string }) {
   const router = useRouter();
   function buy() {
@@ -107,7 +111,8 @@ export function CartClient() {
   const [ready, setReady] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [payment, setPayment] = useState<"QRIS" | "Transfer Bank">("QRIS");
-  const [customer, setCustomer] = useState({ name: "", whatsapp: "", address: "" });
+  const [customer, setCustomer] = useState({ name: "", whatsapp: "", email: "", address: "" });
+  const [ebookDelivery, setEbookDelivery] = useState<"WhatsApp" | "Email">("WhatsApp");
   const [checkoutError, setCheckoutError] = useState("");
   const [completed, setCompleted] = useState(false);
 
@@ -125,8 +130,15 @@ export function CartClient() {
   }, [items, ready]);
 
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.qty, 0), [items]);
-  const shipping = subtotal >= 100000 ? 0 : 10000;
+  const hasEbook = items.some(isEbookProduct);
+  const hasPhysical = items.some((item) => !isEbookProduct(item));
+  const physicalSubtotal = useMemo(
+    () => items.filter((item) => !isEbookProduct(item)).reduce((sum, item) => sum + item.price * item.qty, 0),
+    [items],
+  );
+  const shipping = hasPhysical ? (physicalSubtotal >= 100000 ? 0 : 10000) : 0;
   const total = subtotal + shipping;
+  const ebookOnlyCart = items.length > 0 && hasEbook && !hasPhysical;
   const bookOnlyCart = items.length > 0 && items.every(isBookProduct);
   const recommendations = (bookOnlyCart ? bookProducts : joeProducts).filter((product) => !items.some((item) => item.name === product.name)).slice(0, 5);
   const changeQty = (name: string, delta: number) => setItems((prev) => prev.map((item) => item.name === name ? { ...item, qty: Math.max(minimumQty(item), item.qty + delta) } : item));
@@ -148,39 +160,63 @@ export function CartClient() {
   }
 
   function confirmOrder() {
-    if (!customer.name.trim() || !customer.whatsapp.trim() || !customer.address.trim()) {
-      setCheckoutError("Lengkapi nama, nomor WhatsApp, dan alamat pengiriman terlebih dahulu.");
+    if (!customer.name.trim()) {
+      setCheckoutError("Lengkapi nama penerima terlebih dahulu.");
       return;
     }
+    if (hasPhysical && (!customer.whatsapp.trim() || !customer.address.trim())) {
+      setCheckoutError("Lengkapi nomor WhatsApp dan alamat pengiriman untuk produk fisik.");
+      return;
+    }
+    if (hasEbook && ebookDelivery === "WhatsApp" && !customer.whatsapp.trim()) {
+      setCheckoutError("Tuliskan nomor WhatsApp tujuan pengiriman e-book.");
+      return;
+    }
+    if (hasEbook && ebookDelivery === "Email") {
+      const email = customer.email.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setCheckoutError("Tuliskan alamat email yang valid untuk pengiriman e-book.");
+        return;
+      }
+    }
+
     setCheckoutError("");
-    const labelUrl = printUrl({
+    const ebookRecipient = ebookDelivery === "WhatsApp" ? customer.whatsapp.trim() : customer.email.trim();
+    const labelUrl = hasPhysical ? printUrl({
       type: "order",
       name: customer.name.trim(),
       whatsapp: customer.whatsapp.trim(),
+      email: customer.email.trim(),
       address: customer.address.trim(),
+      ebookDelivery: hasEbook ? ebookDelivery : "",
+      ebookRecipient: hasEbook ? ebookRecipient : "",
       payment,
       subtotal,
       shipping,
       total,
       items: items.map((item) => ({ name: item.name, qty: item.qty, price: item.price })),
-    });
+    }) : "";
+
     const message = [
       "PESANAN BARU - ANEXSO | JOE COFFEE",
       "",
       ...items.map((item) => `- ${item.name} x${item.qty}: ${formatRupiah(item.price * item.qty)}`),
       `Subtotal: ${formatRupiah(subtotal)}`,
-      `Ongkir: ${shipping ? formatRupiah(shipping) : "Gratis"}`,
+      `Ongkir: ${hasPhysical ? (shipping ? formatRupiah(shipping) : "Gratis") : "Rp 0 (E-book / produk digital)"}`,
       `Total: ${formatRupiah(total)}`,
       `Pembayaran: ${payment}`,
       "",
       `Nama: ${customer.name.trim()}`,
-      `No. HP/WA: ${customer.whatsapp.trim()}`,
-      `Alamat: ${customer.address.trim()}`,
+      ...(hasPhysical ? [`No. HP/WA: ${customer.whatsapp.trim()}`, `Alamat: ${customer.address.trim()}`] : []),
+      ...(hasEbook ? [
+        `Pengiriman E-book: ${ebookDelivery}`,
+        `${ebookDelivery === "WhatsApp" ? "Nomor WhatsApp" : "Email"}: ${ebookRecipient}`,
+      ] : []),
       "",
-      `CETAK LABEL PEMBELI: ${labelUrl}`,
-      "",
+      ...(hasPhysical ? [`CETAK LABEL PEMBELI: ${labelUrl}`, ""] : []),
       `Saya akan mengirim bukti ${payment === "QRIS" ? "pembayaran QRIS" : "transfer"} di chat ini.`,
     ].join("\n");
+
     window.open(waLink(message), "_blank", "noopener,noreferrer");
     writeCart([]);
     setItems([]);
@@ -202,16 +238,16 @@ export function CartClient() {
             <div className="subtotal-cell"><b>{formatRupiah(item.price * item.qty)}</b><button type="button" aria-label={`Hapus ${item.name}`} onClick={() => remove(item.name)}>⌫</button></div>
           </div>)}
         </div>
-        {items.length > 0 ? <div className="promo-row"><div><strong>Punya Kode Promo?</strong><div className="promo-input"><input placeholder="Masukkan kode promo"/><button type="button">Gunakan</button></div></div><div className="shipping-note"><span>🚚</span><div><strong>{shipping === 0 ? "Gratis Ongkir" : "Ongkir Hemat"}</strong><small>Belanja minimal Rp100.000</small></div><b>✓</b></div></div> : null}
+        {items.length > 0 ? <div className="promo-row"><div><strong>Punya Kode Promo?</strong><div className="promo-input"><input placeholder="Masukkan kode promo"/><button type="button">Gunakan</button></div></div><div className="shipping-note"><span>{ebookOnlyCart ? "📩" : "🚚"}</span><div><strong>{ebookOnlyCart ? "E-book Tanpa Ongkir" : shipping === 0 ? "Gratis Ongkir" : "Ongkir Hemat"}</strong><small>{ebookOnlyCart ? "Dikirim digital via WhatsApp atau Email" : "Belanja produk fisik minimal Rp100.000"}</small></div><b>✓</b></div></div> : null}
         {items.length > 0 ? <><h2 className="recommend-title">Anda Mungkin Juga Suka</h2><div className="recommend-grid">{recommendations.map((product) => <article key={product.name}><img src={product.image} alt={product.name}/><strong>{product.name}</strong><span>{product.subtitle}</span><b>{formatRupiah(product.price)}</b><button type="button" onClick={() => setItems((prev) => addCartItem(prev, product))}>＋ Keranjang</button></article>)}</div></> : null}
       </section>
-      <aside className="order-summary"><h2>RINGKASAN PESANAN</h2><div><span>Subtotal ({items.reduce((sum, item) => sum + item.qty, 0)} produk)</span><b>{formatRupiah(subtotal)}</b></div><div><span>Ongkos Kirim</span><b>{items.length ? (shipping ? formatRupiah(shipping) : "Gratis") : "-"}</b></div><div><span>Promo</span><b>- Rp 0</b></div><hr/><div className="total"><span>Total Pembayaran</span><b>{formatRupiah(items.length ? total : 0)}</b></div><button type="button" disabled={!items.length} onClick={continueCheckout} className="gold-btn wide">Lanjut ke Pengiriman →</button><small>🔒 Transaksi aman dan data Anda terjaga</small></aside>
+      <aside className="order-summary"><h2>RINGKASAN PESANAN</h2><div><span>Subtotal ({items.reduce((sum, item) => sum + item.qty, 0)} produk)</span><b>{formatRupiah(subtotal)}</b></div><div><span>Ongkos Kirim</span><b>{items.length ? (ebookOnlyCart ? "Rp 0" : shipping ? formatRupiah(shipping) : "Gratis") : "-"}</b></div><div><span>Promo</span><b>- Rp 0</b></div><hr/><div className="total"><span>Total Pembayaran</span><b>{formatRupiah(items.length ? total : 0)}</b></div><button type="button" disabled={!items.length} onClick={continueCheckout} className="gold-btn wide">{ebookOnlyCart ? "Lanjut ke Pengiriman E-book →" : "Lanjut ke Pengiriman →"}</button><small>🔒 Transaksi aman dan data Anda terjaga</small></aside>
     </div>
     {checkoutOpen && items.length > 0 ? <section id="checkout-payment" className="checkout-payment container">
-      <div className="checkout-customer form-card"><h2>DATA PENGIRIMAN</h2><div className="form-grid two"><label>Nama Lengkap *<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Masukkan nama lengkap"/></label><label>Nomor WhatsApp *<input required value={customer.whatsapp} onChange={(event) => setCustomer({ ...customer, whatsapp: event.target.value })} placeholder="08xxxxxxxxxx"/></label></div><label>Alamat Pengiriman *<textarea required rows={4} value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} placeholder="Tuliskan alamat lengkap dan patokan"/></label>{checkoutError ? <p role="alert"><b>{checkoutError}</b></p> : null}</div>
+      <div className="checkout-customer form-card"><h2>{ebookOnlyCart ? "DATA PENGIRIMAN E-BOOK" : "DATA PENGIRIMAN"}</h2><div className="form-grid two"><label>Nama Lengkap *<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Masukkan nama lengkap"/></label>{hasPhysical ? <label>Nomor WhatsApp *<input required value={customer.whatsapp} onChange={(event) => setCustomer({ ...customer, whatsapp: event.target.value })} placeholder="08xxxxxxxxxx"/></label> : null}</div>{hasPhysical ? <label>Alamat Pengiriman *<textarea required rows={4} value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} placeholder="Tuliskan alamat lengkap dan patokan"/></label> : null}{hasEbook ? <div style={{marginTop:18}}><p><b>E-book dikirim melalui *</b></p><div className="payment-grid two-payments"><button type="button" onClick={() => setEbookDelivery("WhatsApp")} className={ebookDelivery === "WhatsApp" ? "payment active" : "payment"}><span>💬</span><b>WhatsApp</b><small>E-book dikirim ke nomor WhatsApp yang Anda tulis.</small></button><button type="button" onClick={() => setEbookDelivery("Email")} className={ebookDelivery === "Email" ? "payment active" : "payment"}><span>✉</span><b>Email</b><small>E-book dikirim ke alamat email yang Anda tulis.</small></button></div>{ebookDelivery === "WhatsApp" ? (!hasPhysical ? <label style={{display:"block",marginTop:14}}>Nomor WhatsApp penerima *<input required value={customer.whatsapp} onChange={(event) => setCustomer({ ...customer, whatsapp: event.target.value })} placeholder="08xxxxxxxxxx"/></label> : <p style={{marginTop:12}}>E-book akan dikirim ke nomor WhatsApp yang tercantum di atas.</p>) : <label style={{display:"block",marginTop:14}}>Email penerima *<input required type="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} placeholder="nama@email.com"/></label>}</div> : null}{checkoutError ? <p role="alert"><b>{checkoutError}</b></p> : null}</div>
       <div className="checkout-method form-card"><h2>METODE PEMBAYARAN</h2><p>Pilih metode pembayaran. Setelah membayar, klik tombol konfirmasi untuk membuka WhatsApp dan kirim bukti pembayaran.</p><div className="payment-grid two-payments">{(["QRIS", "Transfer Bank"] as const).map((method) => <button type="button" key={method} onClick={() => setPayment(method)} className={payment === method ? "payment active" : "payment"}><span>{method === "QRIS" ? "▦" : "🏦"}</span><b>{method}</b><small>{method === "QRIS" ? "Pindai atau simpan gambar QRIS." : "Minta rekening resmi melalui WhatsApp."}</small></button>)}</div>{payment === "QRIS" ? <div className="payment-detail qris-detail"><div><h3>QRIS JOE COFFEE (ANEXSO)</h3><p>Pindai dari aplikasi pembayaran atau simpan gambarnya ke galeri.</p><a className="gold-btn" href={QRIS_IMAGE} download="QRIS-Joe-Coffee.jpeg">Simpan QRIS ↓</a></div><img src={QRIS_IMAGE} alt="QRIS JOE Coffee ANEXSO"/></div> : <div className="payment-detail bank-detail"><div><h3>TRANSFER BANK</h3><p>Demi keamanan, nomor rekening resmi diberikan lewat WhatsApp.</p></div><a className="gold-btn" href={requestBankWa} target="_blank" rel="noreferrer">Minta Rekening Resmi ↗</a></div>}<button className="gold-btn wide confirm-order" type="button" onClick={confirmOrder}>Konfirmasi & Kirim Bukti via WhatsApp →</button></div>
     </section> : null}
-    {completed ? <section id="order-complete" className="checkout-payment container"><div className="form-card success-card"><span>✓</span><div><h2>PESANAN TERKONFIRMASI</h2><h3>Keranjang sudah dikosongkan.</h3><p>WhatsApp telah dibuka dengan detail pesanan dan link cetak label pembeli untuk admin.</p><Link className="gold-btn" href="/">Kembali ke Beranda →</Link></div></div></section> : null}
+    {completed ? <section id="order-complete" className="checkout-payment container"><div className="form-card success-card"><span>✓</span><div><h2>PESANAN TERKONFIRMASI</h2><h3>Keranjang sudah dikosongkan.</h3><p>WhatsApp telah dibuka dengan detail pesanan untuk admin. E-book akan dikirim sesuai pilihan WhatsApp atau Email Anda.</p><Link className="gold-btn" href="/">Kembali ke Beranda →</Link></div></div></section> : null}
   </>;
 }
 
