@@ -1,0 +1,39 @@
+name: Apply Ebook Delivery V17C
+
+on:
+  push:
+    paths:
+      - .github/workflows/apply-ebook-delivery-v17c.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Apply patch
+        run: python3 .github/scripts/apply_ebook_delivery_v17c.py
+      - name: Install dependencies
+        run: npm ci
+      - name: Build application
+        run: npm run build
+      - name: Verify ebook checkout rules
+        run: |
+          grep -q 'function isEbookProduct' app/commerce-widgets-v14.tsx
+          grep -q 'E-book Tanpa Ongkir' app/commerce-widgets-v14.tsx
+          grep -q 'E-book dikirim melalui' app/commerce-widgets-v14.tsx
+          grep -q 'Pengiriman E-book:' app/commerce-widgets-v14.tsx
+      - name: Commit runtime fix
+        run: |
+          git config user.name "niyellll"
+          git config user.email "143603121+niyellll@users.noreply.github.com"
+          git rm -f .github/workflows/apply-ebook-delivery-v17.yml .github/workflows/apply-ebook-delivery-v17b.yml .github/workflows/apply-ebook-delivery-v17c.yml .github/scripts/apply_ebook_delivery_v17c.py
+          git add app/commerce-widgets-v14.tsx
+          git commit -m "fix: zero shipping and digital delivery for ebooks v17"
+          git push origin main
