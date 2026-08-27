@@ -14,6 +14,7 @@ type TrainingPayload = {
   date?: string;
   format?: string;
   payment?: string;
+  participants?: string;
   investment?: string;
 };
 
@@ -116,6 +117,7 @@ export async function POST(request: NextRequest) {
     date: clean(payload.date),
     format: clean(payload.format),
     payment: clean(payload.payment),
+    participants: clean(payload.participants),
     investment: clean(payload.investment),
   };
   const pdfUrl = `${origin}/api/training-confirmation/pdf?data=${encodeURIComponent(encodePayload(normalizedPayload))}`;

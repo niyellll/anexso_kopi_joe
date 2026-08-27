@@ -39,11 +39,12 @@ export function TrainingConfirmationAutomation() {
         format: textOf(".format-card .choice.active b"),
         date: summaryValue(form, "Tanggal"),
         payment: textOf(".payment-card .payment.active b"),
-        investment: summaryValue(form, "Investasi per peserta"),
+        participants: summaryValue(form, "Peserta"),
+        investment: summaryValue(form, "TOTAL INVESTASI"),
       };
       if (!payload.name || !payload.whatsapp || !payload.program) return;
 
-      const fingerprint = [payload.whatsapp, payload.program, payload.date, payload.format, payload.payment].join("|");
+      const fingerprint = [payload.whatsapp, payload.program, payload.date, payload.format, payload.participants, payload.investment, payload.payment].join("|");
       if (sessionStorage.getItem("anexso-training-confirmation-v15") === fingerprint) return;
 
       setState("sending");

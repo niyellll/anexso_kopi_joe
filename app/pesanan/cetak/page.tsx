@@ -20,6 +20,7 @@ type PrintPayload = {
   date?: string;
   format?: string;
   investment?: string;
+  participants?: string;
 };
 
 function decodePayload(hash: string): PrintPayload | null {
@@ -87,6 +88,7 @@ export default function PrintOrderPage() {
         <div className="training-field"><span>Program</span><b>{payload.program || "-"}</b></div>
         <div className="training-field"><span>Format</span><b>{payload.format || "-"}</b></div>
         <div className="training-field"><span>Jadwal</span><b>{payload.date || "-"}</b></div>
+        <div className="training-field"><span>Jumlah Peserta</span><b>{payload.participants || "1 Orang"}</b></div>
         <div className="training-field"><span>Investasi</span><b>{payload.investment || "-"}</b></div>
         <div className="training-field"><span>Metode Pembayaran</span><b>{payload.payment || "-"}</b></div>
       </div>
@@ -94,7 +96,7 @@ export default function PrintOrderPage() {
       <div className="training-footer">ANEXSO | TQ Business & Learning Center — Minum. Belajar. Bertumbuh.</div>
     </> : <>
       <div className="brand-line"><h1>ANEXSO | JOE COFFEE</h1><p>LABEL PENGIRIMAN PESANAN</p></div>
-      <div className="label-name">{payload.name || "-"}</div>
+      <div className="label-name">Kepada Yth. {payload.name || "-"}</div>
       <div className="label-phone">HP/WA: {payload.whatsapp || "-"}</div>
       <div className="label-address">{payload.address || "-"}</div>
       <h3>PRODUK</h3>
