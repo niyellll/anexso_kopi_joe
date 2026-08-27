@@ -1,0 +1,46 @@
+name: Apply In-House Participants V16
+
+on:
+  push:
+    branches:
+      - fix/inhouse-participants-label-v16
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/inhouse-participants-label-v16
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply V16 patch
+        run: python .github/scripts/apply_inhouse_participants_label_v16.py
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Assert requested behavior
+        run: |
+          grep -q 'min={10} max={25}' app/commerce-widgets-v14.tsx
+          grep -q 'TOTAL INVESTASI IN-HOUSE' app/commerce-widgets-v14.tsx
+          grep -q 'participantLabelV16' app/commerce-widgets-v14.tsx
+          grep -q 'summaryValue(form, "TOTAL INVESTASI")' app/training-confirmation-auto.tsx
+          grep -q 'Kepada Yth. {payload.name' app/pesanan/cetak/page.tsx
+      - name: Remove temporary applicator files
+        run: |
+          rm -f .github/scripts/apply_inhouse_participants_label_v16.py
+          rm -f .github/workflows/apply-inhouse-participants-label-v16.yml
+      - name: Commit runtime fix
+        run: |
+          git config user.name "niyellll"
+          git config user.email "143603121+niyellll@users.noreply.github.com"
+          git add app/commerce-widgets-v14.tsx app/training-confirmation-auto.tsx app/pesanan/cetak/page.tsx app/api/training-confirmation/pdf/route.ts app/api/whatsapp/training-confirmation/route.ts .github
+          git commit -m "feat: add in-house participant pricing and shipping addressee"
+          git push origin HEAD:fix/inhouse-participants-label-v16
