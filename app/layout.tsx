@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import WhatsAppWidget from "./whatsapp-widget";
 
 export const metadata: Metadata = {
   title: { default: "ANEXSO | Joe Coffee", template: "%s | ANEXSO" },
@@ -14,5 +15,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0b0a08" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="id"><body>{children}</body></html>;
+  return <html lang="id"><body>{children}<WhatsAppWidget /></body></html>;
 }
